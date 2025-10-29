@@ -299,6 +299,7 @@
 
     </script>
 
+    {{-- todo: para obtener los datos de una persona --}}
      <script>
         document.addEventListener('DOMContentLoaded', () => {
 
