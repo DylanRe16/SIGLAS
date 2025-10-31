@@ -6,7 +6,6 @@ use App\Http\Requests\StoreRegistroRequest;
 use App\Models\Persona;
 use App\Models\PreguntaSeg;
 use App\Models\Saime;
-use App\Models\Siglas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -16,32 +15,35 @@ use Illuminate\Support\Facades\Auth;
 
 class BusquedaController extends Controller
 {
-    public function index()
-    {
+    public function index(){
         return view('modulos.register.registro');
     }
 
 
     // muestra la persona si se encuentra en saime
-    public function show(Request $request)
-    {
-        /*  $request->validate([
+    public function show(Request $request) {
+        $request->validate([
             'ced_afiliado' => 'required|numeric|digits_between:6,9',
-        ], [
+            'nacionalidad' => 'required|in:V,E,P'
+        ],[
             // mensajes de error
-        ], [
+        ],[
             'ced_afiliado' => 'Nro. de Documento',
-        ]); */
-
+            'nacionalidad' => 'Tipo de Documento',
+        ]);
+    
         $cedula = $request->ced_afiliado;
+        $nacionalidad = $request->nacionalidad;
 
         // Busca la persona en la base de datos
         $persona = Saime::where('numcedula', $cedula)
-            ->first();
+                        ->where('letra', 'LIKE', "%$nacionalidad%")
+                        ->first();
 
-        $usuario = Siglas::where('cedula', $cedula)
-            ->first();
-
+        $usuario = Persona::where('ndocumento', $cedula)
+                            ->where('snacionalidad', 'LIKE', "%$nacionalidad%")
+                            ->first();
+        
         // // Si no se encuentra la persona, redirige con un mensaje de error
         // if (!$persona) {
         //     return redirect()->route('registro-index')->with('error', 'Persona no encontrada en el sistema.');
@@ -51,11 +53,11 @@ class BusquedaController extends Controller
         // }
 
 
-        if (!$persona) {
+        if(!$persona){
             if (!$usuario) {
                 session()->flash('warning', 'Persona no encontrada en Saime. Ingrese sus datos de forma manual.');
             }
-            return view('modulos.register.registro2', ['cedula' => $cedula]);
+            return view('modulos.register.registro2', ['cedula' => $cedula, 'nacionalidad' => $nacionalidad]);
         } else if ($usuario) {
             return redirect()->route('registro-index')->with('error', 'La persona ya se encuentra registrada.');
         } else {
@@ -69,7 +71,7 @@ class BusquedaController extends Controller
             }
 
             $clave = $request->password;
-
+        
             // Si se encuentra la persona, redirige a la vista registro2
             return view('modulos.register.registro2', ['persona' => $persona, 'clave' => $clave]);
         }
@@ -77,8 +79,7 @@ class BusquedaController extends Controller
 
 
 
-    public function create(Request $request)
-    {
+    public function create(Request $request){
 
         $request->validate([
             'password' => [
@@ -92,11 +93,11 @@ class BusquedaController extends Controller
             ],
         ], [
             'password.*' => 'La contraseña debe cumplir con todos los requisitos especificados.',
-
+            
         ]);
-
-
-        $persona = Siglas::find($request->ndocumento);
+        
+        
+        $persona = Saime::find($request->ndocumento);
         $cod_moviles = DB::connection('bd2')->table('tb_codigos_telefonicos')->where('btipo', true)->get();
         $cod_locales = DB::connection('bd2')->table('tb_codigos_telefonicos')->where('btipo', false)->get();
 
@@ -105,51 +106,48 @@ class BusquedaController extends Controller
 
         $clave = $request->password;
         $edad = $this->calcularEdad($request->dfecha_nacimiento);
-
-
+        
+        
         // return $request->all();  // para ver que datos lleva
 
         // si persona esta en data Saime
-        if ($persona) {
+        if ($persona){
             $persona->ndocumento = trim($request->ced_afiliado);
 
-
+            
             $fecha = $this->validarFecha($persona->fechanac);
-
+    
             if ($fecha) {
                 $persona->fechanac = $fecha->format('Y-m-d');
             } else {
                 echo 'Formato de fecha inválido.';
             }
-
-
-            return view('modulos.register.registro3', [
-                'persona' => $persona,
-                'clave' => $clave,
-                't_discapacidad' => $t_discapacidad,
-                'preguntas_seg' => $preguntas_seg,
-                'edad' => $edad,
-                'cod_moviles' => $cod_moviles,
-                'cod_locales' => $cod_locales
-            ]);
-        } else {
+            
+    
+            return view('modulos.register.registro3', ['persona' => $persona, 
+                                                    'clave' => $clave, 
+                                                    't_discapacidad' => $t_discapacidad, 
+                                                    'preguntas_seg' => $preguntas_seg, 
+                                                    'edad' => $edad,
+                                                    'cod_moviles' => $cod_moviles,
+                                                    'cod_locales' => $cod_locales]);
+        } else { 
             $persona = $request->all();
             // return $persona;
-            return view('modulos.register.registro3', [
-                'persona' => $persona,
-                'clave' => $clave,
-                't_discapacidad' => $t_discapacidad,
-                'preguntas_seg' => $preguntas_seg,
-                'edad' => $edad,
-                'cod_moviles' => $cod_moviles,
-                'cod_locales' => $cod_locales
-            ]);
+            return view('modulos.register.registro3', ['persona' => $persona, 
+                                                    'clave' => $clave, 
+                                                    't_discapacidad' => $t_discapacidad, 
+                                                    'preguntas_seg' => $preguntas_seg, 
+                                                    'edad' => $edad,
+                                                    'cod_moviles' => $cod_moviles,
+                                                    'cod_locales' => $cod_locales]);
         }
+
+        
     }
 
 
-    public function store(StoreRegistroRequest $request)
-    {
+    public function store(StoreRegistroRequest $request){
 
         $data = $request->merge([
             'sclave' => Hash::make($request->sclave),
@@ -163,7 +161,7 @@ class BusquedaController extends Controller
             ['pregunta' => $request->pregunta_2, 'respuesta' => $request->respuesta_2],
             ['pregunta' => $request->pregunta_3, 'respuesta' => $request->respuesta_3],
         ];
-
+        
         foreach ($preguntas as $pregunta) {
             PreguntaSeg::create([
                 'id_persona' => $persona->id_persona,
@@ -172,7 +170,7 @@ class BusquedaController extends Controller
                 'nusuario_creacion' => $persona->ndocumento,
             ]);
         }
-
+        
         Auth::login($persona);
         return redirect()->route('inicio')->with('success', '¡Se ha registrado exitosamente!');
     }
@@ -190,12 +188,11 @@ class BusquedaController extends Controller
         $hoy = new \DateTime();
         return $hoy->diff($fechaNacimiento)->y; // Retorna la edad en años
     }
+    
 
-
-    private function validarFecha($fecha)
-    {
+    private function validarFecha($fecha) {
         $formatos = ['Y-m-d', 'd-m-Y'];
-
+    
         foreach ($formatos as $formato) {
             try {
                 $fechaFormateada = Carbon::createFromFormat($formato, trim($fecha));
@@ -204,7 +201,10 @@ class BusquedaController extends Controller
                 continue; // Intentar con el siguiente formato
             }
         }
-
+    
         return null; // Retorna null si no se pudo validar
     }
+
 }
+
+    

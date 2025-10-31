@@ -15,6 +15,24 @@ class Saime extends Model{
     protected $primaryKey = 'numcedula'; // Clave primaria de la tabla
     public $timestamps = false; // Desactivar los timestamps automáticos
 
+    /**
+     * Evento que limpia todos los strings al recuperar el modelo
+     */
+    protected static function booted()
+    {
+        static::retrieved(function ($model) {
+            foreach ($model->attributes as $key => $value) {
+                if (is_string($value)) {
+                    $model->attributes[$key] = ucfirst(strtolower(trim($value)));
+                }
+            }
+        });
+    }
+
+    // public function getPrimerNombreAttribute($value){
+    //     return trim($value);
+    // }
+
     public function getFormattedFechaNac()
     {
         if (!$this->fechanac) {

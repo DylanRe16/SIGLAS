@@ -16,6 +16,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/cnconstituyente/getPerson', [CNCController::class , 'getPerson'])->name('cnc-getPerson');
 
+    Route::get('/cnconstituyente/getCompany', [CNCController::class , 'getCompany'])->name('cnc-getCompany');
+
     // Route::get('/ccombatiente/registrar', [CcombatienteController::class, 'show'])->name('ccombatiente-registrar');
     // Route::post('/ccombatiente/registrar', [CcombatienteController::class, 'busqueda'])->name('busqueda-siggefirh');
     // Route::post('/ccombatiente/registrar/crear', [CcombatienteController::class, 'store'])->name('dato-personal-crear');

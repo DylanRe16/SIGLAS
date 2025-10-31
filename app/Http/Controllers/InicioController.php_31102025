@@ -34,16 +34,16 @@ class InicioController extends Controller
         // Validar los datos de entrada
         $request->validate([
             'ced_afiliado' => 'required|numeric|digits_between:6,9',
-
+            'nacionalidad' => 'required|in:V,E,P',
             'password' => 'required'
         ], [
             'ced_afiliado.required' => 'El :attribute es requerido',
             'ced_afiliado.numeric' => 'El :attribute debe ser numérico',
-
+            'nacionalidad.required' => 'El :attribute es requerido',
             'password.required' => 'La :attribute es requerida',
         ], [
             'ced_afiliado' => 'Nro. de Documento',
-
+            'nacionalidad' => 'Tipo de Documento',
             'password' => 'Contraseña',
         ]);
 
@@ -53,10 +53,10 @@ class InicioController extends Controller
 
         // Log::info("Intentando autenticar usuario con nacionalidad: $nacionalidad y cédula: $cedula");
 
-        $user = Siglas::where('cedula', $cedula)
+        $user = Siglas::where('personales_cedula', $cedula)
             //->where('snacionalidad', 'LIKE', "%$nacionalidad%")
             ->first();
-        //return $user;
+        // return $user;
 
         // Verificar si el usuario existe
         if (!$user) {
@@ -67,15 +67,39 @@ class InicioController extends Controller
         Log::info('Resultado de consulta:', ['user' => $user]);
 
         // Verificar la contraseña
-        if ($user->sclave == null) {
-            $ndocumento = $user->cedula;
+        $storedPassword = $user->clave;
+        $inputPassword  = $password;
 
-            return redirect()->route('registro-show')->with('error', 'Por favor cree una nueva contraseña')->with('ced_afiliado', $ndocumento)->withInput();
-        } else
-        if (!Hash::check($password, $user->sclave)) {
-            // Log::warning("Contraseña incorrecta para usuario con cédula: $cedula");
-            return redirect()->back()->with('error', 'Contraseña incorrecta, por favor intente nuevamente')->withInput();
+        if ($storedPassword) {
+            // 🧩 Si parece MD5 (32 caracteres hexadecimales)
+            if (strlen($storedPassword) === 32 && ctype_xdigit($storedPassword)) {
+
+                // Comparar manualmente con md5()
+                if (md5($inputPassword) !== $storedPassword) {
+                    return redirect()->back()
+                        ->with('error', 'Contraseña incorrecta, por favor intente nuevamente')
+                        ->withInput();
+                }
+            } else {
+                // 🧩 Si es bcrypt (formato normal de Laravel)
+                if (!Hash::check($inputPassword, $storedPassword)) {
+                    return redirect()->back()
+                        ->with('error', 'Contraseña incorrecta, por favor intente nuevamente')
+                        ->withInput();
+                }
+            }
+        } else {
+            return redirect()->back()
+                ->with('error', 'El usuario no tiene una contraseña registrada')
+                ->withInput();
         }
+
+        // ✅ Si llega aquí, la contraseña es correcta (MD5 o Bcrypt)
+        //  Log::info("Inicio de sesión exitoso para usuario con cédula: {$cedula}");
+
+        // Log::info("Usuario autenticado correctamente, ID: {$user->id_persona}");
+
+        // Intentar loguear al usuario
         Auth::login($user);
 
         // Regenerar sesión
