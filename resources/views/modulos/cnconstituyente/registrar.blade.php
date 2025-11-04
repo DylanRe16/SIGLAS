@@ -38,7 +38,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <form action="" method="get">
+                <form action="{{ route('cnc-store') }}" method="get">
                     @csrf
                     <div class="row fs-6 d-flex align-items-end mb-4">
                         <div class="col-md-4"> 
@@ -107,7 +107,7 @@
 
 
                     <div class="text-center">
-                        <button type="button" class=" btn btn-guardar rounded-pill my-3">Guardar</button>
+                        <button type="submit" class=" btn btn-guardar rounded-pill my-3">Guardar</button>
                     </div>
                 </form>
             </div>
@@ -269,188 +269,18 @@
     </div>
 
 
-    <script>
-        // todo: para mostrar el campo tipo de Organización Social
-        const selectOsocial = document.getElementById('osocial');
-        const selectTOsocial = document.getElementById('tosocial');
-
-        selectOsocial.addEventListener('change', function(){
-                if (selectOsocial.value == 'Si') {
-                    selectTOsocial.style.display = 'block';
-                } else {
-                    selectTOsocial.style.display = 'none';
-                }
-                // console.log("osocial -> ", selectOsocial.value);
-        })
-        // fin todo: para mostrar el campo tipo de Organización Social
-
-    </script>
-
-    {{-- todo: para obtener los datos de una persona y empresa --}}
-     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
-            const urlBasePersona = '{{ url('cnconstituyente/getPerson') }}';
-            const btnBuscarPersona = document.getElementById('btnGetPerson');
-            const inputNacionalidad = document.getElementById('snacionalidad');
-            const inputDocumento = document.getElementById('ndocumento');
-
-            const urlBaseEmpresa = '{{ url('cnconstituyente/getCompany') }}';
-            const btnBuscarEmpresa = document.getElementById('btnGetCompany');
-            const inputRif = document.getElementById('srif');
-
-            const camposPersona = [
-                'primer_nombre',
-                'segundo_nombre',
-                'primer_apellido',
-                'segundo_apellido'
-            ];
-
-            const camposEmpresa = [
-                'srazon_social',
-                'sdenominacion_comercial',
-                'estado',
-                'municipio',
-                'parroquia',
-            ];
-
-            // 🔹 Función reutilizable para limpiar los campos
-            function limpiarCampos(campos) {
-                campos.forEach(id => {
-                    const campo = document.getElementById(id);
-                    if (campo) campo.value = '';
-                });
-            }
-
-            // 🔹 Función principal de búsqueda
-            
-            async function buscarEmpresa() {
-                const srif = inputRif.value.trim();
-                console.log(srif);
-
-                try {
-                    const queryParams = new URLSearchParams({
-                        srif
-                    });
-
-                    const response = await fetch(`${urlBaseEmpresa}?${queryParams}`);
-
-                    if (!response.ok) {
-                        throw new Error(`Error HTTP: ${response.status}`);
-                    }
-
-                    const json = await response.json();
-                    console.log(json);
-
-                    if (json.success && json.company) {
-                        const company = json.company;
-                        // console.log(company.estado);
-                        camposEmpresa.forEach(id => {
-                            const campo = document.getElementById(id);
-                            if (campo && company[id] !== undefined) {
-                                campo.value = company[id] ?? '';
-                                // console.log(company[id]);
-                            }
-                        });
-
-                        showToast('Empresa encontrada correctamente.', 'success');
-                    } else {
-                        limpiarCampos(camposEmpresa);
-                        // alert(json.message || '');
-                        showToast(json.message || 'No se encontraron datos para el rif.', 'warning');
-                    }
-
-                } catch (error) {
-                    console.error('Error al obtener los datos:', error);
-                    limpiarCampos(camposEmpresa);
-                    showToast('Ocurrió un error al intentar obtener los datos.', 'error');
-                }
-            }
-            
-            async function buscarPersona() {
-                const snacionalidad = inputNacionalidad.value.trim();
-                const ndocumento = inputDocumento.value.trim();
-
-                try {
-                    const queryParams = new URLSearchParams({
-                        snacionalidad,
-                        ndocumento
-                    });
-
-                    const response = await fetch(`${urlBasePersona}?${queryParams}`);
-
-                    if (!response.ok) {
-                        throw new Error(`Error HTTP: ${response.status}`);
-                    }
-
-                    const json = await response.json();
-                    console.log(json);
-
-                    if (json.success && json.persona) {
-                        const persona = json.persona;
-
-                        camposPersona.forEach(id => {
-                            const campo = document.getElementById(id);
-                            if (campo && persona[id] !== undefined) {
-                                campo.value = persona[id] ?? '';
-                            }
-                        });
-
-                        showToast('Persona encontrada correctamente.', 'success');
-                    } else {
-                        limpiarCampos(camposPersona);
-                        // alert(json.message || '');
-                        showToast(json.message || 'No se encontraron datos para el documento.', 'warning');
-                    }
-
-                } catch (error) {
-                    console.error('Error al obtener los datos:', error);
-                    limpiarCampos(camposPersona);
-                    showToast('Ocurrió un error al intentar obtener los datos.', 'error');
-                }
-            }
-
-            
-
-
-            // 🔹 Asignar evento
-            btnBuscarPersona.addEventListener('click', buscarPersona);
-            btnBuscarEmpresa.addEventListener('click', buscarEmpresa);
-        });
-        </script>
-
-    <script>
-        window.addEventListener('load', function () {
-            const configDataTable = {
-                responsive: true,
-                language: {
-                    decimal: ",",
-                    thousands: ".",
-                    processing: "Procesando...",
-                    search: "Buscar:",
-                    lengthMenu: "Mostrar _MENU_ entradas",
-                    info: "Mostrando _START_ a _END_ de _TOTAL_ entradas",
-                    infoEmpty: "Mostrando 0 a 0 de 0 entradas",
-                    infoFiltered: "(filtrado de _MAX_ entradas totales)",
-                    loadingRecords: "Cargando...",
-                    zeroRecords: "No se encontraron registros coincidentes",
-                    emptyTable: "No hay datos disponibles en la tabla",
-                    paginate: { first: "«", previous: "‹", next: "›", last: "»" },
-                    aria: { sortAscending: ": activar para ordenar ascendente", sortDescending: ": activar para ordenar descendente" }
-                }
-            };
-
-            const tableEl = document.querySelector('#myTable');
-            if (window.DataTable && tableEl) {
-                new DataTable(tableEl, configDataTable);
-            } else {
-                console.warn('DataTable no disponible o #myTable no encontrado.');
-            }
-        });
-    </script>
+    <script src="{{asset('js/loadDatatable.js')}}"></script>
     
-    <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100"></div>
+    <div id="toast-container" class="position-fixed bottom-0 end-0 p-3 fw-bold" style="z-index: 1100"></div>
+
+    <script>
+        const urlBaseEmpresa = "{{ url('cnconstituyente/getCompany') }}";
+        const urlBasePersona = "{{ url('cnconstituyente/getPerson') }}";
+    </script>
+    <script src="{{ asset('js/cnc/main.js') }}"></script>
 @endsection
+
+
 
 @section('footer')
     @include('layouts.footer')

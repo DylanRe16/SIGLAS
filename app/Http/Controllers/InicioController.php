@@ -49,14 +49,13 @@ class InicioController extends Controller
 
         $nacionalidad = $request->input('nacionalidad');
         $cedula = $request->input('ced_afiliado');
-        $password = $request->input('password');
+        $password = $request->password;
 
         // Log::info("Intentando autenticar usuario con nacionalidad: $nacionalidad y cédula: $cedula");
 
         $user = Siglas::where('cedula', $cedula)
             //->where('snacionalidad', 'LIKE', "%$nacionalidad%")
             ->first();
-        //return $user;
 
         // Verificar si el usuario existe
         if (!$user) {
@@ -65,13 +64,13 @@ class InicioController extends Controller
         }
 
         Log::info('Resultado de consulta:', ['user' => $user]);
+        //return $user;
 
         // Verificar la contraseña
-        if ($user->sclave == null) {
-            $ndocumento = $user->cedula;
-
-            return redirect()->route('registro-show')->with('error', 'Por favor cree una nueva contraseña')->with('ced_afiliado', $ndocumento)->withInput();
-        } else
+        if (is_null($user->sclave)) {
+            return redirect()->route('registro-show')->with('error', 'Por favor cree una nueva contraseña')->with('ced_afiliado', $cedula)->withInput();
+        }
+        // return $password."<br>". Hash::make($password)."<br>". Hash::make($user->sclave);
         if (!Hash::check($password, $user->sclave)) {
             // Log::warning("Contraseña incorrecta para usuario con cédula: $cedula");
             return redirect()->back()->with('error', 'Contraseña incorrecta, por favor intente nuevamente')->withInput();

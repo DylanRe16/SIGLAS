@@ -25,53 +25,24 @@ class BusquedaController extends Controller
     // muestra la persona si se encuentra en saime
     public function show(Request $request)
     {
-        /*  $request->validate([
-            'ced_afiliado' => 'required|numeric|digits_between:6,9',
-        ], [
-            // mensajes de error
-        ], [
-            'ced_afiliado' => 'Nro. de Documento',
-        ]); */
 
-        $cedula = $request->ced_afiliado;
+        $cedula = session('ced_afiliado');
 
         // Busca la persona en la base de datos
-        $persona = Saime::where('numcedula', $cedula)
-            ->first();
 
         $usuario = Siglas::where('cedula', $cedula)
             ->first();
 
-        // // Si no se encuentra la persona, redirige con un mensaje de error
-        // if (!$persona) {
-        //     return redirect()->route('registro-index')->with('error', 'Persona no encontrada en el sistema.');
-        // // Si se encuentra la persona y esta registrada, redirige con un mensaje de error
-        // } else if ($usuario) {
-        //     return redirect()->route('registro-index')->with('error', 'La persona ya se encuentra registrada.');
-        // }
-
-
-        if (!$persona) {
-            if (!$usuario) {
-                session()->flash('warning', 'Persona no encontrada en Saime. Ingrese sus datos de forma manual.');
-            }
-            return view('modulos.register.registro2', ['cedula' => $cedula]);
-        } else if ($usuario) {
-            return redirect()->route('registro-index')->with('error', 'La persona ya se encuentra registrada.');
-        } else {
+        if (is_null($usuario->sclave)) {
             // Validar la fecha de nacimiento
-            $fecha = $this->validarFecha($persona->fechanac);
 
-            if ($fecha) {
-                $persona->fechanac = $fecha->format('Y-m-d');
-            } else {
-                echo 'Formato de fecha inválido.';
-            }
 
             $clave = $request->password;
 
             // Si se encuentra la persona, redirige a la vista registro2
-            return view('modulos.register.registro2', ['persona' => $persona, 'clave' => $clave]);
+            return view('modulos.register.registro2', ['cedula' => $cedula, 'clave' => $clave]);
+        } else {
+            return redirect()->route('registro-index')->with('error', 'La persona ya se encuentra registrada.');
         }
     }
 
@@ -97,83 +68,84 @@ class BusquedaController extends Controller
 
 
         $persona = Siglas::find($request->ndocumento);
-        $cod_moviles = DB::connection('bd2')->table('tb_codigos_telefonicos')->where('btipo', true)->get();
-        $cod_locales = DB::connection('bd2')->table('tb_codigos_telefonicos')->where('btipo', false)->get();
+        $cod_moviles = DB::connection('bd4')->table('tb_codigos_telefonicos')->where('btipo', true)->get();
+        $cod_locales = DB::connection('bd4')->table('tb_codigos_telefonicos')->where('btipo', false)->get();
 
-        $t_discapacidad = DB::connection('bd2')->table('tb_tipo_discapacidad')->get();
-        $preguntas_seg = DB::connection('bd2')->table('tb_preguntas_seg')->get();
+        $preguntas_seg = DB::connection('bd4')->table('tb_preguntas_seg')->get();
 
         $clave = $request->password;
-        $edad = $this->calcularEdad($request->dfecha_nacimiento);
+        //$edad = $this->calcularEdad($request->dfecha_nacimiento);
 
 
         // return $request->all();  // para ver que datos lleva
 
         // si persona esta en data Saime
         if ($persona) {
-            $persona->ndocumento = trim($request->ced_afiliado);
+            $persona->cedula = trim($request->ced_afiliado);
 
 
-            $fecha = $this->validarFecha($persona->fechanac);
+            // $fecha = $this->validarFecha($persona->fechanac);
 
-            if ($fecha) {
+            /* if ($fecha) {
                 $persona->fechanac = $fecha->format('Y-m-d');
             } else {
                 echo 'Formato de fecha inválido.';
             }
-
+ */
 
             return view('modulos.register.registro3', [
-                'persona' => $persona,
+                'persona' => $request->ndocumento,
                 'clave' => $clave,
-                't_discapacidad' => $t_discapacidad,
                 'preguntas_seg' => $preguntas_seg,
-                'edad' => $edad,
-                'cod_moviles' => $cod_moviles,
-                'cod_locales' => $cod_locales
             ]);
         } else {
             $persona = $request->all();
             // return $persona;
             return view('modulos.register.registro3', [
-                'persona' => $persona,
+                'persona' => $request->ndocumento,
                 'clave' => $clave,
-                't_discapacidad' => $t_discapacidad,
                 'preguntas_seg' => $preguntas_seg,
-                'edad' => $edad,
-                'cod_moviles' => $cod_moviles,
-                'cod_locales' => $cod_locales
+
             ]);
         }
     }
 
 
-    public function store(StoreRegistroRequest $request)
+    public function store(Request $request)
     {
 
-        $data = $request->merge([
-            'sclave' => Hash::make($request->sclave),
-            'nusuario_actualizacion' => $request->ndocumento,
-        ]);
+        $sclave = trim($request->sclave);
+        // //return $data;
+        // $persona = Siglas::where('cedula', $request->ndocumento)->update([
+        //     'sclave' => Hash::make($sclave),
+        // ]);
+        // return $request->sclave;
 
-        $persona = Persona::create($data->all());
+        $user = Siglas::where('cedula', $request->ndocumento)->first();
+
+        $user->sclave = Hash::make($sclave);
+
+        $user->save();
+
 
         $preguntas = [
             ['pregunta' => $request->pregunta_1, 'respuesta' => $request->respuesta_1],
             ['pregunta' => $request->pregunta_2, 'respuesta' => $request->respuesta_2],
             ['pregunta' => $request->pregunta_3, 'respuesta' => $request->respuesta_3],
         ];
+        $persona2 = Siglas::where('cedula', $request->ndocumento)->first();
+        //return $persona2;
 
         foreach ($preguntas as $pregunta) {
             PreguntaSeg::create([
-                'id_persona' => $persona->id_persona,
+                'id_personales' => $request->ndocumento,
                 'id_preguntaseg' => $pregunta['pregunta'],
                 'srespuesta' => $pregunta['respuesta'],
-                'nusuario_creacion' => $persona->ndocumento,
+                'nusuario_creacion' => $request->ndocumento,
             ]);
         }
 
-        Auth::login($persona);
+        Auth::login($persona2);
         return redirect()->route('inicio')->with('success', '¡Se ha registrado exitosamente!');
     }
 

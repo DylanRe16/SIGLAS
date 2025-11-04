@@ -1,19 +1,10 @@
-@extends('adminlte::master')
-@section('title', 'Cambiar Contraseña')
+@extends('base')
 
-@section('adminlte_css')
-@include('layouts.extenciones')
+@section('content')
 
-@stop
+<div class="container d-flex align-items-center">
 
-@section('content_header')
-include('welcomeExterno')
-@stop
-
-@section('body')
-<link rel="stylesheet" href="{{ asset('css/estilos2.css') }}">
-<main class="p-4">
-    <div class="card card-primary">
+    <div class="card p-4 rounded-4 shadow-sm">
         <div class="card-header">
             <h4 class="card-title font-weight-bold">Cambiar Contraseña</h4>
         </div>
@@ -112,6 +103,7 @@ include('welcomeExterno')
 
                             </div>
                         </div>
+                        <input type="text" name="ndocumento" id="ndocumento" value="{{ old('ndocumento', $cedula) }}" hidden>
 
                         <div class="row mt-4">
                             <div class="col-md-12 d-flex justify-content-center">
@@ -145,12 +137,10 @@ include('welcomeExterno')
         </div>
     </div>
 
-    </div>
+</div>
 
-    </div>
-    <script type="text/javascript" src="{{ asset('js/requisitos_contraseña.js') }}"></script>
+</div>
+<script type="text/javascript" src="{{ asset('js/requisitos_contraseña.js') }}"></script>
 
-</main>
-
-@include('layouts.footer')
-@stop
+</div>
+@endsection

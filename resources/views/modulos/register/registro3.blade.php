@@ -1,33 +1,10 @@
-@extends('adminlte::master')
-@section('title', 'Cambiar Contraseña')
+@extends('base')
 
-@section('adminlte_css')
-@include('layouts.extenciones')
+@section('content')
 
-@stop
+<div class="container d-flex align-items-center">
 
-@include('layouts.header2')
-
-
-@section('body')
-<link rel="stylesheet" href="{{ asset('css/estilos2.css') }}">
-
-
-
-<main>
-  <div class="content-todo row my-3">
-    <div class="content-login-2">
-
-      {{-- @if ($errors->any())
-          <div class="alert alert-danger fs-6">
-              <ul> 
-                  @foreach ($errors->all() as $error)
-                      <li>{{$error}}</li>
-      @endforeach
-      </ul>
-    </div>
-    @endif --}}
-
+  <div class="card p-4 rounded-4 shadow-sm">
     @if (session('error'))
     <div class="alert alert-danger fs-6">{{session('error')}}</div>
     @endif
@@ -35,19 +12,23 @@
     <form action="{{route('registro-store')}}" method="post">
 
       @csrf
-      <div class="row">
-        <div class="col-sm-12" style="display: flex;justify-content: space-between;">
-          <div class="" style="color: #004B9D; ">
-            <h4 style="font-size: calc(2.150rem + 0.3vw);"><b>Regístrate</b></h4>
+      <div class="card-header">
+
+        <div class="row">
+          <div class="col-sm-12" style="display: flex;justify-content: space-between;">
+            <div class="" style="color: #004B9D; ">
+              <h4 style="font-size: calc(2.150rem + 0.3vw);"><b>Regístrate</b></h4>
+            </div>
+            <div class="requerido fs-6 fw-normal" style="margin-top:20px">Campos obligatorios (*)</div>
           </div>
-          <div class="requerido fs-6 fw-normal" style="margin-top:20px">Campos obligatorios (*)</div>
         </div>
       </div>
+
 
       <hr style="margin-top:0">
 
 
-
+      <input type="text" hidden name="ndocumento" value="{{ old('ndocumento', $persona) }}">
 
       <div class="font-weight-bold" style="color: #007BFF;">
         <h4 style="font-size: calc(1.500rem + 0.3vw);">Preguntas de seguridad</h4>
@@ -148,11 +129,8 @@
 
     </form>
   </div>
-  </div>
+</div>
 
-  <script type="text/javascript" src="{{ asset('js/datos_personales.js')}}"></script>
-  <script type="text/javascript" src="{{ asset('js/preguntas_seguridad.js')}}"></script>
-</main>
-
-@include('layouts.footer')
-@stop
+<script type="text/javascript" src="{{ asset('js/datos_personales.js')}}"></script>
+<script type="text/javascript" src="{{ asset('js/preguntas_seguridad.js')}}"></script>
+@endsection
