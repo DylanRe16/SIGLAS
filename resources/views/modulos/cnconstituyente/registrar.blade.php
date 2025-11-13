@@ -44,7 +44,7 @@
                         <div class="col-md-4"> 
                             <div class="link-secondary">RIF<span class="requerido">*</span></div>
                             <div class="input-group">
-                                <input type="text" name="srif" id="srif" class="form-control" placeholder="Escriba el numero de RIF" required/>
+                                <input type="text" name="srif" id="srif" class="form-control" placeholder="Ejemplo: J123456789" required/>
                                 <button type="button" class="input-group-text btn btn-guardar w-25" id="btnGetCompany">Buscar</button>
                             </div>
                         </div>
@@ -64,24 +64,41 @@
 
                             <div class="link-secondary">Estado<span class="requerido">*</span></div>
     
-                            
+                            <select name="entidad_nentidad" id="entidad_nentidad" class="form-control" disabled>
+                                <option value="">Seleccione</option>
+                                @foreach ($estados as $estado)
+                                    <option value="{{ $estado->nentidad }}">{{ $estado->sdescripcion }}</option>
+                                @endforeach
+                            </select>
 
-                            <input type="text" name="estado" id="estado" class="form-control" placeholder="Estado" value="" >
+                            
     
                         </div>
     
                         <div class="col-md-3">
                             <div class="link-secondary">Municipio<span class="requerido">*</span></div>
-                            
 
-                            <input type="text" name="municipio" id="municipio" class="form-control" placeholder="Municipio" value="">
+                            <select name="municipio_nmunicipio" id="municipio_nmunicipio" class="form-control" disabled>
+                                <option value="">Seleccione</option>
+                                @foreach ($municipios as $municipio)
+                                    <option value="{{ $municipio->nmunicipio }}">{{ $municipio->sdescripcion }}</option>
+                                @endforeach
+                            </select>
+
+                            {{-- <input type="text" name="municipio" id="municipio" class="form-control" placeholder="Municipio" value=""> --}}
                         </div>
 
                         <div class="col-md-3">
                             <div class="link-secondary">Parroquia<span class="requerido">*</span></div>
+
+                            <select name="parroquia_nparroquia" id="parroquia_nparroquia" class="form-control" disabled>
+                                <option value="">Seleccione</option>
+                                @foreach ($parroquias as $parroquia)
+                                    <option value="{{ $parroquia->nparroquia }}">{{ $parroquia->sdescripcion }}</option>
+                                @endforeach
+                            </select>
                             
-                            
-                            <input type="text" name="parroquia" id="parroquia" class="form-control" placeholder="Parroquia" value="">
+                            {{-- <input type="text" name="parroquia" id="parroquia" class="form-control" placeholder="Parroquia" value=""> --}}
                         </div>
 
                         <div class="col-md-3">
@@ -160,22 +177,22 @@
                     <div class="row d-flex align-items-end mb-5 fs-6">
                         <div class="col-md-3">
                             <div class="link-secondary">Primer Nombre<span class="requerido">*</span></div>
-                            <input type="text" class="form-control" placeholder="Primer Nombre" name="primer_nombre" id="primer_nombre" value="">
+                            <input type="text" class="form-control" placeholder="Primer Nombre" name="sprimer_nombre" id="sprimer_nombre" value="">
                         </div>
 
                         <div class="col-md-3">
                             <div class="link-secondary">Segundo Nombre<span class="requerido">*</span></div>
-                            <input type="text" class="form-control" placeholder="Primer Nombre" name="segundo_nombre" id="segundo_nombre" value="">
+                            <input type="text" class="form-control" placeholder="Primer Nombre" name="ssegundo_nombre" id="ssegundo_nombre" value="">
                         </div>
 
                         <div class="col-md-3">
                             <div class="link-secondary">Primer Apellido<span class="requerido">*</span></div>
-                            <input type="text" class="form-control" placeholder="Primer Nombre" name="primer_apellido" id="primer_apellido" value="">
+                            <input type="text" class="form-control" placeholder="Primer Nombre" name="sprimer_apellido" id="sprimer_apellido" value="">
                         </div>
 
                         <div class="col-md-3">
                             <div class="link-secondary">Segundo Apellido<span class="requerido">*</span></div>
-                            <input type="text" class="form-control" placeholder="Primer Nombre" name="segundo_apellido" id="segundo_apellido" value="">
+                            <input type="text" class="form-control" placeholder="Primer Nombre" name="ssegundo_apellido" id="ssegundo_apellido" value="">
                         </div>
                     </div>
 

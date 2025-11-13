@@ -63,7 +63,7 @@
             @yield('content')
         </article>
 
-        @include('layouts.footer')
+        {{-- @include('layouts.footer') --}}<!--  @include('layouts.footer') -->
     </main>
 
     {{-- Toast Alert --}}

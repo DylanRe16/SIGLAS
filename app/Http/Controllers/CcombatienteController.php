@@ -11,6 +11,8 @@ use App\Models\Parroquia;
 use App\Models\Sigefirrhh;
 use App\Models\Ccombatiente;
 use App\Models\Personales;
+use App\Models\RegistroMiliciano;
+use App\Models\Comunas;
 
 use Carbon\Carbon;
 
@@ -48,16 +50,18 @@ class CcombatienteController extends Controller
         $estados = Estado::all();
         $municipios = Municipio::all();
         $parroquias = Parroquia::all();
+        $comunas = Comunas::where('benabled', true)->get();
+        $registro_miliciano = RegistroMiliciano::where('benabled', true)->get();
         $id_grupo_sanguineo = DB::connection('bd4')->table('grupo_sanguineo')->where('nenabled', 1)->get();
         $tipo_trabajo = DB::connection('bd4')->table('tipo_trabajador')->where('nenabled', 1)->get();
         $cargos = DB::connection('bd4')->table('cargos')->where('nenabled', 1)->get();
-        $comunas = DB::connection('bd4')->table('tb_comuna_circuito')->where('benabled', true)->get();
+
 
         $cod_moviles = DB::connection('bd2')->table('tb_codigos_telefonicos')->where('btipo', true)->get();
         $cod_locales = DB::connection('bd2')->table('tb_codigos_telefonicos')->where('btipo', false)->get();
         $t_discapacidad = DB::connection('bd2')->table('tb_tipo_discapacidad')->get();
 
-        return compact('estados', 'municipios', 'parroquias', 'cod_moviles', 'cod_locales', 't_discapacidad', 'id_grupo_sanguineo', 'tipo_trabajo', 'cargos', 'comunas');
+        return compact('estados', 'municipios', 'parroquias',  'registro_miliciano', 'cod_moviles', 'cod_locales', 't_discapacidad', 'id_grupo_sanguineo', 'tipo_trabajo', 'cargos', 'comunas');
     }
 
     //
@@ -248,7 +252,9 @@ class CcombatienteController extends Controller
             'imilitar' => 'required',
             'registro_mimilitar' => 'required',
             'prestaste_servicio_militar' => 'required',
+            'nrango_militancia' => 'nullable|string|max:100',
             'hijos' => 'required|in:0,1',
+            'nhijos' => 'nullable|numeric',
             'ubicacion_estado' => 'required',
             'ubicacion_fisica' => 'required',
             'cargo_ejerce' => 'required',
@@ -302,9 +308,11 @@ class CcombatienteController extends Controller
             'talla_zapato.required' => 'La talla del zapato es obligatoria.',
             'imilitar.required' => 'La inscripción militar es obligatoria.',
             'registro_mimilitar.required' => 'El registro como miliciano es obligatorio.',
+            'nrango_militancia.string' => 'El rango de militancia debe ser una cadena de texto.',
             'prestaste_servicio_militar.required' => 'El prestaste servicio militar es obligatorio.',
             'hijos.required' => 'La cantidad de hijos es obligatoria.',
             'hijos.in' => 'La cantidad de hijos debe ser 0 (No) o 1 (Si).',
+            'nhijos.numeric' => 'La cantidad de hijos debe ser un valor numérico.',
             'ubicacion_estado.required' => 'El estado de Datos laborales es obligatorio.',
             'ubicacion_fisica.required' => 'La ubicación física es obligatoria.',
 

@@ -27,18 +27,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputRif = document.getElementById('srif');
 
     const camposPersona = [
-        'primer_nombre',
-        'segundo_nombre',
-        'primer_apellido',
-        'segundo_apellido'
+        'sprimer_nombre',
+        'ssegundo_nombre',
+        'sprimer_apellido',
+        'ssegundo_apellido'
     ];
 
     const camposEmpresa = [
         'srazon_social',
         'sdenominacion_comercial',
-        'estado',
-        'municipio',
-        'parroquia',
+        'entidad_nentidad',
+        'municipio_nmunicipio',
+        'parroquia_nparroquia',
     ];
 
     // 🔹 Función reutilizable para limpiar los campos
@@ -50,11 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 🔹 Función principal de búsqueda
-    
     async function buscarEmpresa() {
         const srif = inputRif.value.trim();
         const originalText = btnBuscarEmpresa.innerHTML;
-        console.log(srif);
+        // console.log(srif);
 
         try {
             // Deshabilitar botón y mostrar indicador de carga
@@ -79,9 +78,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 // console.log(company.estado);
                 camposEmpresa.forEach(id => {
                     const campo = document.getElementById(id);
+                    console.log(campo.id,' ', company[id]);
                     if (campo && company[id] !== undefined) {
+                        if(campo.id == 'estado'){
+                            // Asignar el valor al select de estado
+                            console.log("estadoId: " + campo);
+                            campo.value = company[id]?.toString().trim() ?? '';
+                            
+                        } else {
                         campo.value = company[id] ?? '';
-                        // console.log(company[id]);
+                        // console.log('no salio');
+                        // console.log(company.entidad_nentidad);
+                        }
                     }
                 });
                 Swal.fire({

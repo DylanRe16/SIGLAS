@@ -387,7 +387,7 @@ return [
             'url' => '/ccombatiente',
             'icon' => 'fas fa-fw bi-person-arms-up',
         ],
-        
+
         [
             'text' => 'Registrar',
             'topnav' => true,
@@ -410,7 +410,7 @@ return [
             'topnav' => true,
             'icon' => 'fas fa-fw',
             'classes' => 'opciones-ccombatiente',
-            'url'  => '/ccombatiente/reportes',
+            'url'  => '/ccombatiente/reporte',
         ],
         [
             'text' => 'Mantenimiento',
@@ -427,12 +427,12 @@ return [
                     'submenu' => [
                         [
                             'text' => 'Comuna',
-                            'url'  => '/ccombatiente/catalogos/ccombatiente',
+                            'url'  => '/ccombatiente/mantenimiento/catalogos/comunas',
                             'icon' => 'fas fa-fw',
                         ],
                         [
                             'text' => 'Registro miliciano',
-                            'url'  => '/ccombatiente/catalogos/ccombatiente',
+                            'url'  => '/ccombatiente/mantenimiento/catalogos/registro-miliciano',
                             'icon' => 'fas fa-fw',
                         ],
                     ],
@@ -564,7 +564,7 @@ return [
             'files' => [
                 ['type' => 'js', 'asset' => false, 'location' => 'https://cdn.datatables.net/2.0.7/js/dataTables.min.js'],
                 ['type' => 'js', 'asset' => false, 'location' => 'https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap4.min.js'],
-                ['type' => 'css','asset' => false, 'location' => 'https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap4.min.css'],
+                ['type' => 'css', 'asset' => false, 'location' => 'https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap4.min.css'],
             ],
         ],
         'Select2' => [
@@ -583,7 +583,7 @@ return [
             ],
         ],
         'Chartjs' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

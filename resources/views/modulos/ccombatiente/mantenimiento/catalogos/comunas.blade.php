@@ -1,5 +1,4 @@
 @extends('adminlte::page')
-@extends('layouts.extenciones')
 @section('title', 'Catalogos')
 
 @section('content')
@@ -9,7 +8,7 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <div class="link-secondary">
-                <h4 class="font-weight-bold">Mantenimiento > Catalogos > Comunas</h4>
+                <h4 class="font-weight-bold">Mantenimiento > Catálogos > Comunas</h4>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
@@ -31,17 +30,25 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <div class="row fs-6 d-flex align-items-end mb-4">
-                <div class="col-md-10">
-                    <div class="link-secodary">
-                        Información de la Comuna <span class="requerido">*</span>
+            <form action="{{ isset($editComuna) ? route('comuna-editar', $editComuna->id_comuna_circuito) : route('comuna-crear') }}" method="POST">
+                <div class="row fs-6 d-flex align-items-end mb-4">
+                    @csrf
+                    @if(isset($editComuna))
+                    @method('PUT')
+                    @endif
+
+
+                    <div class="col-md-10">
+                        <div class="link-secodary">
+                            Información de la Comuna <span class="requerido">*</span>
+                        </div>
+                        <input type="text" tabindex="9" class="form-control" placeholder="Ingrese la información de la Comuna" name="comuna" id="comuna" value="{{ old('comuna', isset($editComuna) ? $editComuna->sdescripcion : '') }}" required>
                     </div>
-                    <input type="text" tabindex="9" class="form-control" placeholder="Ingrese la información de la Comuna" name="comuna" id="comuna" value="{{ old('comuna') }}">
+                    <div class="col-md-2  d-flex justify-content-center">
+                        <button id="btnRegistrarComuna" class="btn btn-primary" type="submit"> {{ isset($editComuna) ? 'Actualizar' : 'Agregar' }}</button>
+                    </div>
                 </div>
-                <div class="col-md-2  d-flex justify-content-center">
-                    <button id="btnRegistrarComuna" class="btn btn-primary" type="button">Registrar</button>
-                </div>
-            </div>
+            </form>
         </div>
         <!-- /.card-body -->
     </div>
@@ -61,16 +68,51 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-12">
+            <div class="table-responsive">
+                <table id="miTabla" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nro</th>
+                            <th class="text-left">Descripción</th>
+                            <th class="text-center">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($comunas as $comuna)
+                        <tr>
+                            <td class="text-center" style="width: 5%;">{{ $loop->iteration }}</td>
+                            <td class="text-left">{{ $comuna->sdescripcion }}</td>
+                            <td class="text-center" style="width: 15%;">
+                                <a href="{{ route('comuna-editar', ['id' => $comuna->id_comuna_circuito]) }}" class="btn btn-sm btn-primary">Editar</a>
+                                <a href="{{ route('comuna-eliminar', ['id' => $comuna->id_comuna_circuito]) }}" class="btn btn-sm btn-danger">Eliminar</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
-                </div>
+
             </div>
         </div>
         <!-- /.card-body -->
     </div>
 </main>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Selecciona todos los inputs y textareas
+        const campos = document.querySelectorAll('input[type="text"], textarea');
+
+        campos.forEach(campo => {
+            campo.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+        });
+    });
+</script>
 @endsection
+@include('layouts.extenciones')
+
+
 @section('footer')
 @include('layouts.footer')
 @endsection

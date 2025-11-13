@@ -13,7 +13,7 @@ class PreguntasController extends Controller
 {
     public function edit()
     {
-        $preguntaSeg_user = PreguntaSeg::where('id_persona', Auth::user()->id)->get();
+        $preguntaSeg_user = PreguntaSeg::where('id_personales', Auth::user()->cedula)->get();
 
         $preguntaSeg = Preguntas::where('benabled', true)->get();
 
@@ -52,7 +52,7 @@ class PreguntasController extends Controller
         ]);
 
         // Obtén los registros actuales del usuario
-        $preguntasActuales = PreguntaSeg::where('id_persona', Auth::user()->id)->get()->values();
+        $preguntasActuales = PreguntaSeg::where('id_personales', Auth::user()->cedula)->get()->values();
         // return $preguntasActuales;
 
         if ($preguntasActuales->isEmpty()) {
@@ -64,7 +64,7 @@ class PreguntasController extends Controller
 
             foreach ($preguntas as $pregunta) {
                 PreguntaSeg::create([
-                    'id_persona' => Auth::user()->id,
+                    'id_persona' => Auth::user()->cedula,
                     'id_preguntaseg' => $pregunta['pregunta'],
                     'srespuesta' => $pregunta['respuesta'],
                     'nusuario_creacion' => Auth::user()->ndocumento,

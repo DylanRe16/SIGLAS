@@ -1,7 +1,7 @@
-{{--@extends('welcomeInterno')--}}
 @extends('adminlte::page')
 @include('layouts.extenciones')
 @section('title', 'Inicio')
+
 
 
 @section('content')
@@ -24,7 +24,7 @@
                 <i class="bi bi-shield-fill-check"></i> {{ session('success') }}
             </div>
             @endif
-            <h3 tabindex="16" class="card-title" style="color: #004B9D; cursor: default; font-size: 1.5rem; margin-bottom: 10px;">Bienvenido(a) {{ Auth::user()->sprimer_nombre }} {{ Auth::user()->sprimer_apellido }}</h3>
+            <h3 tabindex="16" class="card-title" style="color: #004B9D; cursor: default; font-size: 1.5rem; margin-bottom: 10px;">Bienvenido(a) {{ Auth::user()->primer_nombre }} {{ Auth::user()->primer_apellido }}</h3>
 
 
             <div class="card-tools">

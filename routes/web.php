@@ -70,6 +70,12 @@ Route::middleware('auth')->group(function () {
 });
 
 
+
+Route::get('/manual-usuario', function () {
+    return view('modulos.ayuda-test.index');
+})->name('manual-usuario');
+
+
 // Incluye otros archivos de rutas
 require __DIR__ . '/auth.php';
 require __DIR__ . '/registro.php';

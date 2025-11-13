@@ -13,6 +13,8 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/cnconstituyente/registrar', [CNCController::class , 'create'])->name('cnconstituyente-registrar');
+    
+    Route::get('/cnconstituyente/reportes', [CNCController::class , 'report'])->name('cnconstituyente-reportes');
 
     Route::get('/cnconstituyente/getPerson', [CNCController::class , 'getPerson'])->name('cnc-getPerson');
 

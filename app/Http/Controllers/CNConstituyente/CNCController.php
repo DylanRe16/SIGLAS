@@ -4,6 +4,11 @@ namespace App\Http\Controllers\CNConstituyente;
 
 use App\Http\Controllers\Controller;
 use App\Models\Estado;
+use App\Models\Minpptrassi\Public\Estado as PublicEstado;
+use App\Models\Minpptrassi\Public\Municipio;
+use App\Models\Minpptrassi\Public\Parroquia;
+use App\Models\Minpptrassi\Rncpt\Empresa;
+use App\Models\Minpptrassi\Rncpt\Miembros;
 use App\Models\Saime;
 use App\Models\Seniat;
 use Exception;
@@ -11,9 +16,16 @@ use Illuminate\Http\Request;
 
 class CNCController extends Controller{
     public function create(){
-        $estados = Estado::where('nenabled', 1)->get();
+        $estados = PublicEstado::where('nenabled', 1)->get();
+        $municipios = Municipio::where('nenabled', 1)->get();
+        $parroquias = Parroquia::where('nenabled', 1)->get();
+        
+        return view('modulos.cnconstituyente.registrar', compact('estados', 'municipios', 'parroquias'));
+    }
 
-        return view('modulos.cnconstituyente.registrar', compact('estados'));
+    public function report(){
+        
+        return view('modulos.cnconstituyente.reportes');
     }
 
     
@@ -30,7 +42,7 @@ class CNCController extends Controller{
                     'srif' => 'RIF',
                 ]);
 
-            $company = Seniat::where('srif', $request->srif)
+            $company = Empresa::where('srif', $request->srif)
                 ->first();
 
             if($company) {
@@ -65,8 +77,8 @@ class CNCController extends Controller{
                 'ndocumento' => 'Nro. de Documento',
             ]);
 
-            $persona = Saime::where('numcedula', $request->ndocumento)
-                ->where('letra', $request->snacionalidad)
+            $persona = Miembros::where('ncedula', $request->ndocumento)
+                ->where('snacionalidad', $request->snacionalidad)
                 ->first();
     
             if($persona) {
@@ -91,6 +103,6 @@ class CNCController extends Controller{
 
 
     public function store(Request $request){
-        return redirect()->route('cnconstituyente-registrar')->with('error', 'Constituyente registrado exitosamente.');
+        return redirect()->route('cnconstituyente-registrar')->with('success', 'Constituyente registrado exitosamente.');
     }
 }

@@ -1,26 +1,29 @@
-@extends('welcomeExterno')
+@extends('base')
 
-@section('contrasena')
+@section('content')
 
+<div class="container d-flex align-items-center">
 
-
-<main>
-    <div class="content-todo row my-3" id="content-todo">
-        <div class="content-login">
-            <div class="card caja">
+    <div class="card p-4 rounded-4 shadow-sm">
+        <div class="card-header">
+            <h4 class="card-title font-weight-bold">Cambiar Contraseña</h4>
+        </div>
+        <!-- <hr class="mt-0"> -->
+        <!-- <center>
+            <h4 class="font-weight-bold link-secondary">Defina una contraseña que cumpla las siguientes características</h4>
+        </center> -->
+        <div class="card-body" style="display: flex;justify-content: space-evenly;flex-direction: row-reverse;">
+            <div class="caja">
                 <div class="caja_trasera-register">
-                    <center>
-                        <h4 class="text-d balc">Defina una contraseña que cumpla las siguientes características</h4>
-                    </center>
                     <div class="validaciones caja_trasera-register validaciones-mg" style="color: white; transition: 500ms; margin: 0;">
-                        <div class="ul-seguridad validaciones caja_trasera-register validaciones-mg" style="background-color: #fff; box-shadow: 0 3px 6px #00000029; width: 500px; height: auto; margin: 0; padding: 30px; border-radius: 20px;">
+                        <div class="ul-seguridad validaciones caja_trasera-register validaciones-mg">
                             <ul>
-                                <li id="t1" class="text-danger">Al menos <strong>una letra min&uacute;scula</strong></li>
-                                <li id="t2" class="text-danger">Al menos <strong>una letra may&uacute;scula</strong></li>
-                                <li id="t3" class="text-danger">Al menos <strong>un n&uacute;mero</strong></li>
-                                <li id="t4" class="text-danger">Debe contener más de <strong>8 caracteres</strong></li>
-                                <li id="t5" class="text-danger">La contrase&ntilde;a <strong>debe tener un carácter especial Ej:(@, #, $, etc.),</strong></li>
-                                <li id="t6" class="text-danger">La contrase&ntilde;a <strong>debe coincidir</strong></li>
+                                <li id="t1" class="text-danger">Al Menos <strong>Una Letra Min&uacute;scula</strong></li>
+                                <li id="t2" class="text-danger">Al Menos <strong>Una Letra May&uacute;scula</strong></li>
+                                <li id="t3" class="text-danger">Al Menos <strong>Un N&uacute;mero</strong></li>
+                                <li id="t4" class="text-danger">Debe Contener más de <strong>8 Caracteres</strong></li>
+                                <li id="t5" class="text-danger">La Contrase&ntilde;a <strong>debe tener un Carácter especial Ej:(@, #, $, etc.)</strong></li>
+                                <li id="t6" class="text-danger">La Contrase&ntilde;a <strong>debe Coincidir</strong></li>
                             </ul>
                         </div>
                     </div>
@@ -29,14 +32,14 @@
 
             <form action="{{ route('clave-store') }}" method="post">
                 @csrf
-                <div class="col-sm-6 caja2" style="margin-top:0 !important;">
-                    <div class="card card-body caja-body">
-                        <div class="text-center h1 mb-4">
+                <div class="col-sm-10" style="margin-top:0 !important;">
+                    <div class="card-body caja-body">
+                        <!--  <div class="text-center h1 mb-4">
                             <div style="color: #004B9D;">
                                 <h4 style="font-size: calc(2.150rem + 0.3vw);"><b>Cambia tu contraseña</b></h4>
                             </div>
                             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
-                        </div>
+                        </div> -->
 
                         @if ($errors->any())
                         <div class="alert alert-danger fs-6" id="alert">
@@ -57,9 +60,8 @@
                         @endif
 
                         <div class="row">
-                            <div class="form-label fs-6 text-blue">Ingrese su nueva Contraseña <span class="requerido">*</span></div>
+                            <div class="form-label fs-6 link-secondary">Ingrese su nueva Contraseña <span class="requerido">*</span></div>
                             <div class="input-group">
-                                <input type="text" class="form-control" hidden name="id_persona" id="id_persona" value="{{ $id_persona ?? '' }}">
                                 <input
                                     alt="Es obligatorio indicar su contraseña"
                                     type="password"
@@ -79,7 +81,7 @@
                         <div class="sep"></div>
 
                         <div class="row">
-                            <div class="form-label fs-6 text-blue">Confirme su nueva Contraseña <span class="requerido">*</span></div>
+                            <div class="form-label fs-6 link-secondary">Confirme su nueva Contraseña <span class="requerido">*</span></div>
                             <div class="input-group">
                                 <input
                                     alt="debe confirmar su contraseña"
@@ -97,23 +99,42 @@
 
                             </div>
                         </div>
+                        <input type="text" name="id_persona" id="id_persona" value="{{ old('id_persona', $id_persona) }}" hidden>
 
                         <div class="row mt-4">
                             <div class="col-md-12 d-flex justify-content-center">
-                                <input tabindex="19" type="submit" value="Restablecer" class="btn btn-guardar rounded-pill" title="Restablecer Contraseña">
+                                <input tabindex="19" type="submit" value="Guardar" class="btn btn-guardar rounded-pill" title="Cambiar Contraseña">
                             </div>
                         </div>
 
                     </div>
                 </div>
             </form>
+
         </div>
     </div>
 
-    <script type="text/javascript" src="{{ asset('js/requisitos_contraseña.js') }}"></script>
-</main>
 
-@endsection
-@section('footer')
-@include('layouts.footer')
+    <div class="sep"></div>
+    <div class="row ">
+
+    </div>
+    <div id="observacion" style="display: none;">
+        <div class="alert" id="alert">
+            <div id="titulo" class="titulo">
+            </div>
+            <div id="texto">
+            </div>
+            <div id="cerrar">
+                <a href="#" onclick="cerrar_alert();">Cerrar</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+<script type="text/javascript" src="{{ asset('js/requisitos_contraseña.js') }}"></script>
+
+</div>
 @endsection

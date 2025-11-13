@@ -41,7 +41,7 @@
                 <div class="icon">
                     <i class="fas bi-pie-chart-fill"></i>
                 </div>
-                <a href="{{ route('ccombatiente-reportes') }}" class="small-box-footer">
+                <a href="{{ route('cnconstituyente-reportes') }}" class="small-box-footer">
                     Más información <i class="fas fa-arrow-circle-right"></i>
                 </a>
             </div>

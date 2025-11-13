@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Persona;
+use App\Models\Siglas;
 use App\Models\PreguntaSeg;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,47 +14,50 @@ use Illuminate\Support\Facades\Auth; // ¡Asegúrate de que esta línea esté aq
 class ContraseñaController extends Controller
 {
 
-    public function index() {
+    public function index()
+    {
         return view('modulos.restablecer_clave.contrasena');
     }
 
 
     // Mostrar preguntas de seguridad si el usuario existe en la base de datos
-    public function show(Request $request){
-    
+    public function show(Request $request)
+    {
+
         $request->validate([
-            'nacionalidad' => 'required|in:V,E,P',
+            'nacionalidad' => 'required|in:1,2,3',
             'ced_afiliado' => 'required|regex:/^[0-9]{5,9}$/'
-        ],[],[
+        ], [], [
             'nacionalidad' => 'Tipo de Documento',
             'ced_afiliado' => 'Nro. de Documento',
-        ]);	
+        ]);
 
         $cedula = $request->ced_afiliado;
         $nacionalidad = $request->nacionalidad;
 
-        $persona = Persona::where('ndocumento', $cedula)
-                            ->where('snacionalidad', 'LIKE', "%$nacionalidad%")
-                            ->first();
+        $persona = Siglas::where('cedula', $cedula)
+            ->where('nacionalidad', 'LIKE', "%$nacionalidad%")
+            ->first();
 
         if (!$persona) {
             return redirect()->back()->with('error', 'Usuario no encontrado.');
         }
 
         // Verifica si la persona tiene preguntas de seguridad
-        $preguntaSeg = PreguntaSeg::where('id_persona',$persona->id_persona)->get();
+        $preguntaSeg = PreguntaSeg::where('id_personales', $cedula)->get();
         if ($preguntaSeg->isEmpty()) {
             return redirect()->back()->with('error', 'No se encontraron preguntas de seguridad para este usuario.');
         }
-        
+
         // Selecciona aleatoriamente 2 preguntas de seguridad
         $preguntasAleatorias = $preguntaSeg->shuffle()->take(2);
 
-        return view('modulos.restablecer_clave.contrasena2',['persona' => $persona, 'preguntas' => $preguntasAleatorias]);
+        return view('modulos.restablecer_clave.contrasena2', ['persona' => $persona, 'preguntas' => $preguntasAleatorias]);
     }
-    
-    
-    public function create(Request $request){
+
+
+    public function create(Request $request)
+    {
         $id_persona = $request->id_persona;
         $request->validate([
             'respuesta_1' => 'required|string|max:255',
@@ -60,7 +65,7 @@ class ContraseñaController extends Controller
         ]);
 
         // Obtén las preguntas y respuestas correctas
-        $preguntas = PreguntaSeg::where('id_persona', $id_persona)
+        $preguntas = PreguntaSeg::where('id_personales', $id_persona)
             ->whereIn('id_preguntaseg', [$request->pregunta_id_1, $request->pregunta_id_2])
             ->get()
             ->keyBy('id_preguntaseg');
@@ -85,7 +90,8 @@ class ContraseñaController extends Controller
 
 
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $id_persona = $request->id_persona;
         if (!$id_persona) {
             return redirect()->back()->with(['error' => 'No se encontró el ID del usuario. Intente nuevamente el proceso de recuperación.']);
@@ -108,7 +114,7 @@ class ContraseñaController extends Controller
         try {
             $nuevaClave = Hash::make($request->password);
 
-            $persona = Persona::find($id_persona);
+            $persona = Siglas::where('cedula', $id_persona)->first();
 
             $persona->update([
                 'sclave' => $nuevaClave,
@@ -123,13 +129,15 @@ class ContraseñaController extends Controller
     }
 
     // para actualizar la contraseña desde el perfil
-    public function clave_edit(){
+    public function clave_edit()
+    {
         return view('modulos.users.contrasena-3');
     }
 
     // para actualizar la contraseña desde el perfil
-    public function clave_update(Request $request){
-        
+    public function clave_update(Request $request)
+    {
+
         $request->validate([
             'password' => [
                 'required',
@@ -141,15 +149,15 @@ class ContraseñaController extends Controller
                 'min:8', // Más de 10 caracteres
             ],
         ], [
-            'password.*' => 'La contraseña debe cumplir con todos los requisitos especificados.',  
+            'password.*' => 'La contraseña debe cumplir con todos los requisitos especificados.',
         ]);
 
         try {
             $nuevaClave = Hash::make($request->password);
-            $user = Persona::find(Auth::id());
+            $user = Siglas::where('cedula', Auth::user()->cedula)->first();
             $user->update([
                 'sclave' => $nuevaClave,
-                'nusuario_creacion' => Auth::user()->ndocumento,
+                'nusuario_creacion' => Auth::user()->cedula,
                 'dfecha_actualizacion' => now(),
             ]);
 
@@ -158,5 +166,4 @@ class ContraseñaController extends Controller
             return redirect()->back()->with(['error' => 'Error al actualizar la contraseña.']);
         }
     }
-
 }
