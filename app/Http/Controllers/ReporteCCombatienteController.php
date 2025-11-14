@@ -57,7 +57,33 @@ class ReporteCCombatienteController extends Controller
             ->groupBy('pers.id_tipo_trabajador', 'trabajo.sdescripcion')
             ->get();
 
+        $cantidadComunas = Ccombatiente::select(
+            DB::raw('COUNT(id_persona) AS cantidad'),
+            DB::raw("COALESCE(comuna.sdescripcion, 'POR DEFINIR') AS comuna")
+        )
+            ->from('cuerpo_combatiente.tb_persona as pers')
+            ->leftJoin('public.tb_comuna_circuito as comuna', 'pers.id_comuna_circuito', '=', 'comuna.id_comuna_circuito')
+            ->where('pers.benabled', true)
+            ->groupBy('pers.id_comuna_circuito', 'comuna.sdescripcion')
+            ->get();
 
-        return view('modulos.ccombatiente.reporte', compact('totalHombres', 'totalMujeres', 'personasDiscapacitadas', 'personasNoDiscapacitadas', 'cantidadMPPPST', 'cantidadINPSASEL', 'cantidadINCES', 'cantidadTSS', 'totalPersonasEnte', 'cantidadPersonaEntidad', 'cantidadEdades', 'catidadPersonaTipoTrabajo', 'totalGeneral'));
+
+
+        return view('modulos.ccombatiente.reporte', compact(
+            'totalHombres',
+            'totalMujeres',
+            'personasDiscapacitadas',
+            'personasNoDiscapacitadas',
+            'cantidadMPPPST',
+            'cantidadINPSASEL',
+            'cantidadINCES',
+            'cantidadTSS',
+            'totalPersonasEnte',
+            'cantidadPersonaEntidad',
+            'cantidadEdades',
+            'catidadPersonaTipoTrabajo',
+            'cantidadComunas',
+            'totalGeneral'
+        ));
     }
 }

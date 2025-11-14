@@ -128,6 +128,24 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h5 class="card-title">Comunas</h5>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="myChart7" width="400" height="400"></canvas>
+                 <div class="text-end">
+                        <button id="btnImprimir7" class="btn btn-primary">
+                            <i class="fas fa-file-pdf"></i> Descargar Reporte PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 
@@ -141,7 +159,7 @@
 //Reporte de tipo de trabajador
     const labels = @json($catidadPersonaTipoTrabajo->pluck('tipo_trabajo'));
     const valores = @json($catidadPersonaTipoTrabajo->pluck('cantidad'));
-    const edades = @json($cantidadEdades);
+    const edades = @json($cantidadEdades); 
     console.log(labels);
 //Reporte por edad
     const labelsEdades = Object.keys(edades);
@@ -185,6 +203,14 @@ const datosEntidad = @json($cantidadPersonaEntidad);
         cantidadINCES,
         cantidadTSS
     ];
+//Reporte por Comuna
+ const datosComuna = @json($cantidadComunas);
+const labelsComuna = datosComuna.map(c => c.comuna);
+const valoresComuna = datosComuna.map(c => c.cantidad);
+const totalComuna = valoresComuna.reduce((acc, val) => acc + val, 0);
+
+const labelsConCantidad = datosComuna.map(c => `${c.comuna} (${c.cantidad})`);
+   
 //Definimos las graficas    
     const ctx = document.getElementById('myChart');
     const ctx2 = document.getElementById('myChart2');
@@ -192,6 +218,8 @@ const datosEntidad = @json($cantidadPersonaEntidad);
     const ctx4 = document.getElementById('myChart4');
     const ctx5 = document.getElementById('myChart5');
     const ctx6 = document.getElementById('myChart6');
+    const ctx7 = document.getElementById('myChart7');
+//Creamos las graficas
 
     if (ctx && labels.length > 0) {
         new Chart(ctx, {
@@ -408,7 +436,46 @@ if (ctx2) {
         });
     } else {
         console.warn('⚠️ No se encontró el canvas para la gráfica de ente.');
-    }</script>
+    }
+    if (ctx7 && labelsComuna.length > 0) {
+    new Chart(ctx7, {
+    type: 'bar',
+    data: {
+        labels: labelsConCantidad,  // ⬅️ Aquí va el nuevo
+        datasets: [{
+            label: 'Cantidad de Personas por Comuna',
+            data: valoresComuna,
+            backgroundColor: [
+                'rgba(98, 75, 192, 0.6)',
+                'rgba(192, 75, 75, 0.6)',
+                'rgba(75, 192, 192, 0.6)'
+            ],
+            borderColor: 'rgba(0,0,0,0.2)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: {
+                display: true,
+                text: `Distribución por Comuna (Total: ${totalComuna})`
+            },
+            legend: { display: false }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { stepSize: 1 }
+            }
+        }
+    }
+});
+
+    } else {
+        console.warn('⚠️ No hay datos o no se encontró el canvas.');
+    }
+    </script>
 
 
 

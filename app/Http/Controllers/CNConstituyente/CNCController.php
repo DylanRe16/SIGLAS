@@ -12,6 +12,7 @@ use App\Models\Minpptrassi\Rncpt\Miembros;
 use App\Models\Saime;
 use App\Models\Seniat;
 use Exception;
+use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 
 class CNCController extends Controller{
@@ -23,10 +24,10 @@ class CNCController extends Controller{
         return view('modulos.cnconstituyente.registrar', compact('estados', 'municipios', 'parroquias'));
     }
 
-    public function report(){
+    // public function report(){
         
-        return view('modulos.cnconstituyente.reportes');
-    }
+    //     return view('modulos.cnconstituyente.reportes');
+    // }
 
     
     public function getCompany(Request $request){
@@ -104,5 +105,25 @@ class CNCController extends Controller{
 
     public function store(Request $request){
         return redirect()->route('cnconstituyente-registrar')->with('success', 'Constituyente registrado exitosamente.');
+    }
+
+
+    // todo: grafico del mapa de venezuela entre otros
+    public function report(){
+        $METABASE_SITE_URL = "http://10.46.1.15:3000";
+        $METABASE_SECRET_KEY = "6fc8a3b1fd09fe7668e7874400ed59593fa7031d11a913c59c82192a41b93528";
+
+        $payload = [
+            "resource" => ["question" => 56],   // <--- ID de tu gráfica (mapa)
+            "params"   => (object) [],
+            "exp"      => time() + (60 * 10)    // Expira en 10 minutos
+        ];
+
+        $token = JWT::encode($payload, $METABASE_SECRET_KEY, 'HS256');
+
+        $iframeUrl = $METABASE_SITE_URL . "/embed/question/" . $token .
+            "#bordered=true&titled=true";
+
+        return view('modulos.cnconstituyente.reportes', compact('iframeUrl'));
     }
 }

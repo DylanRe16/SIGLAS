@@ -16,7 +16,7 @@ class ModulosFilter implements FilterInterface
                 return false;
             }
         }
-        if (isset($item['url']) && $item['url'] === '/ccombatiente/reportes') {
+        if (isset($item['url']) && $item['url'] === '/ccombatiente/reporte') {
             // Depuración: muestra el path actual
             //dd(request()->path());
             // El código siguiente no se ejecutará por el dd()

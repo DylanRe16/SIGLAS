@@ -948,10 +948,16 @@
                 <div class="row fs-6 mb-4">
                     <div class="col-md-4">
                         <div class="link-secondary">Tipo de trabajador</div>
-                        <select name="tipo_trabajador" id="tipo_trabajador" class="form-select">
+                        <select id="tipo_trabajador" class="form-select" disabled>
                             <option value="">Seleccione</option>
                             @foreach ($tipo_trabajo as $trabajador)
-                            <option value="{{ $trabajador->ncodigo }}" @selected(old('tipo_trabajador', $persona->id_tipo_trabajador ?? '') == $trabajador->ncodigo)>{{ $trabajador->sdescripcion }}</option>
+                            <option value="{{ $trabajador->ncodigo }}" @selected(old('tipo_trabajador', $persona->tipo_trabajador_ncodigo ?? '') == $trabajador->ncodigo)>{{ $trabajador->sdescripcion }}</option>
+                            @endforeach
+                        </select>
+                        <select name="tipo_trabajador" class="form-select" data-selected="{{ old('tipo_trabajador', $persona->tipo_trabajador_ncodigo ?? '') }}" hidden>
+                            <option value="">Seleccione</option>
+                            @foreach ($tipo_trabajo as $trabajador)
+                            <option value="{{ $trabajador->ncodigo }}" @selected(old('tipo_trabajador', $persona->tipo_trabajador_ncodigo ?? '') == $trabajador->ncodigo)>{{ $trabajador->sdescripcion }}</option>
                             @endforeach
                         </select>
                         @error('tipo_trabajador')

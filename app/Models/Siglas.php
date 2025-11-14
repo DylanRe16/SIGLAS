@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Minpptrassi\Public\Rol;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,7 @@ class Siglas extends Authenticatable
     protected $connection = 'bd4'; // Conexión a la base de datos
 
     protected $table = 'personales'; // Nombre de la tabla en la base de datos
-    protected $primaryKey = 'id'; // Clave primaria de la tabla
+    protected $primaryKey = 'cedula'; // Clave primaria de la tabla
     public $timestamps = false; // Desactivar los timestamps automáticos
 
     protected $fillable = [
@@ -106,4 +107,9 @@ class Siglas extends Authenticatable
         'srif2',
         'sclave',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Rol::class, 'personales_rol', 'personales_cedula', 'rol_id')->wherePivot('nenabled', '1');
+    }
 }

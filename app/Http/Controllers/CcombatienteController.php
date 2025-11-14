@@ -258,7 +258,7 @@ class CcombatienteController extends Controller
             'ubicacion_estado' => 'required',
             'ubicacion_fisica' => 'required',
             'cargo_ejerce' => 'required',
-            'tipo_trabajador' => 'required',
+            //   'tipo_trabajador' => 'required',
             'ente_trabajador' => 'required',
         ], [
             'ndocumento2.required' => 'El número de documento es obligatorio y debe tener entre 6 y 9 dígitos.',
@@ -321,7 +321,7 @@ class CcombatienteController extends Controller
             'cargo_ejerce.string' => 'El Cargo o puesto de trabajo que ejerce debe ser una cadena de texto.',
             'cargo_ejerce.max' => 'El Cargo o puesto de trabajo que ejerce no debe exceder los 255 caracteres.',
             'id_estado_civil.required' => 'El estado civil es obligatorio.',
-            'tipo_trabajador.required' => 'El tipo de trabajador es obligatorio.',
+            // 'tipo_trabajador.required' => 'El tipo de trabajador es obligatorio.',
             'ente_trabajador.required' => 'El Ente de Procedencia es obligatorio.',
             'ente_trabajador.string' => 'El Ente de Procedencia debe ser una cadena de texto.',
             'ente_trabajador.max' => 'El Ente de Procedencia no debe exceder los 255 caracteres.',

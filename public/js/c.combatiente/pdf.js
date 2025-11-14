@@ -566,3 +566,73 @@ document.getElementById("btnImprimir6").addEventListener("click", async () => {
     // === DESCARGA ===
     pdf.save("reporte-ente-procedencia.pdf");
 });
+document.getElementById("btnImprimir7").addEventListener("click", async () => {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+    });
+
+    // CONFIGURACIÓN
+    const logoUrl = "../img/cintillo_mpppst_documentos_g3302.png";
+    const fecha = new Date();
+    const fechaFormateada = fecha.toLocaleDateString("es-VE", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+    const horaFormateada = fecha.toLocaleTimeString("es-VE", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+    });
+
+    // === 1. OBTENER IMAGEN DE LA GRÁFICA ===
+    const canvas = document.getElementById("myChart7");
+
+    // 🔥 MÉTODO SEGURO con Chart.js
+    // Si tienes chartInstance:
+    // const imgData = chart7.toBase64Image();
+
+    // 🔥 MÉTODO SEGURO sin chartInstance
+    const imgData = canvas.toDataURL("image/png", 1.0);
+
+    // === 2. CARGA DEL LOGO ===
+    const img = new Image();
+    img.src = logoUrl;
+    await img.decode();
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    // LOGO
+    pdf.addImage(img, "PNG", 10, 5, 200, 0);
+
+    // Línea divisoria
+    pdf.setDrawColor(0, 122, 204);
+    pdf.setLineWidth(0.8);
+    pdf.line(10, 27, pageWidth - 10, 27);
+
+    // === GRÁFICA ===
+    const imgWidth = 160;
+    const imgHeight = (canvas.height / canvas.width) * imgWidth;
+    const posX = (pageWidth - imgWidth) / 2;
+
+    pdf.addImage(imgData, "PNG", posX, 40, imgWidth, imgHeight);
+
+    // PIE DE PÁGINA
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(10);
+    pdf.text(
+        `Fecha: ${fechaFormateada} - ${horaFormateada}`,
+        15,
+        pageHeight - 7
+    );
+    pdf.text(`Página 1 de 1`, pageWidth - 15, pageHeight - 7, {
+        align: "right",
+    });
+
+    // Guardar PDF
+    pdf.save("reporte-comunas.pdf");
+});

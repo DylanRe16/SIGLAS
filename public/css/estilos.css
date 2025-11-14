@@ -37,12 +37,12 @@ footer {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.25) !important;
 }
 /* Oculta el menú si no estás en la ruta ccombatiente */
-/* .opciones-ccombatiente {
+.opciones-ccombatiente {
     display: none !important;
 }
 body.page-ccombatiente .opciones-ccombatiente {
     display: block !important;
-} */
+} /* */
 /* body{
     background-color: azure;
     background-image: url(../imagenes/login.png);
@@ -51,7 +51,7 @@ body.page-ccombatiente .opciones-ccombatiente {
     background-position: center;
     background-attachment: fixed;
 } */
-.form-control, .form-select {
+.form-control {
     transition: all 0.4s ease;
     border: none; /* Elimina todos los bordes */
     border-bottom: 1px solid #007bff; /* Agrega un borde inferior sólido */
