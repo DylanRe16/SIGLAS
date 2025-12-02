@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <canvas id="myChart" width="400" height="400"></canvas>
+                    <canvas id="myChart" width="400" height="400" style="width: 400px; height: 400px !important;"></canvas>
                     <div class="text-end">
                         <button id="btnImprimir" class="btn btn-primary">
                             <i class="fas fa-file-pdf"></i> Descargar Reporte PDF
@@ -228,15 +228,13 @@
     const cantidadINPSASEL = @json($cantidadINPSASEL);
     const cantidadINCES = @json($cantidadINCES);
     const cantidadTSS = @json($cantidadTSS);
-    const cantidadINCRET = @json($cantidadINCRET);
     const totalPersonasEnte = @json($totalPersonasEnte);
- 
+
     const labelsEnte = [
         `MPPPST (${cantidadMPPPST})`,
         `INPSASEL (${cantidadINPSASEL})`,
         `INCES (${cantidadINCES})`,
-        `TSS (${cantidadTSS})`,
-        `INCRET (${cantidadINCRET})`
+        `TSS (${cantidadTSS})`
     ];
 
     const valoresEnte = [
@@ -253,75 +251,80 @@
 
     const labelsConCantidad = datosComuna.map(c => `${c.comuna} (${c.cantidad})`);
 
-       //Reporte por milicia 
-    const cantidadMilicia = @json($miliciasi);
-    const cantidadNoMilicia = @json($milicano);
-    const labelsMilicia = [
-        `Con Milicia (${cantidadMilicia})`,
-        `Sin Milicia (${cantidadNoMilicia})`
-    ];
-    const totalMilicia = cantidadMilicia + cantidadNoMilicia;
-    const valoresMilicia = [cantidadMilicia, cantidadNoMilicia];
-    //Reporte por Rango
-    const datosRango = @json($cantidadRangos);
-    const labelsRango = datosRango.map(r => `${r.rango_militancia} (${r.cantidad})`);
-    const valoresRango = datosRango.map(r => r.cantidad);
-    const totalRango = valoresRango.reduce((acc, val) => acc + val, 0);
-
     //Definimos las graficas    
     const ctx = document.getElementById('myChart');
+
     const ctx2 = document.getElementById('myChart2');
     const ctx3 = document.getElementById('myChart3');
     const ctx4 = document.getElementById('myChart4');
     const ctx5 = document.getElementById('myChart5');
     const ctx6 = document.getElementById('myChart6');
     const ctx7 = document.getElementById('myChart7');
-    const ctx8 = document.getElementById('myChart8');
-    const ctx9 = document.getElementById('myChart9');
     //Creamos las graficas
+const textoAbajoPlugin = {
+    id: 'textoAbajoPlugin',
+    afterDraw(chart, args, options) {
+        const { ctx, chartArea: { bottom, left, right } } = chart;
+
+        ctx.save();
+        ctx.font = '16px Arial';
+       ctx.fillStyle = '#6c757d';
+        ctx.textAlign = 'center';
+        ctx.padding = '10px';
+        ctx.textBaseline = 'bottom';
+
+
+        // Texto centrado debajo de la gráfica
+        ctx.fillText(options.texto, (left + right) / 2, bottom + 40);
+
+        ctx.restore();
+    }
+};
 
     if (ctx && labels.length > 0) {
+   // ctx.canvas.style.height = "400px";
         new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: labelssexo,
-                datasets: [{
-                    label: 'Cantidad de Personas',
-                    totalPersona,
-                    data: [mujeres, hombres],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(54, 162, 235, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(153, 102, 255, 0.6)',
-                        'rgba(255, 159, 64, 0.6)'
-                    ],
-                    borderColor: 'rgba(0,0,0,0.2)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Relación del Cuerpo Combatiente por Sexo Total de Registros: (' + totalPersona + ')',
-                        font: {
-                            size: 20
-                        }
-                    },
-                    legend: {
-                        position: 'bottom'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+    type: 'pie',
+    data: {
+        labels: labelssexo,
+        datasets: [{
+            label: 'Cantidad de Personas',
+            totalPersona,
+            data: [mujeres, hombres],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)'
+            ],
+            borderColor: 'rgba(0,0,0,0.2)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+    responsive: true,
+    aspectRatio: 1, // Más espacio vertical
+    plugins: {
+        legend: { position: 'bottom' },
+        title: {
+            display: true,
+            text: 'Relación del Cuerpo Combatiente por Sexo',
+            font: {
+                size: 20
             }
-        });
+        },
+        textoAbajoPlugin: {
+            texto: "Total de registros: " + totalPersona,
+            marginTop: 20
+        }
+    },
+    layout: {
+        padding: {
+            bottom: 50 // espacio garantizado
+        }
+    }
+},
+    plugins: [textoAbajoPlugin]
+});
+
     }
     if (ctx2) {
         new Chart(ctx2, {
@@ -571,83 +574,6 @@
             }
         });
 
-    } else {
-        console.warn('⚠️ No hay datos o no se encontró el canvas.');
-    }
-    if (ctx8) {
-        new Chart(ctx8, {
-            type: 'doughnut',
-            data: {
-                labels: labelsMilicia,
-                datasets: [{
-                    label: 'Personas',
-                    data: valoresMilicia,
-                    backgroundColor: [
-                        'rgba(255, 159, 64, 0.6)', // naranja
-                        'rgba(54, 162, 235, 0.6)' // azul
-                    ],
-                    borderColor: 'rgba(255,255,255,1)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Relación del Cuerpo Combatiente por Milicia Total de Registros: (' + totalMilicia + ')',
-                        font: {
-                            size: 20
-                        }
-                    },
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-    } else {
-        console.warn('⚠️ No se encontró el canvas para milicia.');
-    }
-    if (ctx9 && labelsRango.length > 0) {
-        new Chart(ctx9, {
-            type: 'bar',
-            data: {
-                labels: labelsRango,
-                datasets: [{
-                    label: 'Cantidad de Personas por Rango',
-                    data: valoresRango,
-                    backgroundColor: 'rgba(153, 102, 255, 0.6)',
-                    borderColor: 'rgba(0,0,0,0.2)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                                indexAxis: 'y',
-
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: `Relación del Cuerpo Combatiente por Rango Total de Registros: (${totalRango})`,
-                        font: {
-                            size: 20
-                        }
-                    },
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                }
-            }
-        });
     } else {
         console.warn('⚠️ No hay datos o no se encontró el canvas.');
     }

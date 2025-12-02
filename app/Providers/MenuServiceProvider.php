@@ -7,8 +7,6 @@ use App\Models\Minpptrassi\Public\Opcion as PublicOpcion;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Modulo;
-use App\Models\Opcion;
 
 class MenuServiceProvider extends ServiceProvider
 {
@@ -23,7 +21,8 @@ class MenuServiceProvider extends ServiceProvider
             $roles = $user->roles->pluck('id');
 
             // Obtener módulos habilitados (senabled = 1)
-            $modulos = PublicModulo::where('senabled', 1)->get();
+            $modulos = PublicModulo::where('senabled', 1)->where('bsiglas2', true)->get();
+            return $modulos;
 
             foreach ($modulos as $modulo) {
 

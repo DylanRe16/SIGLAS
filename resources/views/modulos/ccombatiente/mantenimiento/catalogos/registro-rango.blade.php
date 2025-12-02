@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <div class="link-secondary">
-                <h4 class="font-weight-bold">Mantenimiento > Catálogos > Registro Miliciano</h4>
+                <h4 class="font-weight-bold">Mantenimiento > Catálogos > Rango</h4>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
@@ -17,7 +17,7 @@
 
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title font-weight-bold">Registro Miliciano</h3>
+            <h3 class="card-title font-weight-bold">Rango</h3>
 
             <div class="card-tools">
                 <!-- This will cause the card to maximize when clicked -->
@@ -31,7 +31,7 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <form action="{{ isset($editRegistro) ? route('registro-miliciano-editar', $editRegistro->id_registro_miliciano) : route('registro-miliciano-crear') }}" method="POST">
+            <form action="{{ isset($editRegistro) ? route('registro-rango-editar', $editRegistro->id_rango) : route('registro-rango-crear') }}" method="POST">
                 @csrf
                 @if(isset($editRegistro))
                 @method('PUT')
@@ -39,9 +39,9 @@
                 <div class="row fs-6 d-flex align-items-end mb-4">
                     <div class="col-md-10">
                         <div class="link-secodary">
-                            Información del Registro Miliciano <span class="requerido">*</span>
+                            Información del Rango <span class="requerido">*</span>
                         </div>
-                        <input type="text" tabindex="9" class="form-control" placeholder="Ingrese la información del Registro Miliciano" name="registro_miliciano" id="registro_miliciano" value="{{ old('registro_miliciano', isset($editRegistro) ? $editRegistro->sdescripcion : '') }}" required>
+                        <input type="text" tabindex="9" class="form-control" placeholder="Ingrese la información del Rango" name="rango" id="rango" value="{{ old('rango', isset($editRegistro) ? $editRegistro->sdescripcion : '') }}" required>
                     </div>
                     <div class="col-md-2  d-flex justify-content-center">
                         <button id="btnRegistrarComuna" class="btn btn-primary" type="submit"> {{ isset($editRegistro) ? 'Actualizar' : 'Agregar' }}</button>
@@ -53,7 +53,7 @@
     </div>
     <div class="card card-light">
         <div class="card-header">
-            <h3 class="card-title font-weight-bold">Tabla de Registro Miliciano</h3>
+            <h3 class="card-title font-weight-bold">Tabla de Rango</h3>
 
             <div class="card-tools">
                 <!-- This will cause the card to maximize when clicked -->
@@ -82,8 +82,8 @@
                             <td class="text-center" style="width: 5%;">{{ $loop->iteration }}</td>
                             <td class="text-left">{{ $registro->sdescripcion }}</td>
                             <td class="text-center" style="width: 15%;">
-                                <a href="{{ route('registro-miliciano-editar', ['id' => $registro->id_registro_miliciano]) }}" class="btn btn-sm btn-primary">Editar</a>
-                                <a href="{{ route('registro-miliciano-eliminar', ['id' => $registro->id_registro_miliciano]) }}" class="btn btn-sm btn-danger">Eliminar</a>
+                                <a href="{{ route('registro-rango-editar', ['id' => $registro->id_rango]) }}" class="btn btn-sm btn-primary">Editar</a>
+                                <a href="{{ route('registro-rango-eliminar', ['id' => $registro->id_rango]) }}" class="btn btn-sm btn-danger">Eliminar</a>
                             </td>
                         </tr>
                         @endforeach

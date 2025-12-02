@@ -13,6 +13,9 @@ use App\Models\Ccombatiente;
 use App\Models\Personales;
 use App\Models\RegistroMiliciano;
 use App\Models\Comunas;
+use App\Models\Rango;
+use App\Models\Minpptrassi\Public\Rol;
+use App\Models\Minpptrassi\Public\Modulo;
 
 use Carbon\Carbon;
 
@@ -55,13 +58,14 @@ class CcombatienteController extends Controller
         $id_grupo_sanguineo = DB::connection('bd4')->table('grupo_sanguineo')->where('nenabled', 1)->get();
         $tipo_trabajo = DB::connection('bd4')->table('tipo_trabajador')->where('nenabled', 1)->get();
         $cargos = DB::connection('bd4')->table('cargos')->where('nenabled', 1)->get();
+        $rangos = Rango::where('benabled', true)->get();
 
 
         $cod_moviles = DB::connection('bd2')->table('tb_codigos_telefonicos')->where('btipo', true)->get();
         $cod_locales = DB::connection('bd2')->table('tb_codigos_telefonicos')->where('btipo', false)->get();
         $t_discapacidad = DB::connection('bd2')->table('tb_tipo_discapacidad')->get();
 
-        return compact('estados', 'municipios', 'parroquias',  'registro_miliciano', 'cod_moviles', 'cod_locales', 't_discapacidad', 'id_grupo_sanguineo', 'tipo_trabajo', 'cargos', 'comunas');
+        return compact('estados', 'municipios', 'parroquias',  'registro_miliciano', 'cod_moviles', 'cod_locales', 't_discapacidad', 'id_grupo_sanguineo', 'tipo_trabajo', 'cargos', 'comunas', 'rangos');
     }
 
     //
@@ -244,6 +248,10 @@ class CcombatienteController extends Controller
             'ndireccion' => 'required|string|max:255',
             'comuna' => 'required',
             'bdiscapacidad' => 'required|in:0,1',
+            'benfermedad_cronica' => 'required|in:0,1',
+            'senfermedad_cronica_especifica' => 'nullable|string|max:255',
+            'btratamiento_medico' => 'required|in:0,1',
+            'stratamiento_medico_especifico' => 'nullable|string|max:255',
             'lateralidad' => 'required',
             'tsangre' => 'required',
             'talla_camisa' => 'required',
@@ -252,7 +260,7 @@ class CcombatienteController extends Controller
             'imilitar' => 'required',
             'registro_mimilitar' => 'required',
             'prestaste_servicio_militar' => 'required',
-            'nrango_militancia' => 'nullable|string|max:100',
+            'nrango_militancia' => 'nullable|numeric',
             'hijos' => 'required|in:0,1',
             'nhijos' => 'nullable|numeric',
             'ubicacion_estado' => 'required',
@@ -300,6 +308,14 @@ class CcombatienteController extends Controller
             'comuna.required' => 'La comuna o Circuito Comunal es obligatoria.',
             'bdiscapacidad.required' => 'La discapacidad es obligatoria.',
             'bdiscapacidad.in' => 'La discapacidad debe ser 0 (No) o 1 (Si).',
+            'benfermedad_cronica.required' => 'La enfermedad crónica es obligatoria.',
+            'benfermedad_cronica.in' => 'La enfermedad crónica debe ser 0 (No) o 1 (Si).',
+            'senfermedad_cronica_especifica.string' => 'La enfermedad crónica especifica debe ser una cadena de texto.',
+            'senfermedad_cronica_especifica.max' => 'La enfermedad crónica especifica no debe exceder los 255 caracteres.',
+            'btratamiento_medico.required' => 'El tratamiento médico es obligatorio.',
+            'btratamiento_medico.in' => 'El tratamiento médico debe ser 0 (No) o 1 (Si).',
+            'stratamiento_medico_especifico.string' => 'El tratamiento médico especifico debe ser una cadena de texto.',
+            'stratamiento_medico_especifico.max' => 'El tratamiento médico especifico no debe exceder los 255 caracteres.',
             'lateralidad.required' => 'La lateralidad es obligatoria.',
             'lateralidad.in' => 'La lateralidad debe ser D (Diestro) o Z (Zurdo).',
             'tsangre.required' => 'El tipo de sangre es obligatorio.',
@@ -308,7 +324,6 @@ class CcombatienteController extends Controller
             'talla_zapato.required' => 'La talla del zapato es obligatoria.',
             'imilitar.required' => 'La inscripción militar es obligatoria.',
             'registro_mimilitar.required' => 'El registro como miliciano es obligatorio.',
-            'nrango_militancia.string' => 'El rango de militancia debe ser una cadena de texto.',
             'prestaste_servicio_militar.required' => 'El prestaste servicio militar es obligatorio.',
             'hijos.required' => 'La cantidad de hijos es obligatoria.',
             'hijos.in' => 'La cantidad de hijos debe ser 0 (No) o 1 (Si).',
@@ -349,23 +364,28 @@ class CcombatienteController extends Controller
         $spunto_referencia = $request->punto_referencia;
         $id_comuna_circuito = $request->comuna;
         $btiene_discapacidad = $request->bdiscapacidad;
-        $id_tipo_discapacidad = $request->id_tdiscapacidad ?? null;
-        $id_grado_discapacidad = $request->grado_discapacidad ?? null;
-        $sdicapacidad_especifique = $request->sdicapacidad_especifica ?? null;
+        $id_tipo_discapacidad = $request->id_tdiscapacidad;
+        $id_grado_discapacidad = $request->grado_discapacidad;
+        $sdicapacidad_especifique = $request->sdicapacidad_especifica;
         $bcertificado_conapdis = $request->bcertificado_conapdis ?? 0;
-        $ncodigo_conapdis = $request->nnum_certificado ?? null;
+        $ncodigo_conapdis = $request->nnum_certificado;
+        $benfermedad_cronica = $request->benfermedad_cronica;
+        $senfermedad_cronica_especifica = $request->senfermedad_cronica_especifica;
+        $btratamiento_medico = $request->btratamiento_medico;
+        $stratamiento_medico_especifico = $request->stratamiento_medico_especifico;
         $slateralidad = $request->lateralidad;
         $id_grupo_sanguineo = $request->tsangre;
         $stalla_camisa = $request->talla_camisa;
         $stalla_pantalon = $request->talla_pantalon;
         $ntalla_zapato = $request->talla_zapato;
         $binscripcion_militar = $request->imilitar;
-        $nnumero_inscripcion_militar = $request->registro_mimilitar ?? null;
-        $id_registro_miliciano = $request->id_registro_miliciano ?? null;
+        $nnumero_inscripcion_militar = $request->registro_mimilitar;
+        $id_registro_miliciano = $request->id_registro_miliciano;
+
         $bservicio_militar = $request->prestaste_servicio_militar;
-        $srango_militancia = $request->srango_militancia ?? null;
+        $srango_militancia = $request->nrango_militancia;
         $btiene_hijos = $request->hijos;
-        $ncant_hijos_menores = $request->nhijos ?? null;
+        $ncant_hijos_menores = $request->nhijos;
         $subicacion_administrativa = $request->ubicacion;
         $id_ciudad = $request->ubicacion_estado;
         $subicacion_fisica = $request->ubicacion_fisica;
@@ -373,7 +393,7 @@ class CcombatienteController extends Controller
         $id_tipo_trabajador = $request->tipo_trabajador;
         $id_ente = $request->ente_trabajador;
         $benabled = 1;
-        $nusuario_creacion = Auth::user()->id_persona ?? 1; // o el ID de usuario actual
+        $nusuario_creacion = Auth::user()->id_persona; // o el ID de usuario actual
         $dfecha_creacion = now();
         $ncod_cargo_titular = $request->cargo_titular;
 
@@ -405,6 +425,7 @@ class CcombatienteController extends Controller
             'sdicapacidad_especifique' => $sdicapacidad_especifique,
             'bcertificado_conapdis' => $bcertificado_conapdis,
             'ncodigo_conapdis' => $ncodigo_conapdis,
+
             'slateralidad' => $slateralidad,
             'id_grupo_sanguineo' => $id_grupo_sanguineo,
             'stalla_camisa' => $stalla_camisa,
@@ -414,7 +435,7 @@ class CcombatienteController extends Controller
             'nnumero_inscripcion_militar' => $nnumero_inscripcion_militar,
             'id_registro_miliciano' => $id_registro_miliciano,
             'bservicio_militar' => $bservicio_militar,
-            'srango_militancia' => $srango_militancia,
+            'id_rango' => $srango_militancia,
             'btiene_hijos' => $btiene_hijos,
             'ncant_hijos_menores' => $ncant_hijos_menores,
             'subicacion_administrativa' => $subicacion_administrativa,
@@ -427,13 +448,90 @@ class CcombatienteController extends Controller
             'nusuario_creacion' => $nusuario_creacion,
             'dfecha_creacion' => $dfecha_creacion,
             'ncod_cargo_titular' => $ncod_cargo_titular,
+            'bcondicion_salud' => $benfermedad_cronica,
+            'scondicion_salud' => $senfermedad_cronica_especifica,
+            'btratamiento_med' => $btratamiento_medico,
+            'stratamiento_med' => $stratamiento_medico_especifico,
         ]);
 
         $persona->save();
         $data = $this->cosas();
 
 
-        session()->flash('success', '¡Se ha registrado exitosamente!');
-        return view('modulos.ccombatiente.registrar', $data);
+        ///session()->flash('success', '¡Se ha registrado exitosamente!');
+        return redirect()->route('ccombatiente-registrar')->with('success', '¡Se ha registrado exitosamente!');
+    }
+    public function roles()
+    {
+        $id_modulo = Modulo::where('sdescripcion', 'CUERPO COMBATIENTE')->first()->id;
+        $roles = Rol::where('nenabled', true)->where('modulo_id', $id_modulo)->get();
+
+        return $roles;
+    }
+    public function usuarios()
+    {
+        $roles = $this->roles();
+        return view('modulos.ccombatiente.mantenimiento.usuarios', compact('roles'));
+    }
+
+    public function asignarRoles(Request $request)
+    {
+        $validatedData = $request->validate([
+            'documento_usuario' => 'required|string',
+            'id_rol' => 'required',
+            'id_rol.*' => 'string',
+        ]);
+        $persona = Personales::where('cedula', $request->documento_usuario)->first();
+        if (!$persona) {
+            return redirect()->back()->with('error', 'Persona no encontrada.');
+        } else {
+            $verificar_roles = $persona->roles()
+                ->whereIn('personales_rol.rol_id', (array)$request->id_rol)
+                ->pluck('personales_rol.rol_id')
+                ->toArray();
+            if (!empty($verificar_roles)) {
+                return redirect()->back()->with('error', 'La persona ya tiene asignado uno o más de los roles seleccionados.');
+            }
+            $roles = $this->roles()->pluck('id')->toArray();
+            $inhabilitar_rol_anterior = $persona->roles()->whereIn('rol_id', $roles)->update(['nenabled' => 0]);
+            $rolesRequest = $request->id_rol;        // Arreglo de roles enviados
+            $documento = $request->documento_usuario;
+            $nusuario_creacion = Auth::user()->id_persona;
+            $dfecha_creacion = now();
+
+
+            // Verificar si existe la relación
+            $existe = $persona->roles()
+                ->where('rol_id', $rolesRequest)
+                ->first();
+
+            if ($existe) {
+                // Ya existe → habilitarlo / actualizar
+                $persona->roles()->updateExistingPivot($rolesRequest, [
+                    'nenabled' => 1,
+                    'nusuario_modificacion' => $nusuario_creacion,
+                    'dfecha_modificacion' => $dfecha_creacion,
+                ]);
+            } else {
+                // No existe → insertar
+                $persona->roles()->attach($rolesRequest, [
+                    'personales_cedula' => $documento,
+                    'nenabled' => 1,
+                    'nusuario_creacion' => $nusuario_creacion,
+                    'dfecha_creacion' => $dfecha_creacion,
+                ]);
+            }
+
+
+
+
+            return redirect()->route('ccombatiente-mantenimiento-usuarios')->with('success', '¡Se ha registrado exitosamente!');
+        }
+    }
+
+    public function desasignarRoles(Request $request)
+    {
+        $persona = Personales::where('cedula', $request->documento_usuario)->first();
+        $persona->roles()->detach($request->roles);
     }
 }

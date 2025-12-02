@@ -13,7 +13,7 @@ class Rol extends Model
 
     public function opciones()
     {
-        return $this->belongsToMany(Opcion::class, 'rolopcion', 'rol_id', 'opcion_id');
+        return $this->belongsToMany(Opcion::class, 'rolopcion', 'rol_id', 'opcion_id')->where('bsiglas2', true);
     }
 
     public function usuarios()

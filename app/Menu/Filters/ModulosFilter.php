@@ -16,6 +16,7 @@ class ModulosFilter implements FilterInterface
                 return false;
             }
         }
+
         if (isset($item['url']) && $item['url'] === '/ccombatiente/reporte') {
             // Depuración: muestra el path actual
             //dd(request()->path());
@@ -24,6 +25,7 @@ class ModulosFilter implements FilterInterface
                 return false;
             }
         }
+
         if (isset($item['url']) && $item['url'] === '#ccombatiente-mantenimiento') {
             // Depuración: muestra el path actual
             //dd(request()->path());
@@ -32,6 +34,7 @@ class ModulosFilter implements FilterInterface
                 return false;
             }
         }
+
         if (isset($item['url']) && $item['url'] === '/ccombatiente/ayuda') {
             // Depuración: muestra el path actual
             //dd(request()->path());
@@ -42,5 +45,6 @@ class ModulosFilter implements FilterInterface
         }
 
         return $item;
+
     }
 }

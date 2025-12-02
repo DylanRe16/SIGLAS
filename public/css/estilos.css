@@ -37,12 +37,12 @@ footer {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.25) !important;
 }
 /* Oculta el menú si no estás en la ruta ccombatiente */
-.opciones-ccombatiente {
+/* .opciones-ccombatiente {
     display: none !important;
 }
 body.page-ccombatiente .opciones-ccombatiente {
     display: block !important;
-} /* */
+}  */
 /* body{
     background-color: azure;
     background-image: url(../imagenes/login.png);

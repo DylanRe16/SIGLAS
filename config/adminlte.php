@@ -196,7 +196,7 @@ return [
     |
     */
 
-    'classes_body' => '',
+'classes_body' => 'sidebar-collapse',
     'classes_brand' => 'bg-primary',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -221,9 +221,9 @@ return [
     */
 
     'sidebar_mini' => 'lg',
-    'sidebar_collapse' => false,
+    'sidebar_collapse' => true,
     'sidebar_collapse_auto_size' => false,
-    'sidebar_collapse_remember' => false,
+    'sidebar_collapse_remember' => true,
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
@@ -431,27 +431,20 @@ return [
                             'icon' => 'fas fa-fw',
                         ],
                         [
-                            'text' => 'Registro miliciano',
-                            'url'  => '/ccombatiente/mantenimiento/catalogos/registro-miliciano',
+                            'text' => 'Rango',
+                            'url'  => '/ccombatiente/mantenimiento/catalogos/registro-rango',
                             'icon' => 'fas fa-fw',
                         ],
                     ],
                 ],
                 [
                     'text' => 'Usuarios',
-                    'url'  => '/ccombatiente/catalogos/usuarios',
+                    'url'  => '/ccombatiente/mantenimiento/usuarios',
                     'icon' => 'fas fa-fw',
                 ],
             ]
         ],
-        [
-            'text' => 'Ayuda',
-            'url' => '/ccombatiente/ayuda',
-            'topnav' => true,
-
-            // 'icon' => 'fas fa-fw fa-chart-pie',
-            'classes' => 'opciones-ccombatiente',
-        ],
+      
 
 
         /*  [
@@ -587,7 +580,7 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
+                    'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
                 ],
             ],

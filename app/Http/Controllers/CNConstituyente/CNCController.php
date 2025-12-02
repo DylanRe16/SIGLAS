@@ -113,6 +113,7 @@ class CNCController extends Controller{
         $METABASE_SITE_URL = "http://10.46.1.15:3000";
         $METABASE_SECRET_KEY = "6fc8a3b1fd09fe7668e7874400ed59593fa7031d11a913c59c82192a41b93528";
 
+        // mapa Venezuela (empresas)
         $payload = [
             "resource" => ["question" => 56],   // <--- ID de tu gráfica (mapa)
             "params"   => (object) [],
@@ -124,6 +125,60 @@ class CNCController extends Controller{
         $iframeUrl = $METABASE_SITE_URL . "/embed/question/" . $token .
             "#bordered=true&titled=true";
 
-        return view('modulos.cnconstituyente.reportes', compact('iframeUrl'));
+
+        // reporte a modo de tablas (empresas)
+        $payload1 = [
+            "resource" => ["question" => 61],   // <--- ID de tu gráfica (mapa)
+            "params"   => (object) [],
+            "exp"      => time() + (60 * 10)    // Expira en 10 minutos
+        ];
+
+        $token1 = JWT::encode($payload1, $METABASE_SECRET_KEY, 'HS256');
+
+        $iframeUrl1 = $METABASE_SITE_URL . "/embed/question/" . $token1 .
+            "#bordered=true&titled=true";
+
+
+        // reporte a modo de torta (empresas)
+        $payload2 = [
+            "resource" => ["question" => 53],   // <--- ID de tu gráfica (mapa)
+            "params"   => (object) [],
+            "exp"      => time() + (60 * 10)    // Expira en 10 minutos
+        ];
+
+        $token2 = JWT::encode($payload2, $METABASE_SECRET_KEY, 'HS256');
+
+        $iframeUrl2 = $METABASE_SITE_URL . "/embed/question/" . $token2 .
+            "#bordered=true&titled=true";
+
+
+        
+        // reporte a modo de torta (miembros)
+        $payload3 = [
+            "resource" => ["question" => 62],   // <--- ID de tu gráfica (mapa)
+            "params"   => (object) [],
+            "exp"      => time() + (60 * 10)    // Expira en 10 minutos
+        ];
+
+        $token3 = JWT::encode($payload3, $METABASE_SECRET_KEY, 'HS256');
+
+        $iframeUrl3 = $METABASE_SITE_URL . "/embed/question/" . $token3 .
+            "#bordered=true&titled=true";
+
+
+        // reporte a modo de torta (miembros)
+        $payload4 = [
+            "resource" => ["question" => 63],   // <--- ID de tu gráfica (mapa)
+            "params"   => (object) [],
+            "exp"      => time() + (60 * 10)    // Expira en 10 minutos
+        ];
+
+        $token4 = JWT::encode($payload4, $METABASE_SECRET_KEY, 'HS256');
+
+        $iframeUrl4 = $METABASE_SITE_URL . "/embed/question/" . $token4 .
+            "#bordered=true&titled=true";
+
+
+        return view('modulos.cnconstituyente.reportes', compact('iframeUrl', 'iframeUrl1', 'iframeUrl2', 'iframeUrl3', 'iframeUrl4'));
     }
 }

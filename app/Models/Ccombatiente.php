@@ -61,6 +61,11 @@ class Ccombatiente extends Model
         'benabled',
         'nusuario_creacion',
         'dfecha_creacion',
-        'ncod_cargo_titular'
+        'ncod_cargo_titular',
+        'id_rango',
+        'bcondicion_salud',
+        'scondicion_salud',
+        'btratamiento_med',
+        'stratamiento_med'
     ];
 }

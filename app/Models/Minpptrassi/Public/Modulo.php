@@ -13,6 +13,6 @@ class Modulo extends Model
 
 
     public function opciones(){
-        return $this->hasMany(Opcion::class, 'nmodulo', 'id')->where('nenabled', 1);
+        return $this->hasMany(Opcion::class, 'nmodulo', 'id')->where('senabled', 1)->where('bsiglas2', true);
     }
 }

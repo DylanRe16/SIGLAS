@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CcombatienteController;
 use App\Http\Controllers\ComunaController;
-use App\Http\Controllers\RegistroMilicianoController;
+use App\Http\Controllers\RangoController;
 use App\Http\Controllers\ReporteCCombatienteController;
 
 Route::middleware('auth')->group(function () {
@@ -20,13 +20,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/ccombatiente/mantenimiento/catalogos/comunas/actualizar/{id}', [ComunaController::class, 'edit'])->name('comuna-editar');
     Route::put('/ccombatiente/mantenimiento/catalogos/comunas/actualizar/{id}', [ComunaController::class, 'update'])->name('comuna-actualizar');
     Route::get('/ccombatiente/mantenimiento/catalogos/comunas/eliminar/{id}', [ComunaController::class, 'destroy'])->name('comuna-eliminar');
-    #CATALOGO REGISTRO MILICIANO
-    Route::get('/ccombatiente/mantenimiento/catalogos/registro-miliciano', [RegistroMilicianoController::class, 'index'])->name('ccombatiente-mantenimiento-catalogos-registro-miliciano');
+    #CATALOGO REGISTRO rango
+    Route::get('/ccombatiente/mantenimiento/catalogos/registro-rango', [RangoController::class, 'index'])->name('ccombatiente-mantenimiento-catalogos-registro-rango');
 
-    Route::post('/ccombatiente/mantenimiento/catalogos/registro-miliciano/crear', [RegistroMilicianoController::class, 'store'])->name('registro-miliciano-crear');
-    Route::get('/ccombatiente/mantenimiento/catalogos/registro-miliciano/actualizar/{id}', [RegistroMilicianoController::class, 'edit'])->name('registro-miliciano-editar');
-    Route::put('/ccombatiente/mantenimiento/catalogos/registro-miliciano/actualizar/{id}', [RegistroMilicianoController::class, 'update'])->name('registro-miliciano-actualizar');
-    Route::get('/ccombatiente/mantenimiento/catalogos/registro-miliciano/eliminar/{id}', [RegistroMilicianoController::class, 'destroy'])->name('registro-miliciano-eliminar');
+    Route::post('/ccombatiente/mantenimiento/catalogos/registro-rango/crear', [RangoController::class, 'store'])->name('registro-rango-crear');
+    Route::get('/ccombatiente/mantenimiento/catalogos/registro-rango/actualizar/{id}', [RangoController::class, 'edit'])->name('registro-rango-editar');
+    Route::put('/ccombatiente/mantenimiento/catalogos/registro-rango/actualizar/{id}', [RangoController::class, 'update'])->name('registro-rango-actualizar');
+    Route::get('/ccombatiente/mantenimiento/catalogos/registro-rango/eliminar/{id}', [RangoController::class, 'destroy'])->name('registro-rango-eliminar');
 
     #REGISTRAR COMBATIENTE
     Route::get('/ccombatiente/registrar', [CcombatienteController::class, 'show'])->name('ccombatiente-registrar');
@@ -34,4 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/ccombatiente/registrar/crear', [CcombatienteController::class, 'store'])->name('dato-personal-crear');
     Route::get('municipios/{estadoId}', [CcombatienteController::class, 'getMunicipios'])->name('getMunicipios');
     Route::get('parroquias/{municipioId}', [CcombatienteController::class, 'getParroquias'])->name('getParroquias');
+    #MANTENIMIENTO USUARIOS
+    Route::get('/ccombatiente/mantenimiento/usuarios', [CcombatienteController::class, 'usuarios'])->name('ccombatiente-mantenimiento-usuarios');
+    Route::post('/ccombatiente/mantenimiento/usuarios/asignar', [CcombatienteController::class, 'asignarRoles'])->name('ccombatiente.usuarios.asignar');
+    Route::post('/ccombatiente/mantenimiento/usuarios/desasignar', [CcombatienteController::class, 'desasignarRoles'])->name('ccombatiente.usuarios.desasignar');
 });

@@ -119,7 +119,8 @@
                 'ssexo',
                 'ubicacion',
                 'cargo_titular',
-                'ente_trabajador'
+                'ente_trabajador',
+                'tipo_trabajador'
 
             ];
 
@@ -546,7 +547,8 @@
                     <div class="col-md-4">
                         <div class="link-secondary">Municipio<span class="requerido">*</span></div>
                         <select class="form-control" name="id_municipio" id="municipio" data-parroquias-url="{{ url('parroquias') }}" data-selected="{{ old('id_municipio', $entidad->municipio ?? '') }}">
-                            <option value="-1" disabled selected>Seleccione el municipio</option>
+                            <option value="-1" disabled selected>Seleccione el muniSección III – Percepción sobre los temas tratados
+                                cipio</option>
 
                         </select>
                     </div>
@@ -574,7 +576,50 @@
 
 
 
+
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <div class="card card-light">
+            <div class="card-header">
+                <h3 class="card-title font-weight-bold">Datos Comunas</h3>
+
+                <div class="card-tools">
+                    <!-- This will cause the card to maximize when clicked -->
+                    <!--  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>-->
+                    <!-- This will cause the card to collapse when clicked -->
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                    <!-- This will cause the card to be removed when clicked -->
+                    <!-- <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>-->
+                </div>
+                <!-- /.card-tools -->
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row fs-6 mb-4">
                     <div class="col-md-12">
+                        <!--                         <div class="link-secondary"><span class="requerido">*</span></div> -->
+                        <div class="link-secondary">Consejo Comunal</div>
+                        <input type="text" name="consejo_comunal" id="consejo_comunal" class="form-control" value="{{ old('consejo_comunal') }}" placeholder="Nombre del Consejo Comunal">
+
+                    </div>
+                </div>
+                <br>
+                <div class="row fs-6">
+                    <div class="col-md-3">
+                        <div class="link-secondary" id="estado_text">Estado</div>
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="link-secondary" id="municipio_text">Municipio</div>
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="link-secondary" id="parroquia_text">Parroquia</div>
+                    </div>
+
+                    <div class="col-md-3">
                         <div class="link-secondary">Comuna o Circuito Comunal<span class="requerido">*</span></div>
                         <select name="comuna" id="comuna" class="form-select" data-selected="{{ old('comuna', $persona->id_comuna ?? '') }}">
                             <option value="">Seleccione</option>
@@ -585,12 +630,13 @@
                         @error('comuna')
                         <small class="text-danger">{{$message}}</small>
                         @enderror
+
                     </div>
                 </div>
             </div>
             <!-- /.card-body -->
         </div>
-        <div class="card card-light">
+        <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title font-weight-bold">Datos Adicionales</h3>
 
@@ -646,7 +692,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-4 fs-6 d-flex align-items-end" id="row_disc1" style="display=none;">
+                <div class="row fs-6 d-flex align-items-end" id="row_disc1" style="display=none;">
                     <div class="col-md-4 {{ old('bdiscapacidad', Auth::user()->bdiscapacidad) == 0 ? 'disc_container' : '' }}" id="tipo_discapacidad_container">
                         <div class="link-secondary">¿Tipo de discapacidad? <span class="requerido">*</span></div>
                         <select name="id_tdiscapacidad" id="id_tdiscapacidad" class="form-select">
@@ -682,6 +728,7 @@
                     </div>
                 </div>
 
+
                 <div class="row fs-6 d-flex align-items-end" id="row_disc2">
 
 
@@ -707,7 +754,45 @@
                     </div>
                 </div>
 
+                <div class="row fs-6 my-4">
+                    <div class="col-md-3">
+                        <div class="link-secondary">¿Tiene alguna condición de salud? <span class="requerido">*</span></div>
+                        <select name="benfermedad_cronica" id="benfermedad_cronica" class="form-select">
+                            <option value="">Seleccione</option>
+                            <option value="0" @selected(old('benfermedad_cronica'))>NO</option>
+                            <option value="1" @selected(old('benfermedad_cronica'))>SI</option>
+                        </select>
+                        @error('benfermedad_cronica')
+                        <small class="text-danger">{{$message}}</small>
+                        @enderror
+                    </div>
 
+                    <div class="col-md-3" id="especifique_enfermedad_container">
+                        <div class="link-secondary">Especifique <span class="requerido">*</span></div>
+                        <input type="text" name="senfermedad_cronica_especifica" id="senfermedad_cronica_especifica" class="form-control" value="{{ old('senfermedad_cronica_especifica') }}">
+                        @error('senfermedad_cronica_especifica')
+                        <small class="text-danger">{{$message}}</small>
+                        @enderror
+                    </div>
+                    <div class="col-md-3">
+                        <div class="link-secondary">¿Está bajo tratamiento médico? <span class="requerido">*</span></div>
+                        <select name="btratamiento_medico" id="btratamiento_medico" class="form-select">
+                            <option value="">Seleccione</option>
+                            <option value="0" @selected(old('btratamiento_medico'))>NO</option>
+                            <option value="1" @selected(old('btratamiento_medico'))>SI</option>
+                        </select>
+                        @error('btratamiento_medico')
+                        <small class="text-danger">{{$message}}</small>
+                        @enderror
+                    </div>
+                    <div class="col-md-3">
+                        <div class="link-secondary">Indique cual <span class="requerido">*</span></div>
+                        <input type="text" name="stratamiento_medico_especifico" id="stratamiento_medico_especifico" class="form-control" value="{{ old('stratamiento_medico_especifico') }}">
+                        @error('stratamiento_medico_especifico')
+                        <small class="text-danger">{{$message}}</small>
+                        @enderror
+                    </div>
+                </div>
                 <div class="row fs-6 my-4">
                     <div class="col-md-4">
                         <div class="link-secondary">Talla de Camisa <span class="requerido">*</span></div>
@@ -789,22 +874,21 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-4">
+                    <!-- <div class="col-md-4">
                         <div class="link-secondary">Nro. Inscripción Militar</div>
                         <input type="number" class="form-control" name="nnum_inscripcion_militar" placeholder="Indique su nro. de inscripción militar" value="{{ old('nnum_inscripcion_militar', $persona->ncodigo_inscripcion_militar ?? '' )}}">
                         @error('nnum_inscripcion_militar')
                         <small class="text-danger">{{$message}}</small>
                         @enderror
-                    </div>
+                    </div> -->
 
 
                     <div class="col-md-4">
-                        <div class="link-secondary">Se registro como miliciano <span class="requerido">*</span></div>
+                        <div class="link-secondary">¿Se alisto como miliciano?<span class="requerido">*</span></div>
                         <select name="registro_mimilitar" id="registro_mimilitar" class="form-select">
                             <option value="">Seleccione</option>
-                            @foreach($registro_miliciano as $registro_militar)
-                            <option value="{{ $registro_militar->id_registro_miliciano }}" @selected(old('registro_mimilitar', $persona->registro_mimilitar ?? '') == $registro_militar->id_registro_miliciano)>{{ $registro_militar->sdescripcion }}</option>
-                            @endforeach
+                            <option value="1" @selected(old('registro_mimilitar', $persona->sregistro_mimilitar ?? '') == '1')>Si</option>
+                            <option value="0" @selected(old('registro_mimilitar', $persona->sregistro_mimilitar ?? '') == '0')>No</option>
                         </select>
                         @error('registro_mimilitar')
                         <small class="text-danger">{{$message}}</small>
@@ -828,7 +912,13 @@
 
                     <div class="col-md-6">
                         <div class="link-secondary">Rango</div>
-                        <input type="text" class="form-control" name="nrango_militancia" placeholder="Indique su rango de militancia" value="{{old('nrango_militancia')}}">
+                       <!--  <input type="text" class="form-control" name="nrango_militancia" placeholder="Indique su rango de militancia" value="{{old('nrango_militancia')}}"> -->
+                        <select name="nrango_militancia" id="nrango_militancia" class="form-select">
+                            <option value="">Seleccione</option>
+                            @foreach($rangos as $rango)
+                            <option value="{{ $rango->id_rango }}" @selected(old('nrango_militancia'))>{{ $rango->sdescripcion }}</option>
+                            @endforeach
+                        </select>
                         @error('nrango_militancia')
                         <small class="text-danger">{{$message}}</small>
                         @enderror
@@ -863,7 +953,7 @@
             </div>
             <!-- /.card-body -->
         </div>
-        <div class="card card-primary">
+        <div class="card card-light">
             <div class="card-header">
                 <h3 class="card-title font-weight-bold">Datos Laborales</h3>
 
@@ -914,7 +1004,6 @@
                         @enderror
                     </div>
                 </div>
-
 
                 <div class="row fs-6 mb-4">
                     <div class="col-md-6">
@@ -1000,6 +1089,7 @@
                             <option value="TSS">
                                 TSS
                             </option>
+                            <option value="INCRET">INCRET</option>
                         </select>
                         @error('ente_trabajador')
                         <small class="text-danger">{{$message}}</small>
@@ -1068,6 +1158,86 @@
             $selectHijos.on('change', actualizarCampoHijos);
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            const $selectsalud = $('#benfermedad_cronica');
+            const $inputsalud = $('input[name="senfermedad_cronica_especifica"]');
+
+            function actualizarCampoSalud() {
+                const valor = $selectsalud.val();
+
+                if (valor === '0') {
+                    $inputsalud.val(''); // limpia el campo
+                    $inputsalud.prop('disabled', true); // deshabilita
+                } else if (valor === '1') {
+                    $inputsalud.prop('disabled', false); // habilita
+                } else {
+                    $inputsalud.val(''); // limpia si se elige "Seleccione"
+                    $inputsalud.prop('disabled', true);
+                }
+            }
+
+            // Ejecuta al cargar la página
+            actualizarCampoSalud();
+
+            // Ejecuta cada vez que cambie el select
+            $selectsalud.on('change', actualizarCampoSalud);
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            const $selecttratamiento = $('#btratamiento_medico');
+            const $inputtratamiento = $('input[name="stratamiento_medico_especifico"]');
+
+            function actualizarCampoTratamiento() {
+                const valor = $selecttratamiento.val();
+
+                if (valor === '0') {
+                    $inputtratamiento.val(''); // limpia el campo
+                    $inputtratamiento.prop('disabled', true); // deshabilita
+                } else if (valor === '1') {
+                    $inputtratamiento.prop('disabled', false); // habilita
+                } else {
+                    $inputtratamiento.val(''); // limpia si se elige "Seleccione"
+                    $inputtratamiento.prop('disabled', true);
+                }
+            }
+            // Ejecuta al cargar la página
+            actualizarCampoTratamiento();
+
+            // Ejecuta cada vez que cambie el select
+            $selecttratamiento.on('change', actualizarCampoTratamiento);
+        });
+    </script>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const selEstado = document.getElementById("estado");
+    const selMunicipio = document.getElementById("municipio");
+    const selParroquia = document.getElementById("parroquia");
+
+    const txtEstado = document.getElementById("estado_text");
+    const txtMunicipio = document.getElementById("municipio_text");
+    const txtParroquia = document.getElementById("parroquia_text");
+
+    // Estado → Div
+    selEstado.addEventListener("change", function() {
+        txtEstado.textContent = selEstado.options[selEstado.selectedIndex].text;
+    });
+
+    // Municipio → Div
+    selMunicipio.addEventListener("change", function() {
+        txtMunicipio.textContent = selMunicipio.options[selMunicipio.selectedIndex].text;
+    });
+
+    // Parroquia → Div
+    selParroquia.addEventListener("change", function() {
+        txtParroquia.textContent = selParroquia.options[selParroquia.selectedIndex].text;
+    });
+
+});
+</script>
+
     @endpush
 
 </main>

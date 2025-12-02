@@ -21,7 +21,8 @@ class ReporteCCombatienteController extends Controller
         $cantidadINPSASEL = Ccombatiente::where('id_ente', 'INPSASEL')->count();
         $cantidadINCES = Ccombatiente::where('id_ente', 'INCES')->count();
         $cantidadTSS = Ccombatiente::where('id_ente', 'TSS')->count();
-        $totalPersonasEnte = Ccombatiente::whereIn('id_ente', ['MPPPST', 'INPSASEL', 'INCES', 'TSS'])->count();
+        $cantidadINCRET = Ccombatiente::where('id_ente', 'INCRET')->count();
+        $totalPersonasEnte = Ccombatiente::whereIn('id_ente', ['MPPPST', 'INPSASEL', 'INCES', 'TSS', 'INCRET'])->count();
         $cantidadPersonaEntidad = Ccombatiente::select(
             DB::raw('COUNT(id_persona) AS cantidad'),
             DB::raw("COALESCE(enti.sdescripcion, 'POR DEFINIR') AS entidad_federal")
@@ -67,6 +68,19 @@ class ReporteCCombatienteController extends Controller
             ->groupBy('pers.id_comuna_circuito', 'comuna.sdescripcion')
             ->get();
 
+            $miliciasi = Ccombatiente::where('balisto_miliciano', true)->count();
+            $milicano = Ccombatiente::where('balisto_miliciano', false)->count();
+            $cantidadRangos = Ccombatiente::select(
+                DB::raw('COUNT(id_persona) AS cantidad'),
+                DB::raw("COALESCE(rango.sdescripcion, 'POR DEFINIR') AS rango_militancia")
+            )
+                ->from('cuerpo_combatiente.tb_persona as pers')
+                ->leftJoin('cuerpo_combatiente.tb_rango as rango', 'pers.id_rango', '=', 'rango.id_rango')
+                ->where('pers.benabled', true)->where('pers.id_rango', '!=', null)
+                ->groupBy('pers.id_rango', 'rango.sdescripcion')
+                ->get();
+                //return $cantidadRangos;
+
 
 
         return view('modulos.ccombatiente.reporte', compact(
@@ -78,11 +92,15 @@ class ReporteCCombatienteController extends Controller
             'cantidadINPSASEL',
             'cantidadINCES',
             'cantidadTSS',
+            'cantidadINCRET',
             'totalPersonasEnte',
             'cantidadPersonaEntidad',
             'cantidadEdades',
             'catidadPersonaTipoTrabajo',
             'cantidadComunas',
+            'miliciasi',
+            'milicano',
+            'cantidadRangos',
             'totalGeneral'
         ));
     }
