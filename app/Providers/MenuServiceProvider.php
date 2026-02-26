@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Minpptrassi\Public\Modulo as PublicModulo;
 use App\Models\Minpptrassi\Public\Opcion as PublicOpcion;
+use App\Models\PersonaRol;
 use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
@@ -17,12 +18,13 @@ class MenuServiceProvider extends ServiceProvider
             $user = Auth::user();
             if (!$user) return;
 
+            $roles_usuario = PersonaRol::where('personales_cedula', Auth::user()->cedula)->where('nenabled', 1)->pluck('rol_id');
+
             // Obtener roles del usuario
             $roles = $user->roles->pluck('id');
 
             // Obtener módulos habilitados (senabled = 1)
             $modulos = PublicModulo::where('senabled', 1)->where('bsiglas2', true)->get();
-            return $modulos;
 
             foreach ($modulos as $modulo) {
 
@@ -32,7 +34,7 @@ class MenuServiceProvider extends ServiceProvider
                     ->where('opcion.id', $modulo->opcion_id)
                     ->where('opcion.nnivel', 0)
                     ->where('opcion.nenabled', 1)
-                    ->whereIn('rolopcion.rol_id', $roles)
+                    ->whereIn('rolopcion.rol_id', $roles_usuario)
                     ->first();
 
                 if (!$opcion) continue;
@@ -40,7 +42,7 @@ class MenuServiceProvider extends ServiceProvider
                 // Agregar al menú (sin submenú)
                 $event->menu->add([
                     'text' => $modulo->sdescripcion,
-                    'url'  => $modulo->surl ?: '#',
+                    'url'  => $opcion->surl ?: '#',
                     'icon' => $modulo->slogo3 ?? $modulo->slogo ?? 'fas fa-folder',
                 ]);
             }

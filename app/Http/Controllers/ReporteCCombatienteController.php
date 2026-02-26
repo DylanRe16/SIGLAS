@@ -68,19 +68,20 @@ class ReporteCCombatienteController extends Controller
             ->groupBy('pers.id_comuna_circuito', 'comuna.sdescripcion')
             ->get();
 
-            $miliciasi = Ccombatiente::where('balisto_miliciano', true)->count();
-            $milicano = Ccombatiente::where('balisto_miliciano', false)->count();
-            $cantidadRangos = Ccombatiente::select(
-                DB::raw('COUNT(id_persona) AS cantidad'),
-                DB::raw("COALESCE(rango.sdescripcion, 'POR DEFINIR') AS rango_militancia")
-            )
-                ->from('cuerpo_combatiente.tb_persona as pers')
-                ->leftJoin('cuerpo_combatiente.tb_rango as rango', 'pers.id_rango', '=', 'rango.id_rango')
-                ->where('pers.benabled', true)->where('pers.id_rango', '!=', null)
-                ->groupBy('pers.id_rango', 'rango.sdescripcion')
-                ->get();
-                //return $cantidadRangos;
-
+        $miliciasi = Ccombatiente::where('balisto_miliciano', true)->count();
+        $milicano = Ccombatiente::where('balisto_miliciano', false)->count();
+        $cantidadRangos = Ccombatiente::select(
+            DB::raw('COUNT(id_persona) AS cantidad'),
+            DB::raw("COALESCE(rango.sdescripcion, 'POR DEFINIR') AS rango_militancia")
+        )
+            ->from('cuerpo_combatiente.tb_persona as pers')
+            ->leftJoin('cuerpo_combatiente.tb_rango as rango', 'pers.id_rango', '=', 'rango.id_rango')
+            ->where('pers.benabled', true)->where('pers.id_rango', '!=', null)
+            ->groupBy('pers.id_rango', 'rango.sdescripcion')
+            ->get();
+        //return $cantidadRangos;
+        $condicionSaludsi = Ccombatiente::where('bcondicion_salud', true)->count();
+        $condicionSaludno = Ccombatiente::where('bcondicion_salud', false)->count();
 
 
         return view('modulos.ccombatiente.reporte', compact(
@@ -101,6 +102,8 @@ class ReporteCCombatienteController extends Controller
             'miliciasi',
             'milicano',
             'cantidadRangos',
+            'condicionSaludsi',
+            'condicionSaludno',
             'totalGeneral'
         ));
     }

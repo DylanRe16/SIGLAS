@@ -68,7 +68,12 @@ class InicioController extends Controller
 
         // Verificar la contraseña
         if (is_null($user->sclave)) {
-            return redirect()->route('registro-show')->with('error', 'Por favor cree una nueva contraseña')->with('ced_afiliado', $cedula)->withInput();
+             return redirect()
+                ->route('registro-index', ['cedula' => $user->cedula])
+                ->with([
+                    'error'        => 'Por favor cree una nueva contraseña',
+                ])
+            ;
         }
         // return $password."<br>". Hash::make($password)."<br>". Hash::make($user->sclave);
         if (!Hash::check($password, $user->sclave)) {

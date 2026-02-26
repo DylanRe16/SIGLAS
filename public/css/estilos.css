@@ -58,6 +58,16 @@ body.page-ccombatiente .opciones-ccombatiente {
     border-radius: 12px;
     /*     background-color: #bababa29; */
 }
+
+.form-select {
+    /* transition: all 0.4s ease; */
+    border: none; /* Elimina todos los bordes */
+    border-bottom: 1px solid #007bff; /* Agrega un borde inferior sólido */
+    border-radius: 12px;
+    /*     background-color: #bababa29; */
+}
+
+
 .buttom {
     width: 75%;
     background-color: rgb(70, 162, 253);

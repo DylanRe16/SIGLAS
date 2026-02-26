@@ -6,6 +6,7 @@
 @section('content')
 
 <main class="p-4">
+    @include('layouts.modals.perfil.modal_preguntas_seguridad')
 
 
 
@@ -17,9 +18,17 @@
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
     </div>
+    @include('layouts.alertas')
+
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title font-weight-bold">Preguntas de Seguridad</h3>
+            <div class="card-tools">
+                <!-- This will cause the card to collapse when clicked -->
+                <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modal1">
+                    <i class="bi bi-info-circle"></i>
+                </button>
+            </div>
         </div>
         <div class="card-body">
 
@@ -114,7 +123,7 @@
 
                 <div class="col-sm-4"></div>
                 <div class="col-sm-4 text-center mt-3">
-                    <button type="submit" class="btn btn-guardar rounded-pill" data-bs-toggle="tooltip">Guardar</button>
+                    <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip">Guardar</button>
                 </div>
                 <div class="col-sm-4"></div>
                 <div class="sep"></div>

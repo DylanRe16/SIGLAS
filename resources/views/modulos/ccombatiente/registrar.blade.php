@@ -41,8 +41,7 @@
 
 <main class="p-4">
 
-    @include('layouts.alertas')
-
+    @include('layouts.modals.ccombatiente.modal')
 
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
@@ -52,16 +51,19 @@
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
     </div>
+    @include('layouts.alertas')
 
 
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title font-weight-bold">Buscar Usuario</h3>
-
+            <h3 class="card-title font-weight-bold">Buscar Usuario </h3>
             <div class="card-tools">
                 <!-- This will cause the card to maximize when clicked -->
                 <!--  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>-->
                 <!-- This will cause the card to collapse when clicked -->
+                <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modal1">
+                    <i class="bi bi-info-circle"></i>
+                </button>
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                 <!-- This will cause the card to be removed when clicked -->
                 <!-- <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>-->
@@ -74,24 +76,24 @@
                 @csrf
                 <div class="row fs-6 d-flex align-items-end mb-4">
                     <div class="col-md-5">
-                        <div class="link-secondary">Tipo de documento<span class="requerido">*</span></div>
+                        <div class="link-secondary">Tipo de Documento<span class="requerido">*</span></div>
 
                         <select name="snacionalidad" id="snacionalidad" class="form-select" required>
 
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="V">Venezolano</option>
                             <option value="E">Extranjero</option>
                             <option value="P">Pasaporte</option>
                         </select>
                     </div>
                     <div class="col-md-5">
-                        <div class="link-secondary">Nro. de documento<span class="requerido">*</span></div>
-                        <input tabindex="9" class="form-control" placeholder="Nro. del documento" name="ndocumento" id="ndocumento" maxlength="11" onkeypress="return numbers(event);" pattern="[0-9]{6,11}" value="{{ old('ndocumento') }}">
+                        <div class="link-secondary">Nro. de Documento<span class="requerido">*</span></div>
+                        <input tabindex="9" class="form-control" placeholder="Ingrese..." name="ndocumento" id="ndocumento" maxlength="11" value="">
                     </div>
 
 
                     <div class="col-md-2 d-flex justify-content-center">
-                        <button type="submit" class=" btn btn-guardar rounded-pill my-3">Buscar</button>
+                        <button type="submit" class=" btn btn-primary">Buscar</button>
                     </div>
 
                 </div>
@@ -103,11 +105,20 @@
 
     @php
     $persona = $persona ?? null;
-
+    $data = ['sprimer_nombre',
+    'ssegundo_nombre',
+    'sprimer_apellido',
+    'ssegundo_apellido',
+    'dfecha_nacimiento',
+    'ssexo',
+    'ubicacion',
+    'cargo_titular',
+    'ente_trabajador',
+    'tipo_trabajador'];
     @endphp
 
 
-    @if(session('error') == 'Persona no encontrada en SIGEFIRHH.')
+    @if(session('error') === 'Persona no encontrada en SIGEFIRRHH.' || $errors->hasAny($data))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const campos = [
@@ -213,12 +224,15 @@
 
         <div class="card card-light">
             <div class="card-header">
-                <h3 class="card-title font-weight-bold">Datos Básicos</h3>
+                <h3 class="card-title font-weight-bold">Datos Básicos </h3>
 
                 <div class="card-tools">
                     <!-- This will cause the card to maximize when clicked -->
                     <!--  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>-->
                     <!-- This will cause the card to collapse when clicked -->
+                    <!-- <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal2">
+                        <i class="bi bi-info-circle"></i>
+                    </button> -->
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                     <!-- This will cause the card to be removed when clicked -->
                     <!-- <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>-->
@@ -238,7 +252,7 @@
                         $nacionalidad = 'P';
                         }
                         @endphp
-                        @if(session('error') == 'Persona no encontrada en SIGEFIRHH.')
+                        @if(session('error') == 'Persona no encontrada en SIGEFIRRHH.')
 
                         <input type="text" hidden name="snacionalidad2" value="{{ old('snacionalidad2', $nacionalidad ?? '') }}">
                         <input type="text" hidden name="ndocumento2" value="{{ old('ndocumento2', $cedula ?? '') }}">
@@ -250,29 +264,54 @@
                         <div class="link-secondary">Primer nombre </div>
 
                         <input type="text" class="form-control" id="sprimer_nombre" disabled value="{{ old('sprimer_nombre', $persona->primer_nombre  ?? '') }}">
-                        <input type="text" class="form-control" name="sprimer_nombre" value="{{ old('sprimer_nombre', $persona->primer_nombre  ?? '') ?? $persona->primer_nombre  ?? ''  }}" hidden>
+                        <input type="text" class="form-control" name="sprimer_nombre" placeholder="Ingrese..." value="{{ old('sprimer_nombre', $persona->primer_nombre  ?? '') ?? $persona->primer_nombre  ?? ''  }}" hidden>
 
                     </div>
 
                     <div class="col-md-3">
                         <div class="link-secondary">Segundo nombre </div>
                         <input type="text" class="form-control" id="ssegundo_nombre" disabled value="{{old('ssegundo_nombre', $persona->segundo_nombre ?? '') ??  $persona->segundo_nombre  ?? ''  }}">
-                        <input type="text" class="form-control" name="ssegundo_nombre" value="{{ old('ssegundo_nombre', $persona->segundo_nombre ?? '') ?? $persona->segundo_nombre  ?? ''  }}" hidden>
+                        <input type="text" class="form-control" name="ssegundo_nombre" placeholder="Ingrese..." value="{{ old('ssegundo_nombre', $persona->segundo_nombre ?? '') ?? $persona->segundo_nombre  ?? ''  }}" hidden>
                     </div>
 
                     <div class="col-md-3">
                         <div class="link-secondary">Primer apellido </div>
                         <input type="text" class="form-control" id="sprimer_apellido" disabled value="{{ old('sprimer_apellido', $persona->primer_apellido  ?? '') }}">
-                        <input type="text" class="form-control" name="sprimer_apellido" value="{{ old('sprimer_apellido', $persona->primer_apellido  ?? '') ?? $persona->primer_apellido  ?? ''  }}" hidden>
+                        <input type="text" class="form-control" name="sprimer_apellido" placeholder="Ingrese..." value="{{ old('sprimer_apellido', $persona->primer_apellido  ?? '') ?? $persona->primer_apellido  ?? ''  }}" hidden>
                     </div>
 
                     <div class="col-md-3">
                         <div class="link-secondary">Segundo apellido</div>
                         <input type="text" class="form-control" id="ssegundo_apellido" disabled value="{{ old('ssegundo_apellido', $persona->segundo_apellido  ?? '') }}">
-                        <input type="text" class="form-control" name="ssegundo_apellido" value="{{ old('ssegundo_apellido', $persona->segundo_apellido  ?? '') }}" hidden>
+                        <input type="text" class="form-control" name="ssegundo_apellido" placeholder="Ingrese..." value="{{ old('ssegundo_apellido', $persona->segundo_apellido  ?? '') }}" hidden>
                     </div>
 
                 </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+
+                        // Names de tus inputs que deben aceptar solo letras
+                        const campos = [
+                            'sprimer_nombre',
+                            'ssegundo_nombre',
+                            'sprimer_apellido',
+                            'ssegundo_apellido'
+                        ];
+
+                        campos.forEach(name => {
+                            const input = document.querySelector(`input[name="${name}"]`);
+
+                            if (input) {
+                                input.addEventListener('input', function() {
+                                    // Permite solo letras, espacios y acentos
+                                    this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+                                });
+                            }
+                        });
+
+                    });
+                </script>
 
 
                 <div class="row fs-6 d-flex align-items-end mb-4">
@@ -357,13 +396,13 @@
                     <div class="col-md-2">
                         <div class="link-secondary">Sexo</div>
 
-                        <select id="ssexo" name="ssexo" class="form-control">
-                            <option value="">Seleccione</option>
+                        <select id="ssexo" name="ssexo" class="form-select">
+                            <option value="">Seleccione...</option>
                             <option value="1" @selected( old('ssexo', $persona->sexo ?? '') === '1' || isset($persona) && $persona->sexo === '1')>Femenino</option>
                             <option value="2" @selected( old('ssexo', $persona->sexo ?? '') === '2' || isset($persona) && $persona->sexo === '2')>Masculino</option>
                         </select>
                         <!-- <select name="ssexo" class="form-control" hidden>
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="1" @selected( old('ssexo', $persona->sexo ?? '') === '1' || isset($persona) && $persona->sexo === '1')>Femenino</option>
                             <option value="2" @selected( old('ssexo', $persona->sexo ?? '') === '2' || isset($persona) && $persona->sexo === '2')>Masculino</option>
                         </select> -->
@@ -373,7 +412,7 @@
                     <div id="contenedor-embarazo" class="col-md-2" style="display: none;">
                         <div class="link-secondary">¿Está embarazada? </div>
                         <select name="bembarazada" id="embarz" class="form-control">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="1">SI</option>
                             <option value="0">NO</option>
                         </select>
@@ -404,7 +443,7 @@
                                 } else {
                                     contenedorEmbarazo.style.display = 'none'; // Ocultar
 
-                                    // Opcional: Restablecer el valor de 'embarazada' a "Seleccione" al ocultar
+                                    // Opcional: Restablecer el valor de 'embarazada' a "Seleccione..." al ocultar
                                     const selectEmbarazo = document.getElementById('embarz');
                                     if (selectEmbarazo) {
                                         selectEmbarazo.value = '';
@@ -438,7 +477,7 @@
                     <div class="col-md-4" style="min-width: 200p">
                         <div class="link-secondary">Estado Civil<span class="requerido">*</span></div>
                         <select name="ecivil" id="ecivil" class="form-select" data-selected="{{ old('ecivil') }}">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
 
                             <option value="1" @selected(old('ecivil')==='1' || ($persona->estado_civil ?? '') === 'S')>Soltero(a)</option>
 
@@ -458,7 +497,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <select name="ncodigo_telfmovil" id="ncodigo_telfmovil" class="form-control">
-                                    <option value="">Seleccione</option>
+                                    <option value="">Seleccione...</option>
                                     @foreach($cod_moviles as $cod_movil)
                                     <option value="{{$cod_movil->ncodigo}}" @selected(old('ncodigo_telfmovil'))>
                                         0{{$cod_movil->ncodigo}}
@@ -471,7 +510,7 @@
                             </div>
 
                             <div class="col-md-8">
-                                <input type="text" name="nnumero_telfmovil" id="nnumero_telfmovil" class="form-control num_tlf" maxlength="7" value="{{ old('nnumero_telfmovil' ?? '') }}">
+                                <input type="text" name="nnumero_telfmovil" id="nnumero_telfmovil" class="form-control num_tlf" placeholder="Ingrese..." maxlength="7" value="{{ old('nnumero_telfmovil' ?? '') }}">
                                 @error('nnumero_telfmovil')
                                 <small class="text-danger">{{$message}}</small>
                                 @enderror
@@ -485,7 +524,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <select name="ncodigo_telflocal" id="ncodigo_telflocal" class="form-control">
-                                    <option value="">Seleccione</option>
+                                    <option value="">Seleccione...</option>
                                     @foreach($cod_locales as $cod_local)
                                     <option value="{{$cod_local->ncodigo}}" @selected( old('ncodigo_telflocal'))>
                                         0{{$cod_local->ncodigo}}
@@ -497,7 +536,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-8">
-                                <input type="text" name="nnumero_telflocal" id="nnumero_telflocal" class="form-control num_tlf" value="{{ old('nnumero_telflocal' ) }}" maxlength="7">
+                                <input type="text" name="nnumero_telflocal" id="nnumero_telflocal" class="form-control num_tlf" placeholder="Ingrese..." value="{{ old('nnumero_telflocal' ) }}" maxlength="7">
                                 @error('nnumero_telflocal')
                                 <small class="text-danger">{{$message}}</small>
                                 @enderror
@@ -516,6 +555,9 @@
                     <!-- This will cause the card to maximize when clicked -->
                     <!--  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>-->
                     <!-- This will cause the card to collapse when clicked -->
+                    <!-- <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modal3">
+                        <i class="bi bi-info-circle"></i>
+                    </button> -->
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                     <!-- This will cause the card to be removed when clicked -->
                     <!-- <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>-->
@@ -529,9 +571,9 @@
 
                         <div class="link-secondary">Estado<span class="requerido">*</span></div>
 
-                        <select class="form-control" name="id_estado" id="estado" data-municipios-url="{{ url('municipios') }}">
-                            <option value="-1" disabled {{ old('id_estado', $entidad->id ?? null) ? 'selected' : '' }}>
-                                Seleccione el estado
+                        <select class="form-select" name="id_estado" id="estado" data-municipios-url="{{ url('municipios') }}">
+                            <option value="-1" {{ old('id_estado', $entidad->id ?? null) ? 'selected' : '' }}>
+                                Seleccione...
                             </option>
 
                             @foreach ($estados as $estado)
@@ -546,16 +588,15 @@
 
                     <div class="col-md-4">
                         <div class="link-secondary">Municipio<span class="requerido">*</span></div>
-                        <select class="form-control" name="id_municipio" id="municipio" data-parroquias-url="{{ url('parroquias') }}" data-selected="{{ old('id_municipio', $entidad->municipio ?? '') }}">
-                            <option value="-1" disabled selected>Seleccione el muniSección III – Percepción sobre los temas tratados
-                                cipio</option>
+                        <select class="form-select" name="id_municipio" id="municipio" data-parroquias-url="{{ url('parroquias') }}" data-selected="{{ old('id_municipio', $entidad->municipio ?? '') }}">
+                            <option value="-1" disabled selected>Seleccione...</option>
 
                         </select>
                     </div>
                     <div class="col-md-4">
                         <div class="link-secondary">Parroquia<span class="requerido">*</span></div>
-                        <select class="form-control" name="id_parroquia" id="parroquia" data-selected="{{ old('id_parroquia', $entidad->id_parroquia ?? '') }}">
-                            <option value="-1" disabled selected>Seleccione la parroquia</option>
+                        <select class="form-select" name="id_parroquia" id="parroquia" data-selected="{{ old('id_parroquia', $entidad->id_parroquia ?? '') }}">
+                            <option value="-1" disabled selected>Seleccione...</option>
                         </select>
                     </div>
                 </div>
@@ -564,11 +605,11 @@
 
                     <div class="col-md-6">
                         <div class="link-secondary">Dirección </div>
-                        <textarea name="ndireccion" id="ndireccion" class="form-control">{{old('ndireccion')}}</textarea>
+                        <textarea name="ndireccion" id="ndireccion" class="form-control" placeholder="Ingrese...">{{old('ndireccion')}}</textarea>
                     </div>
                     <div class="col-md-6">
                         <div class="link-secondary">Punto de referencia </div>
-                        <textarea name="punto_referencia" id="punto_referencia" class="form-control">{{old('punto_referencia')}}</textarea>
+                        <textarea name="punto_referencia" id="punto_referencia" class="form-control" placeholder="Ingrese...">{{old('punto_referencia')}}</textarea>
                     </div>
                 </div>
 
@@ -583,12 +624,15 @@
         </div>
         <div class="card card-light">
             <div class="card-header">
-                <h3 class="card-title font-weight-bold">Datos Comunas</h3>
+                <h3 class="card-title font-weight-bold">Datos de la Comuna</h3>
 
                 <div class="card-tools">
                     <!-- This will cause the card to maximize when clicked -->
                     <!--  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>-->
                     <!-- This will cause the card to collapse when clicked -->
+                    <!-- <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal4">
+                        <i class="bi bi-info-circle"></i>
+                    </button> -->
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                     <!-- This will cause the card to be removed when clicked -->
                     <!-- <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>-->
@@ -600,8 +644,8 @@
                 <div class="row fs-6 mb-4">
                     <div class="col-md-12">
                         <!--                         <div class="link-secondary"><span class="requerido">*</span></div> -->
-                        <div class="link-secondary">Consejo Comunal</div>
-                        <input type="text" name="consejo_comunal" id="consejo_comunal" class="form-control" value="{{ old('consejo_comunal') }}" placeholder="Nombre del Consejo Comunal">
+                        <div class="link-secondary">Nombre del Consejo Comunal</div>
+                        <input type="text" name="consejo_comunal" id="consejo_comunal" class="form-control" value="{{ old('consejo_comunal') }}" placeholder="Ingrese...">
 
                     </div>
                 </div>
@@ -622,7 +666,7 @@
                     <div class="col-md-3">
                         <div class="link-secondary">Comuna o Circuito Comunal<span class="requerido">*</span></div>
                         <select name="comuna" id="comuna" class="form-select" data-selected="{{ old('comuna', $persona->id_comuna ?? '') }}">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             @foreach($comunas as $comuna)
                             <option value="{{ $comuna->id_comuna_circuito }}" @selected(old('comuna')==$comuna->id_comuna_circuito)>{{ $comuna->sdescripcion }}</option>
                             @endforeach
@@ -644,6 +688,9 @@
                     <!-- This will cause the card to maximize when clicked -->
                     <!--  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>-->
                     <!-- This will cause the card to collapse when clicked -->
+                    <!-- <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modal5">
+                        <i class="bi bi-info-circle"></i>
+                    </button> -->
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                     <!-- This will cause the card to be removed when clicked -->
                     <!-- <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>-->
@@ -656,7 +703,7 @@
                     <div class="col-md-4">
                         <div class="link-secondary">¿Tiene discapacidad? <span class="requerido">*</span></div>
                         <select name="bdiscapacidad" id="bdiscapacidad" data-selected="{{ old('bdiscapacidad', $persona->sdiscapacidad ?? '') }}" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="0" @selected(old('bdiscapacidad', $persona->sdiscapacidad ?? '') == '0')>NO</option>
                             <option value="1" @selected(old('bdiscapacidad', $persona->sdiscapacidad ?? '') == '1')>SI</option>
                         </select>
@@ -668,7 +715,7 @@
                     <div class="col-md-4">
                         <div class="link-secondary">Lateralidad<span class="requerido">*</span></div>
                         <select name="lateralidad" id="lateralidad" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="1" @selected(old('lateralidad', $persona->slateralidad ?? '') == '1')>Ambas</option>
                             <option value="2" @selected(old('lateralidad', $persona->slateralidad ?? '') == '2')>Diestro</option>
                             <option value="3" @selected(old('lateralidad', $persona->slateralidad ?? '') == '3')>Zurdo</option>
@@ -681,7 +728,7 @@
                     <div class="col-md-4">
                         <div class="link-secondary">Tipo de Sangre<span class="requerido">*</span></div>
                         <select name="tsangre" id="tsangre" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             @foreach($id_grupo_sanguineo as $tipo_sangre)
                             <option value="{{ $tipo_sangre->id }}" @selected(old('tsangre', $persona->id_tipo_sangre ?? '') == $tipo_sangre->id)>{{ $tipo_sangre->sdescripcion }}</option>
                             @endforeach
@@ -696,7 +743,7 @@
                     <div class="col-md-4 {{ old('bdiscapacidad', Auth::user()->bdiscapacidad) == 0 ? 'disc_container' : '' }}" id="tipo_discapacidad_container">
                         <div class="link-secondary">¿Tipo de discapacidad? <span class="requerido">*</span></div>
                         <select name="id_tdiscapacidad" id="id_tdiscapacidad" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             @foreach ($t_discapacidad as $discapacidad)
                             <option value="{{ $discapacidad->id_tdiscapacidad }}" {{ old('id_tdiscapacidad', $persona->id_tipo_discapacidad ?? '') == $discapacidad->id_tdiscapacidad ? 'selected' : ''}}>
                                 {{ $discapacidad->sdescripcion }}
@@ -710,7 +757,7 @@
                     <div class="col-md-3 {{ old('bdiscapacidad', Auth::user()->bdiscapacidad) == 0 ? 'disc_container' : '' }}" id="grado_discapacidad_container">
                         <div class="link-secondary">Grado de Discapacidad<span class="requerido">*</span></div>
                         <select name="grado_discapacidad" id="grado_discapacidad" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="1" @selected(old('grado_discapacidad', $persona->grado_discapacidad ?? '') == '1')>Leve</option>
                             <option value="2" @selected(old('grado_discapacidad', $persona->grado_discapacidad ?? '') == '2')>Moderada</option>
                             <option value="3" @selected(old('grado_discapacidad', $persona->grado_discapacidad ?? '') == '3')>Severa</option>
@@ -721,7 +768,7 @@
                     </div>
                     <div class="col-md-5 {{ old('bdiscapacidad', Auth::user()->bdiscapacidad) == 0 ? 'disc_container' : '' }}" id="especifique_discapacidad_container">
                         <div class="link-secondary">Especifique</div>
-                        <textarea name="sdicapacidad_especifica" id="sdicapacidad_especifica" class="form-control">{{ old('sdicapacidad_especifica', Auth::user()->sdicapacidad_especifica )}}</textarea>
+                        <textarea name="sdicapacidad_especifica" id="sdicapacidad_especifica" class="form-control" placeholder="Ingrese...">{{ old('sdicapacidad_especifica', Auth::user()->sdicapacidad_especifica )}}</textarea>
                         @error('sdicapacidad_especifica')
                         <small class="text-danger">{{$message}}</small>
                         @enderror
@@ -736,7 +783,7 @@
                     <div class="col-md-3 {{ old('bdiscapacidad', Auth::user()->bdiscapacidad) == 0 ? 'disc_container' : '' }}" id="tiene_conapdis_container">
                         <div class="link-secondary">¿Tiene Certificado CONAPDIS? <span class="requerido">*</span></div>
                         <select name="bcertificado_conapdis" id="bcertificado_conapdis" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="1" {{ old('bcertificado_conapdis', Auth::user()->bcertificado_conapdis) == 1 ? 'selected' : '' }}>SI</option>
                             <option value="0" {{ old('bcertificado_conapdis', Auth::user()->bcertificado_conapdis) == 0 ? 'selected' : '' }}>NO</option>
                         </select>
@@ -758,9 +805,9 @@
                     <div class="col-md-3">
                         <div class="link-secondary">¿Tiene alguna condición de salud? <span class="requerido">*</span></div>
                         <select name="benfermedad_cronica" id="benfermedad_cronica" class="form-select">
-                            <option value="">Seleccione</option>
-                            <option value="0" @selected(old('benfermedad_cronica'))>NO</option>
-                            <option value="1" @selected(old('benfermedad_cronica'))>SI</option>
+                            <option value="">Seleccione...</option>
+                            <option value="0" @selected(old('benfermedad_cronica')=='0' )>NO</option>
+                            <option value="1" @selected(old('benfermedad_cronica')=='1' )>SI</option>
                         </select>
                         @error('benfermedad_cronica')
                         <small class="text-danger">{{$message}}</small>
@@ -777,9 +824,9 @@
                     <div class="col-md-3">
                         <div class="link-secondary">¿Está bajo tratamiento médico? <span class="requerido">*</span></div>
                         <select name="btratamiento_medico" id="btratamiento_medico" class="form-select">
-                            <option value="">Seleccione</option>
-                            <option value="0" @selected(old('btratamiento_medico'))>NO</option>
-                            <option value="1" @selected(old('btratamiento_medico'))>SI</option>
+                            <option value="">Seleccione...</option>
+                            <option value="0" @selected(old('btratamiento_medico')=='0' )>NO</option>
+                            <option value="1" @selected(old('btratamiento_medico')=='1' )>SI</option>
                         </select>
                         @error('btratamiento_medico')
                         <small class="text-danger">{{$message}}</small>
@@ -787,7 +834,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="link-secondary">Indique cual <span class="requerido">*</span></div>
-                        <input type="text" name="stratamiento_medico_especifico" id="stratamiento_medico_especifico" class="form-control" value="{{ old('stratamiento_medico_especifico') }}">
+                        <input type="text" name="stratamiento_medico_especifico" id="stratamiento_medico_especifico" class="form-control" placeholder="Ingrese..." value="{{ old('stratamiento_medico_especifico') }}">
                         @error('stratamiento_medico_especifico')
                         <small class="text-danger">{{$message}}</small>
                         @enderror
@@ -797,7 +844,7 @@
                     <div class="col-md-4">
                         <div class="link-secondary">Talla de Camisa <span class="requerido">*</span></div>
                         <select name="talla_camisa" id="talla_camisa" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="1" @selected (old('talla_camisa', $persona->stalla_camisa ?? '') === '1')>XS</option>
                             <option value="2" @selected (old('talla_camisa', $persona->stalla_camisa ?? '') === '2')>S</option>
                             <option value="3" @selected (old('talla_camisa', $persona->stalla_camisa ?? '') === '3')>M</option>
@@ -815,7 +862,7 @@
                     <div class="col-md-4">
                         <div class="link-secondary">Talla de Zapato<span class="requerido">*</span></div>
                         <select name="talla_zapato" id="talla_zapato" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="1" @selected (old('talla_zapato', $persona->ntalla_zapato ?? '') === '1')>36</option>
                             <option value="2" @selected (old('talla_zapato', $persona->ntalla_zapato ?? '') === '2')>37</option>
                             <option value="3" @selected (old('talla_zapato', $persona->ntalla_zapato ?? '') === '3')>38</option>
@@ -838,7 +885,7 @@
                     <div class="col-md-4">
                         <div class="link-secondary">Talla de Pantalón<span class="requerido">*</span></div>
                         <select name="talla_pantalon" id="talla_pantalon" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
 
                             <option value="1" @selected (old('talla_camisa', $persona->stalla_pantalon ?? '') === '1')>26</option>
                             <option value="2" @selected (old('talla_camisa', $persona->stalla_pantalon ?? '') === '2')>28</option>
@@ -863,9 +910,9 @@
 
                 <div class="row fs-6 mb-4">
                     <div class="col-md-4">
-                        <div class="link-secondary">Inscripción militar <span class="requerido">*</span></div>
+                        <div class="link-secondary">¿Estas inscrito en el servicio militar?<span class="requerido">*</span></div>
                         <select name="imilitar" id="imilitar" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="1" @selected(old('imilitar', $persona->sinscripcion_militar ?? '') == '1')>Si</option>
                             <option value="0" @selected(old('imilitar', $persona->sinscripcion_militar ?? '') == '0')>No</option>
                         </select>
@@ -886,7 +933,7 @@
                     <div class="col-md-4">
                         <div class="link-secondary">¿Se alisto como miliciano?<span class="requerido">*</span></div>
                         <select name="registro_mimilitar" id="registro_mimilitar" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="1" @selected(old('registro_mimilitar', $persona->sregistro_mimilitar ?? '') == '1')>Si</option>
                             <option value="0" @selected(old('registro_mimilitar', $persona->sregistro_mimilitar ?? '') == '0')>No</option>
                         </select>
@@ -901,7 +948,7 @@
                     <div class="col-md-6">
                         <div class="link-secondary">¿Prestaste servicio militar?<span class="requerido">*</span></div>
                         <select name="prestaste_servicio_militar" id="prestaste_servicio_militar" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="1" @selected(old('prestaste_servicio_militar', $persona->prestaste_servicio_militar ?? '') == '1')>Si</option>
                             <option value="0" @selected(old('prestaste_servicio_militar', $persona->prestaste_servicio_militar ?? '') == '0')>No</option>
                         </select>
@@ -912,9 +959,9 @@
 
                     <div class="col-md-6">
                         <div class="link-secondary">Rango</div>
-                       <!--  <input type="text" class="form-control" name="nrango_militancia" placeholder="Indique su rango de militancia" value="{{old('nrango_militancia')}}"> -->
+                        <!--  <input type="text" class="form-control" name="nrango_militancia" placeholder="Indique su rango de militancia" value="{{old('nrango_militancia')}}"> -->
                         <select name="nrango_militancia" id="nrango_militancia" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             @foreach($rangos as $rango)
                             <option value="{{ $rango->id_rango }}" @selected(old('nrango_militancia'))>{{ $rango->sdescripcion }}</option>
                             @endforeach
@@ -932,7 +979,7 @@
                     <div class="col-md-3">
                         <div class="link-secondary">¿Tiene hijos?<span class="requerido">*</span></div>
                         <select name="hijos" id="hijos" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
 
                             <option value="0" @selected(old('hijos', $persona->hijos ?? '') == '0')>No</option>
 
@@ -944,7 +991,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="link-secondary">¿Cuánto menores de 18 años?</div>
-                        <input type="number" class="form-control" name="nhijos" placeholder="Indique su número de hijos" value="  ">
+                        <input type="number" class="form-control" name="nhijos" placeholder="Ingrese..." value="  ">
                         @error('nhijos')
                         <small class="text-danger">{{$message}}</small>
                         @enderror
@@ -961,6 +1008,9 @@
                     <!-- This will cause the card to maximize when clicked -->
                     <!--  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i></button>-->
                     <!-- This will cause the card to collapse when clicked -->
+                    <!-- <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal6">
+                        <i class="bi bi-info-circle"></i>
+                    </button> -->
                     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
                     <!-- This will cause the card to be removed when clicked -->
                     <!-- <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>-->
@@ -972,8 +1022,8 @@
                 <div class="row fs-6 mb-3">
                     <div class="col-md-8">
                         <div class="link-secondary">Ubicación administrativa de adscripción </div>
-                        <input type="text" class="form-control" id="ubicacion" placeholder="" value="{{ old('ubicacion', $persona->ubicacion ?? '' ) }}" disabled>
-                        <input type="text" class="form-control" name="ubicacion" placeholder="" value="{{ old('ubicacion', $persona->ubicacion ?? '' ) }}" hidden>
+                        <input type="text" class="form-control" id="ubicacion" placeholder="Ingrese..." value="{{ old('ubicacion', $persona->ubicacion ?? '' ) }}" disabled>
+                        <input type="text" class="form-control" name="ubicacion" placeholder="Ingrese..." value="{{ old('ubicacion', $persona->ubicacion ?? '' ) }}" hidden>
                         @error('ubicacion')
                         <small class="text-danger">{{$message}}</small>
                         @enderror
@@ -981,7 +1031,7 @@
                     <div class="col-md-4">
                         <div class="link-secondary">Estado<span class="requerido">*</span></div>
                         <select name="ubicacion_estado" id="ubicacion_estado" class="form-select">
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             @foreach ($estados as $estado)
                             <option value="{{ $estado->nentidad }}"
                                 {{old('ubicacion_estado', $persona->id_ciudad ?? 'null') == $estado->nentidad ? 'selected' : '' }}>
@@ -998,7 +1048,7 @@
                 <div class="row fs-6 mb-4">
                     <div class="col-md-12">
                         <div class="link-secondary">Ubicación física</div>
-                        <input type="text" class="form-control" name="ubicacion_fisica" placeholder="Indique su ubicación física" value="{{ old('ubicacion_fisica', $persona->subicacion_fisica ?? '') }}">
+                        <input type="text" class="form-control" name="ubicacion_fisica" placeholder="Ingrese..." value="{{ old('ubicacion_fisica', $persona->subicacion_fisica ?? '') }}">
                         @error('ubicacion_fisica')
                         <small class="text-danger">{{$message}}</small>
                         @enderror
@@ -1009,13 +1059,13 @@
                     <div class="col-md-6">
                         <div class="link-secondary">Cargo o puesto de trabajo titular</div>
                         <select id="cargo_titular" class="form-select" data-selected="{{ old('cargo_titular', $persona->scodigo ?? '') }}" disabled>
-                            <option value=""></option>
+                            <option value="">Seleccione...</option>
                             @foreach ($cargos as $cargo)
                             <option value="{{ $cargo->scodigo }}" @selected(old('cargo_titular', $persona->scodigo ?? '') == $cargo->scodigo)>{{ $cargo->sdescripcion }}</option>
                             @endforeach
                         </select>
-                        <select name="cargo_titular" class="form-select" data-selected="{{ old('cargo_titular', $persona->scodigo ?? '') }}" hidden>
-                            <option value=""></option>
+                        <select name="cargo_titular" class="form-select" placeholder="Ingrese..." data-selected="{{ old('cargo_titular', $persona->scodigo ?? '') }}" hidden>
+                            <option value="">Seleccione...</option>
                             @foreach ($cargos as $cargo)
                             <option value="{{ $cargo->scodigo }}" @selected(old('cargo_titular', $persona->scodigo ?? '') == $cargo->scodigo)>{{ $cargo->sdescripcion }}</option>
                             @endforeach
@@ -1027,7 +1077,7 @@
 
                     <div class="col-md-6">
                         <div class="link-secondary">Cargo o puesto de trabajo que ejerce</div>
-                        <input type="text" class="form-control" name="cargo_ejerce" placeholder="Indique su cargo o puesto de trabajo que ejerce" value="{{ old('cargo_ejerce', $persona->scargo_actual_ejerce ?? '' )}}">
+                        <input type="text" class="form-control" name="cargo_ejerce" placeholder="Ingrese..." value="{{ old('cargo_ejerce', $persona->scargo_actual_ejerce ?? '' )}}">
                         @error('cargo_ejerce')
                         <small class="text-danger">{{$message}}</small>
                         @enderror
@@ -1038,13 +1088,13 @@
                     <div class="col-md-4">
                         <div class="link-secondary">Tipo de trabajador</div>
                         <select id="tipo_trabajador" class="form-select" disabled>
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             @foreach ($tipo_trabajo as $trabajador)
                             <option value="{{ $trabajador->ncodigo }}" @selected(old('tipo_trabajador', $persona->tipo_trabajador_ncodigo ?? '') == $trabajador->ncodigo)>{{ $trabajador->sdescripcion }}</option>
                             @endforeach
                         </select>
                         <select name="tipo_trabajador" class="form-select" data-selected="{{ old('tipo_trabajador', $persona->tipo_trabajador_ncodigo ?? '') }}" hidden>
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             @foreach ($tipo_trabajo as $trabajador)
                             <option value="{{ $trabajador->ncodigo }}" @selected(old('tipo_trabajador', $persona->tipo_trabajador_ncodigo ?? '') == $trabajador->ncodigo)>{{ $trabajador->sdescripcion }}</option>
                             @endforeach
@@ -1058,7 +1108,7 @@
                         <div class="link-secondary">Ente de Procedencia</div>
 
                         <select id="ente_trabajador" class="form-select" data-selected="{{ old('ente_trabajador', $persona->ncodigo_nomina ?? '') }}" disabled>
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
                             <option value="MPPPST" @selected(old('ente_trabajador' , $persona->ncodigo_nomina ?? '')) >
                                 MPPPST
                             </option>
@@ -1075,7 +1125,7 @@
                         </select>
 
                         <select name="ente_trabajador" class="form-select" data-selected="{{ old('ente_trabajador', $persona->ncodigo_nomina ?? '') }}" hidden>
-                            <option value="">Seleccione</option>
+                            <option value="">Seleccione...</option>
 
                             <option value="MPPPST" @selected(old('ente_trabajador', $persona ?? '' ) )>
                                 MPPPST
@@ -1108,11 +1158,11 @@
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-center ">
                     <div class="w-25 text-center">
-                        <button type="submit" class="btn btn-guardar rounded-pill my-3">Guardar</button>
+                        <button type="submit" class="btn btn-primary fs-6">Guardar</button>
                     </div>
                 </div>
             </div>
-
+            <br>
         </div>
         <!-- /.card-body -->
         </div>
@@ -1146,7 +1196,7 @@
                 } else if (valor === '1') {
                     $inputNHijos.prop('disabled', false); // habilita
                 } else {
-                    $inputNHijos.val(''); // limpia si se elige "Seleccione"
+                    $inputNHijos.val(''); // limpia si se elige "Seleccione..."
                     $inputNHijos.prop('disabled', true);
                 }
             }
@@ -1172,7 +1222,7 @@
                 } else if (valor === '1') {
                     $inputsalud.prop('disabled', false); // habilita
                 } else {
-                    $inputsalud.val(''); // limpia si se elige "Seleccione"
+                    $inputsalud.val(''); // limpia si se elige "Seleccione..."
                     $inputsalud.prop('disabled', true);
                 }
             }
@@ -1198,7 +1248,7 @@
                 } else if (valor === '1') {
                     $inputtratamiento.prop('disabled', false); // habilita
                 } else {
-                    $inputtratamiento.val(''); // limpia si se elige "Seleccione"
+                    $inputtratamiento.val(''); // limpia si se elige "Seleccione..."
                     $inputtratamiento.prop('disabled', true);
                 }
             }
@@ -1210,33 +1260,33 @@
         });
     </script>
     <script>
-document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
 
-    const selEstado = document.getElementById("estado");
-    const selMunicipio = document.getElementById("municipio");
-    const selParroquia = document.getElementById("parroquia");
+            const selEstado = document.getElementById("estado");
+            const selMunicipio = document.getElementById("municipio");
+            const selParroquia = document.getElementById("parroquia");
 
-    const txtEstado = document.getElementById("estado_text");
-    const txtMunicipio = document.getElementById("municipio_text");
-    const txtParroquia = document.getElementById("parroquia_text");
+            const txtEstado = document.getElementById("estado_text");
+            const txtMunicipio = document.getElementById("municipio_text");
+            const txtParroquia = document.getElementById("parroquia_text");
 
-    // Estado → Div
-    selEstado.addEventListener("change", function() {
-        txtEstado.textContent = selEstado.options[selEstado.selectedIndex].text;
-    });
+            // Estado → Div
+            selEstado.addEventListener("change", function() {
+                txtEstado.textContent = selEstado.options[selEstado.selectedIndex].text;
+            });
 
-    // Municipio → Div
-    selMunicipio.addEventListener("change", function() {
-        txtMunicipio.textContent = selMunicipio.options[selMunicipio.selectedIndex].text;
-    });
+            // Municipio → Div
+            selMunicipio.addEventListener("change", function() {
+                txtMunicipio.textContent = selMunicipio.options[selMunicipio.selectedIndex].text;
+            });
 
-    // Parroquia → Div
-    selParroquia.addEventListener("change", function() {
-        txtParroquia.textContent = selParroquia.options[selParroquia.selectedIndex].text;
-    });
+            // Parroquia → Div
+            selParroquia.addEventListener("change", function() {
+                txtParroquia.textContent = selParroquia.options[selParroquia.selectedIndex].text;
+            });
 
-});
-</script>
+        });
+    </script>
 
     @endpush
 

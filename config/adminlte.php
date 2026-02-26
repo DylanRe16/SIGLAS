@@ -196,7 +196,7 @@ return [
     |
     */
 
-'classes_body' => 'sidebar-collapse',
+    'classes_body' => 'sidebar-collapse',
     'classes_brand' => 'bg-primary',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -341,6 +341,7 @@ return [
             'text' => 'profile',
             'icon' => 'fas fa-fw fa-user',
             'url' => 'perfil',
+
         ],
 
         /* [
@@ -382,28 +383,241 @@ return [
             ],
         ], */
         ['header' => 'MODULOS'],
+
         [
-            'text' => 'C.Combatiente',
-            'url' => '/ccombatiente',
-            'icon' => 'fas fa-fw bi-person-arms-up',
+            'text' => 'Recibos y Constancias',
+            'url' => '/recibosconstancias',
+            'icon' => 'fas fa-fw bi-receipt-cutoff',
         ],
 
+        [
+            'text' => 'Constancia de Trabajo',
+            'topnav' => true,
+            'classes' => 'opciones-recibos', // Clase única para tu filtro
+            'submenu' => [
+                [
+                    'text' => 'Simple Con Sueldo',
+                    'url'  => '/recibosconstancias/simple-sueldo',
+                    'target' => '_blank',
+                ],
+                [
+                    'text' => 'Egreso',
+                    'url'  => '/recibosconstancias/egresado',
+                ],
+                [
+                    'text' => 'Faov',
+                    'url'  => '/recibosconstancias/faov',
+                ],
+                [
+                    'text' => 'Simple con Sueldo por Trabajador',
+                    'url'  => '/recibosconstancias/buscar-sueldo',
+                ],
+                [
+                    'text' => 'Jubilados',
+                    'url'  => '/recibos/jubilados',
+                ],
+            ],
+        ],
+
+        [
+            'text' => 'Recibos de Pago',
+            'topnav' => true,
+            'classes' => 'opciones-recibos',
+            'submenu' => [
+                [
+                    'text' => 'Año Actual',
+                    'url'  => '#',
+                    'submenu' => [
+                        [
+                            'text' => 'Ordinario',
+                            'url'  => '/recibos-pagos/ordinarios',
+                        ],
+                        [
+                            'text' => 'Especial',
+                            'url'  => '/recibos-pagos/especiales',
+                        ],
+                    ],
+                ],
+                [
+                    'text' => 'Jubilados',
+                    'url'  => '/recibos-jubilados',
+                ],
+                [
+                    'text' => 'Mensual por Trabajador',
+                    'url'  => '/recibos/mensual-trabajador',
+                ],
+            ],
+        ],
+
+        [
+            'text'    => 'Mantenimiento',
+            'topnav'  => true,
+            'classes' => 'opciones-recibos',
+            'submenu' => [
+                [
+                    'text'    => 'Tickets de Alimentación',
+                    'url'     => '/mantenimiento/tickets-alimentacion',
+                ],
+                [
+                    'text'    => 'Usuarios',
+                    'url'  => '/recibos-constancias/mantenimiento/usuarios',
+                ],
+            ]
+
+
+        ],
+
+        [
+            'text' => 'Procesos',
+            'topnav' => true,
+            'classes' => 'opciones-recibos',
+            'submenu' => [
+                [
+                    'text' => 'Actualizar Personal',
+                    'url'  => '/procesos/actualizar-personal',
+                ],
+                [
+                    'text' => 'Consultar Datos',
+                    'url'  => '/procesos/consultar-datos',
+                ],
+                [
+                    'text' => 'Nómina Funcionarios',
+                    'url'  => '/procesos/funcionarios',
+                ],
+                [
+                    'text' => 'Nómina Obreros',
+                    'url'  => '/procesos/obreros',
+                ],
+            ],
+        ],
+
+        [
+            'text' => 'Roraima',
+            'url' => '/roraima',
+            'icon' => 'fas fa-fw fa-cogs',
+        ],
+
+       [
+            'text' => 'Proyectos',
+            'topnav' => true,
+            'classes' => 'opciones-roraima',
+            'submenu' => [
+                [
+                    'text' => 'Proyectos',
+                    'url'  => 'roraima/proyectos',
+                ],
+                [
+                    'text' => 'Acción Centralizada',
+                    'url'  => 'roraima/acciones-centralizadas',
+                ],
+            ]
+        ],
+
+
+       [
+            'text' => 'Asignar Usuarios',
+            'topnav' => true,
+            'classes' => 'opciones-roraima',
+            'submenu' => [
+                [
+                    'text' => 'Asignar a Proyectos',
+                    'url'  => 'roraima/asignar-proyectos',
+                ],
+                [
+                    'text' => 'Asignar a Accion Centralizada',
+                    'url'  => 'roraima/asignar-acciones',
+                ],
+            ]
+        ],
+
+       [
+            'text' => 'Solicitudes',
+            'topnav' => true,
+            'classes' => 'opciones-roraima',
+            'submenu' => [
+                [
+                    'text' => 'Proyectos Requerimientos',
+                    'url'  => 'roraima/proyectos-requerimientos',
+                ],
+                [
+                    'text' => 'ACC Requerimientos',
+                    'url'  => 'roraima/acc-requerimientos',
+                ],
+            ]
+        ], 
+
+       [
+            'text' => 'Variables',
+            'topnav' => true,
+            'classes' => 'opciones-roraima',
+            'submenu' => [
+                [
+                    'text' => 'Proyecto',
+                    'url'  => 'roraima/variables/proyectos',
+                ],
+                [
+                    'text' => 'Accion Centralizada',
+                    'url'  => 'roraima/variables/acciones',
+                ],
+                [
+                    'text' => 'Reportes Planificación',
+                    'url'  => 'roraima/variables/reportes',
+                ],
+            ]
+        ], 
+
+       
+
+
+
+
+
+        [
+            'text' => 'Formatos',
+            'url' => '/formatos',
+            'icon' => 'fas fa-fw bi-aspect-ratio',
+        ],
+
+        [
+            'text' => 'Notificación de Ausencia',
+            'topnav' => true,
+            'url' => '/formatos/notificacion-ausencia',
+            'classes' => 'opciones-formatos',
+        ],
+
+        [
+            'text' => 'Solicitud de Permiso',
+            'topnav' => true,
+            'url' => '/formatos/solicitud-permiso',
+            'classes' => 'opciones-formatos',
+        ],
+        
+        [
+            'text' => 'Solicitud de Vacaciones',
+            'topnav' => true,
+            'url' => '/formatos/solicitud-vacaciones',
+            'classes' => 'opciones-formatos',
+        ],
+
+
+
+        
         [
             'text' => 'Registrar',
             'topnav' => true,
             'icon' => 'fas fa-fw',
             'classes' => 'opciones-ccombatiente',
             'url'  => '/ccombatiente/registrar',
-            /* 'submenu' => [
-                [
-                    'text' => 'Registrar',
-                    'url'  => '/ccombatiente/registrar',
-                ],
-                [
-                    'text' => 'Reportes',
-                    'url'  => 'ccombatiente-reportes',
-                ],
-            ], */
+            //     /* 'submenu' => [
+            //         [
+            //             'text' => 'Registrar',
+            //             'url'  => '/ccombatiente/registrar',
+            //         ],
+            //         [
+            //             'text' => 'Reportes',
+            //             'url'  => 'ccombatiente-reportes',
+            //         ],
+            //     ], */
         ],
         [
             'text' => 'Reportes',
@@ -444,7 +658,22 @@ return [
                 ],
             ]
         ],
-      
+        //PERFIL
+        [
+            'text' => 'Actualizar Datos',
+            'topnav' => true,
+            'url'  => '/perfil/actualizar-datos',
+        ],
+        [
+            'text' => 'Cambiar Contraseña',
+            'topnav' => true,
+            'url'  => '/perfil/contrasena-3',
+        ],
+        [
+            'text' => 'Preguntas Seguridad',
+            'topnav' => true,
+            'url'  => '/perfil/preguntas-seguridad',
+        ],
 
 
         /*  [
@@ -468,11 +697,11 @@ return [
             'url' => '#',
         ], */
 
-        [
-            'text' => 'C.N. Constituyente',
-            'url' => '/cnconstituyente',
-            'icon' => 'bi bi-buildings-fill',
-        ],
+        // [
+        //     'text' => 'C.N. Constituyente',
+        //     'url' => '/cnconstituyente',
+        //     'icon' => 'bi bi-buildings-fill',
+        // ],
 
         // [
         //     'text' => 'Registrar',
@@ -521,7 +750,11 @@ return [
         JeroenNoten\LaravelAdminLte\Menu\Filters\ClassesFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\LangFilter::class,
         JeroenNoten\LaravelAdminLte\Menu\Filters\DataFilter::class,
-        App\Menu\Filters\ModulosFilter::class, // <-- Agrega esta línea
+        App\Menu\Filters\ModulosFilter::class,
+        App\Menu\Filters\ModulosPagosFilter::class,
+        App\Menu\Filters\PerfilFilter::class,
+        App\Menu\Filters\RoraimaFilter::class,
+        App\Menu\Filters\FormatosFilter::class,
 
     ],
 

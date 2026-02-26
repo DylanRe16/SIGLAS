@@ -8,6 +8,7 @@
 
 
 <main class="p-4">
+    @include('layouts.modals.perfil.modal_cambiar_contraseña')
 
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
@@ -17,9 +18,17 @@
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
     </div>
+    @include('layouts.alertas')
+
     <div class="card card-primary">
         <div class="card-header">
             <h4 class="card-title font-weight-bold">Cambiar Contraseña</h4>
+            <div class="card-tools">
+                <!-- This will cause the card to collapse when clicked -->
+                <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#modal1">
+                    <i class="bi bi-info-circle"></i>
+                </button>
+            </div>
         </div>
         <!-- <hr class="mt-0"> -->
         <!-- <center>
@@ -80,7 +89,7 @@
                                     type="password"
                                     class="form-control"
                                     title="Contraseña"
-                                    placeholder="Ingrese su Contraseña *"
+                                    placeholder="Ingrese..."
                                     name="password"
                                     id="password"
                                     value="{{ old('password') }}"
@@ -101,7 +110,7 @@
                                     type="password"
                                     class="form-control"
                                     title="Confirmar Contraseña"
-                                    placeholder="Confirme su Contraseña *"
+                                    placeholder="Ingrese..."
                                     name="password_confirmation"
                                     id="password_confirmation"
                                     value="{{ old('password_confirmation') }}"
@@ -115,7 +124,7 @@
 
                         <div class="row mt-4">
                             <div class="col-md-12 d-flex justify-content-center">
-                                <input tabindex="19" type="submit" value="Guardar" class="btn btn-guardar rounded-pill" title="Cambiar Contraseña">
+                                <input tabindex="19" type="submit" value="Guardar" class="btn btn-primary" title="Cambiar Contraseña">
                             </div>
                         </div>
 

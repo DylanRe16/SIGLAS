@@ -138,7 +138,7 @@ return [
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,
-            'search_path' => 'public',
+            'search_path' => 'public, recibos_pagos_constancias',
             'sslmode' => 'prefer',
         ],
 
@@ -184,6 +184,19 @@ return [
             'prefix_indexes' => true,
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
+
+        'seventh_db' => [
+            'driver' => 'pgsql', // Basado en el puerto 5432 y el nombre del host
+            'host' => env('SEVENTH_DB_HOST', '10.46.1.93'),
+            'port' => env('SEVENTH_DB_PORT', '5432'),
+            'database' => env('SEVENTH_DB_DATABASE', 'minpptrasse'),
+            'username' => env('SEVENTH_DB_USERNAME', 'postgres'),
+            'password' => env('SEVENTH_DB_PASSWORD', 'postgres'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public', // Cambia esto si usas un esquema diferente como 'recibos_pagos_constancias'
+            'sslmode' => 'prefer',
         ],
 
     ],

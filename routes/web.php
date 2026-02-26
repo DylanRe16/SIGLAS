@@ -16,9 +16,6 @@ Route::get('/ingresar', [InicioController::class, 'create'])->name('ingresar');
 Route::post('/ingresar', [InicioController::class, 'store'])->name('ingresar');
 
 Route::get('/salir', [InicioController::class, 'destroy'])->name('salir');
-Route::get('/perfil', function () {
-    return view('modulos.users.mis-datos');
-})->name('perfil');
 
 // Rutas protegidas para usuarios autenticados
 Route::middleware('auth')->group(function () {
@@ -28,6 +25,9 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     // Perfil
+    Route::get('/perfil', function () {
+        return view('modulos.users.mis-datos');
+    })->name('perfil');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -39,12 +39,12 @@ Route::middleware('auth')->group(function () {
 
     // Contraseña
 
-    Route::get('/contrasena-3', [ContraseñaController::class, 'clave_edit'])->name('contrasena-3');
-    Route::post('/contrasena-3', [ContraseñaController::class, 'clave_update'])->name('clave-update');
+    Route::get('perfil/contrasena-3', [ContraseñaController::class, 'clave_edit'])->name('contrasena-3');
+    Route::post('perfil/contrasena-3', [ContraseñaController::class, 'clave_update'])->name('clave-update');
 
     // Preguntas seguridad
-    Route::get('/preguntas-seguridad', [PreguntasController::class, 'edit'])->name('preguntaSeg-edit');
-    Route::post('/preguntas-seguridad', [PreguntasController::class, 'update'])->name('preguntaSeg-update');
+    Route::get('perfil/preguntas-seguridad', [PreguntasController::class, 'edit'])->name('preguntaSeg-edit');
+    Route::post('perfil/preguntas-seguridad', [PreguntasController::class, 'update'])->name('preguntaSeg-update');
 });
 
 
@@ -86,3 +86,7 @@ require __DIR__ . '/prototipo.php';
 require __DIR__ . '/almacen.php';
 require __DIR__ . '/ccombatiente.php';
 require __DIR__ . '/cnconstituyente/web.php';
+require __DIR__ . '/recibosconstancias.php';
+require __DIR__ . '/formatos.php';
+require __DIR__ . '/roraima.php';
+require __DIR__ . '/siris.php';

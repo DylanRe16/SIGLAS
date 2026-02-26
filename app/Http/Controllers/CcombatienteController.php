@@ -15,6 +15,8 @@ use App\Models\RegistroMiliciano;
 use App\Models\Comunas;
 use App\Models\Rango;
 use App\Models\Minpptrassi\Public\Rol;
+use App\Models\PersonaRol;
+
 use App\Models\Minpptrassi\Public\Modulo;
 
 use Carbon\Carbon;
@@ -23,6 +25,15 @@ use Illuminate\Http\Request;
 
 class CcombatienteController extends Controller
 {
+    public function index()
+    {
+        $roles = $this->roles()->pluck('id')->toArray();
+        $rol_usuario = Auth::user()->roles()->whereIn('rol_id', $roles)->pluck('rol_id')->first();
+
+        $data['rol_usuario'] = $rol_usuario;
+        // return $data;
+        return view('modulos.ccombatiente.index', $data);
+    }
     public function getMunicipios($estadoId)
     {
         $municipios = DB::connection('bd4')
@@ -72,6 +83,8 @@ class CcombatienteController extends Controller
     public function show()
     {
         $data = $this->cosas();
+
+        //return $roles_usuario;
         return view('modulos.ccombatiente.registrar', $data);
     }
     public function busqueda(Request $request)
@@ -80,9 +93,9 @@ class CcombatienteController extends Controller
             'ndocumento' => 'required|numeric|digits_between:6,9',
             'snacionalidad' => 'required|in:V,E,P'
         ], [
-            'ndocumento.required' => 'El número de documento es obligatorio y debe tener entre 6 y 9 dígitos.',
-            'ndocumento.numeric' => 'El número de documento debe ser un valor numerico.',
-            'ndocumento.digits_between' => 'El número de documento debe tener entre 6 y 9 digitos.',
+            'ndocumento.required' => 'El nro de documento es obligatorio y debe tener entre 6 y 9 dígitos.',
+            'ndocumento.numeric' => 'El nro de documento debe ser un valor númerico.',
+            'ndocumento.digits_between' => 'El nro de documento debe tener entre 6 y 9 digitos.',
             'snacionalidad.required' => 'El tipo de documento es obligatorio y debe ser V, E o P.',
             'snacionalidad.in' => 'El tipo de documento debe ser V, E o P.',
         ]);
@@ -221,7 +234,7 @@ class CcombatienteController extends Controller
             }
         } else {
 
-            return back()->withInput()->with('error', 'Persona no encontrada en SIGEFIRHH.')->with('nacionalidad', $nacionalidad)->with('cedula', $cedula);
+            return back()->withInput()->with('error', 'Persona no encontrada en SIGEFIRRHH.')->with('nacionalidad', $nacionalidad)->with('cedula', $cedula);
         }
     }
     public function store(Request $request)
@@ -463,23 +476,52 @@ class CcombatienteController extends Controller
     }
     public function roles()
     {
-        $id_modulo = Modulo::where('sdescripcion', 'CUERPO COMBATIENTE')->first()->id;
+        $id_modulo = Modulo::where('sdescripcion', 'Cuerpo Combatiente')->first()->id;
         $roles = Rol::where('nenabled', true)->where('modulo_id', $id_modulo)->get();
 
         return $roles;
     }
+
     public function usuarios()
     {
         $roles = $this->roles();
-        return view('modulos.ccombatiente.mantenimiento.usuarios', compact('roles'));
+        $datos = DB::connection('bd4')
+            ->table('personales_rol as perso_rol')
+            ->select(
+                'perso_rol.personales_cedula',
+                'perso.primer_nombre',
+                'perso.primer_apellido',
+                'rol.sdescripcion as rol'
+            )
+            ->leftJoin('personales as perso', 'perso_rol.personales_cedula', '=', 'perso.cedula')
+            ->leftJoin('rol as rol', 'perso_rol.rol_id', '=', 'rol.id')
+            ->whereIn('perso_rol.rol_id', [99, 100])
+            ->where('perso_rol.nenabled', 1)
+            ->groupBy(
+                'perso_rol.rol_id',
+                'perso_rol.personales_cedula',
+                'perso.primer_nombre',
+                'perso.primer_apellido',
+                'rol.sdescripcion'
+            )
+            ->get();
+
+
+        // return $datos;
+        return view('modulos.ccombatiente.mantenimiento.usuarios', compact('roles', 'datos'));
     }
 
     public function asignarRoles(Request $request)
     {
-        $validatedData = $request->validate([
-            'documento_usuario' => 'required|string',
+        $request->validate([
+            'documento_usuario' => 'required|numeric|digits_between:8,8',
             'id_rol' => 'required',
-            'id_rol.*' => 'string',
+            //'id_rol.*' => 'string',
+        ], [
+            'documento_usuario.required' => 'El número de documento es obligatorio y debe tener entre 8 dígitos.',
+            'documento_usuario.numeric' => 'El número de documento debe ser un valor numerico.',
+            'documento_usuario.digits_between' => 'El número de documento debe tener entre 8 digitos.',
+            'id_rol.required' => 'Debe seleccionar al menos un rol.',
         ]);
         $persona = Personales::where('cedula', $request->documento_usuario)->first();
         if (!$persona) {
@@ -493,45 +535,83 @@ class CcombatienteController extends Controller
                 return redirect()->back()->with('error', 'La persona ya tiene asignado uno o más de los roles seleccionados.');
             }
             $roles = $this->roles()->pluck('id')->toArray();
-            $inhabilitar_rol_anterior = $persona->roles()->whereIn('rol_id', $roles)->update(['nenabled' => 0]);
+            $inhabilitar_rol_anterior = DB::connection('bd4')->table('personales_rol')
+                ->where('personales_cedula', $request->documento_usuario)
+                ->whereIn('rol_id', $roles)
+                ->update(['nenabled' => 0]);
             $rolesRequest = $request->id_rol;        // Arreglo de roles enviados
             $documento = $request->documento_usuario;
             $nusuario_creacion = Auth::user()->id_persona;
             $dfecha_creacion = now();
 
+            $rolesRequest = explode(',', $rolesRequest);
 
             // Verificar si existe la relación
-            $existe = $persona->roles()
-                ->where('rol_id', $rolesRequest)
-                ->first();
+            $existe = DB::connection('bd4')->table('personales_rol')
+                ->where('personales_cedula', $documento)
+                ->whereIn('rol_id', $rolesRequest)
+                ->exists();
+
+
+
+            // return $existe;
 
             if ($existe) {
                 // Ya existe → habilitarlo / actualizar
-                $persona->roles()->updateExistingPivot($rolesRequest, [
-                    'nenabled' => 1,
-                    'nusuario_modificacion' => $nusuario_creacion,
-                    'dfecha_modificacion' => $dfecha_creacion,
-                ]);
+                $habilitar_roles = DB::connection('bd4')->table('personales_rol')
+                    ->where('personales_cedula', $documento)
+                    ->where('rol_id', $request->id_rol)
+                    ->update([
+                        'nenabled' => 1,
+                        'nusuario_actualizacion' => $nusuario_creacion,
+                        'dfecha_actualizacion' => $dfecha_creacion,
+                    ]);
             } else {
                 // No existe → insertar
-                $persona->roles()->attach($rolesRequest, [
-                    'personales_cedula' => $documento,
-                    'nenabled' => 1,
-                    'nusuario_creacion' => $nusuario_creacion,
-                    'dfecha_creacion' => $dfecha_creacion,
-                ]);
+                $agregar_roles = DB::connection('bd4')->table('personales_rol')
+                    ->insert([
+                        'personales_cedula' => $documento,
+                        'rol_id' => $request->id_rol,
+                        'nenabled' => 1,
+                        'nusuario_creacion' => $nusuario_creacion,
+                        'dfecha_creacion' => $dfecha_creacion,
+                    ]);
             }
 
 
 
 
-            return redirect()->route('ccombatiente-mantenimiento-usuarios')->with('success', '¡Se ha registrado exitosamente!');
+            return redirect()->route('ccombatiente-mantenimiento-usuarios')->with('success', '¡Se ha habilitado exitosamente!');
         }
     }
 
-    public function desasignarRoles(Request $request)
+    public function desasignarRoles($cedula)
     {
-        $persona = Personales::where('cedula', $request->documento_usuario)->first();
-        $persona->roles()->detach($request->roles);
+        $roles = $this->roles()->pluck('id')->toArray();
+        // 1. Buscar persona
+        $persona = Personales::where('cedula', $cedula)->first();
+
+        if (!$persona) {
+            return redirect()->back()->with('error', 'Persona no encontrada.');
+        }
+
+        // 2. Obtener sus roles en BD4
+
+
+        // 3. Inhabilitar roles
+        $actualizados = DB::connection('bd4')
+            ->table('personales_rol')
+            ->where('personales_cedula', $cedula)
+            ->whereIn('rol_id', $roles)
+            ->update(['nenabled' => 0]);
+
+        // 4. Verificar resultado
+        if ($actualizados > 0) {
+            return redirect()->route('ccombatiente-mantenimiento-usuarios')
+                ->with('success', '¡El rol ha sido desasignados correctamente!');
+        } else {
+            return redirect()->route('ccombatiente-mantenimiento-usuarios')
+                ->with('error', 'No se pudo desasignar ningún rol.');
+        }
     }
 }

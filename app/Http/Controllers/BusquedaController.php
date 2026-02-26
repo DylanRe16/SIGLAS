@@ -16,42 +16,42 @@ use Illuminate\Support\Facades\Auth;
 
 class BusquedaController extends Controller
 {
-    public function index()
+  public function index($cedula)
     {
-        return view('modulos.register.registro');
+        return view('modulos.register.registro2', ['cedula' => $cedula]);
     }
 
 
     // muestra la persona si se encuentra en saime
-    public function show(Request $request)
-    {
+    // public function show(Request $request)
+    // {
 
-        $cedula = session('ced_afiliado');
+    //     $cedula = session('ced_afiliado');
 
-        // Busca la persona en la base de datos
+    //     // Busca la persona en la base de datos
 
-        $usuario = Siglas::where('cedula', $cedula)
-            ->first();
+    //     $usuario = Siglas::where('cedula', $cedula)
+    //         ->first();
 
-        if (is_null($usuario->sclave)) {
-            // Validar la fecha de nacimiento
+    //     if (is_null($usuario->sclave)) {
+    //         // Validar la fecha de nacimiento
 
 
-            $clave = $request->password;
+    //         $clave = $request->password;
 
-            // Si se encuentra la persona, redirige a la vista registro2
-            return view('modulos.register.registro2', ['cedula' => $cedula, 'clave' => $clave]);
-        } else {
-            return redirect()->route('registro-index')->with('error', 'La persona ya se encuentra registrada.');
-        }
-    }
+    //         // Si se encuentra la persona, redirige a la vista registro2
+    //         return view('modulos.register.registro2', ['cedula' => $cedula, 'clave' => $clave]);
+    //     } else {
+    //         return redirect()->route('registro-index')->with('error', 'La persona ya se encuentra registrada.');
+    //     }
+    // }
 
 
 
     public function create(Request $request)
     {
 
-        $request->validate([
+         $request->validate([
             'password' => [
                 'required',
                 'confirmed',
@@ -61,10 +61,12 @@ class BusquedaController extends Controller
                 'regex:/[@#$%^&*(),.?":{}|<>]/', // Al menos un carácter especial
                 'min:8', // Más de 10 caracteres
             ],
+            'password_confirmation' => 'required|same:password',
         ], [
             'password.*' => 'La contraseña debe cumplir con todos los requisitos especificados.',
-
+            'password_confirmation.same' => 'Las contrasenas no coinciden',
         ]);
+
 
 
         $persona = Siglas::find($request->ndocumento);

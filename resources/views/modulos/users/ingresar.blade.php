@@ -34,14 +34,7 @@
 
 <div class="container d-flex align-items-center">
     <div class="card p-4 rounded-4 shadow-sm" style="max-width: 400px; min-width: 300px; margin-top: 30px;">
-        <!-- <div class="card caja">
-                <div class="caja_trasera-register d-flex justify-content-center flex-column">
-                    <h3 tabindex="16" class="balc">¿Aún no te encuentras registrado?</h3><br>
-                    <a href="{{ route('registro-index') }}">
-                        <button tabindex="18" id="btn_registrarse" class="buttom" style="font-size: 16px; background-color: #fff; color: #46A2FD; font-weight: bold;" onmouseover="this.style.color='#fff'; this.style.backgroundColor='rgba(0, 128, 255, 0.5)';" onmouseout="this.style.color='#46A2FD'; this.style.backgroundColor='#fff';">Regístrate</button>
-                    </a>
-                </div>
-            </div> -->
+
 
         <div class="col-sm-6 caja2">
             <div class="card-body">

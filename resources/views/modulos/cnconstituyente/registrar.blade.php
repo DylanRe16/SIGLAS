@@ -40,65 +40,40 @@
             <div class="card-body">
                 <form action="{{ route('cnc-store') }}" method="get">
                     @csrf
-                    <div class="row fs-6 d-flex align-items-end mb-4">
-                        <div class="col-md-4"> 
-                            <div class="link-secondary">RIF<span class="requerido">*</span></div>
-                            <div class="input-group">
-                                <input type="text" name="srif" id="srif" class="form-control" placeholder="Ejemplo: J123456789" required/>
-                                <button type="button" class="input-group-text btn btn-guardar w-25" id="btnGetCompany">Buscar</button>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="link-secondary">Nombre o Razon Social<span class="requerido">*</span></div>
-                            <input class="form-control" placeholder="Nombre o Razon Social" name="srazon_social" id="srazon_social" value="">
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="link-secondary">Denominación Comercial<span class="requerido">*</span></div>
-                            <input class="form-control" placeholder="Denominación Comercial" name="sdenominacion_comercial" id="sdenominacion_comercial" value="">
-                        </div>
-                    </div>
 
                     <div class="row d-flex align-items-end mb-5 fs-6">
                         <div class="col-md-3">
-
                             <div class="link-secondary">Estado<span class="requerido">*</span></div>
-    
-                            <select name="entidad_nentidad" id="entidad_nentidad" class="form-control" disabled>
-                                <option value="">Seleccione</option>
+
+                            <select class="form-control" name="id_estado" id="estado" data-municipios-url="{{ url('municipios') }}">
+                                <option value="-1" disabled {{ old('id_estado', $entidad->id ?? null) ? 'selected' : '' }}>
+                                    Seleccione el estado
+                                </option>
+
                                 @foreach ($estados as $estado)
-                                    <option value="{{ $estado->nentidad }}">{{ $estado->sdescripcion }}</option>
+                                <option value="{{ $estado->nentidad }}"
+                                    {{ old('id_estado', $persona->nentidad_entidad ?? null) == $estado->nentidad ? 'selected' : '' }}>
+                                    {{ $estado->sdescripcion }}
+                                </option>
                                 @endforeach
                             </select>
 
-                            
-    
                         </div>
-    
+
                         <div class="col-md-3">
                             <div class="link-secondary">Municipio<span class="requerido">*</span></div>
+                            <select class="form-control" name="id_municipio" id="municipio" data-parroquias-url="{{ url('parroquias') }}" data-selected="{{ old('id_municipio', $entidad->municipio ?? '') }}">
+                                <option value="-1" disabled selected>Seleccione el muniSección III – Percepción sobre los temas tratados
+                                    cipio</option>
 
-                            <select name="municipio_nmunicipio" id="municipio_nmunicipio" class="form-control" disabled>
-                                <option value="">Seleccione</option>
-                                @foreach ($municipios as $municipio)
-                                    <option value="{{ $municipio->nmunicipio }}">{{ $municipio->sdescripcion }}</option>
-                                @endforeach
                             </select>
-
-                            {{-- <input type="text" name="municipio" id="municipio" class="form-control" placeholder="Municipio" value=""> --}}
                         </div>
-
+                        
                         <div class="col-md-3">
                             <div class="link-secondary">Parroquia<span class="requerido">*</span></div>
-
-                            <select name="parroquia_nparroquia" id="parroquia_nparroquia" class="form-control" disabled>
-                                <option value="">Seleccione</option>
-                                @foreach ($parroquias as $parroquia)
-                                    <option value="{{ $parroquia->nparroquia }}">{{ $parroquia->sdescripcion }}</option>
-                                @endforeach
+                            <select class="form-control" name="id_parroquia" id="parroquia" data-selected="{{ old('id_parroquia', $entidad->id_parroquia ?? '') }}">
+                                <option value="-1" disabled selected>Seleccione la parroquia</option>
                             </select>
-                            
-                            {{-- <input type="text" name="parroquia" id="parroquia" class="form-control" placeholder="Parroquia" value=""> --}}
                         </div>
 
                         <div class="col-md-3">
@@ -106,22 +81,6 @@
                             <input class="form-control" placeholder="Motor" name="motor" id="motor" value="">
                         </div>
                     </div>
-
-
-                    <div class="row d-flex align-items-end mb-5 fs-6">
-                        
-
-                        <div class="col-md-6 d-flex">
-                            <div class="link-secondary" style="width: 300px;">Total trabajadores<span class="requerido">*</span></div>
-                            <input type="number" class="form-control" placeholder="Total trabajadores" name="ttrabajadores" id="ttrabajadores" value="">
-                        </div>
-
-                        <div class="col-md-6 d-flex">
-                            <div class="link-secondary" style="width: 300px;">Total Trabajadores Asamblea <span class="requerido">*</span></div>
-                            <input type="number" class="form-control" placeholder="Total Trabajadores Asamblea" name="ttrabajadoresA" id="ttrabajadoresA" value="">
-                        </div>
-                    </div>
-
 
                     <div class="text-center">
                         <button type="submit" class=" btn btn-guardar rounded-pill my-3">Guardar</button>
@@ -167,6 +126,7 @@
                             </div>
                         </div>
 
+
                         <div class="text-center mb-3">
                             <button type="button" class=" btn btn-guardar rounded-pill" id="btnGetPerson">Buscar</button>
                         </div>
@@ -195,38 +155,6 @@
                             <input type="text" class="form-control" placeholder="Primer Nombre" name="ssegundo_apellido" id="ssegundo_apellido" value="">
                         </div>
                     </div>
-
-                    <div class="row d-flex align-items-end mb-5 fs-6">
-                        <div class="col-md-6 d-flex align-items-center">
-                            <div class="link-secondary" style="width: 300px;">¿Pertenece a alguna Organización Social?</div>
-                            <select name="osocial" id="osocial" class="form-select" style="width: auto;">
-                                <option value="">Seleccione</option>
-                                <option value="Si">Si</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-
-
-                        <div class="col-md-6" id="tosocial" style="display: none;">
-                            <div class="link-secondary">Tipo de Organización Social<span class="requerido">*</span></div>
-                            <select name="tosocialSelect" id="tosocialSelect" class="form-select">
-                                <option value="">Seleccione</option>
-                                <option value="Si">CPT</option>
-                                <option value="No">Delegado Prevención</option>
-                                <option value="No">Consejo de Trabajo</option>
-                                <option value="No">Emprendedor</option>
-                            </select>
-                        </div>
-                        
-                    </div>
-
-                    <div class="row d-flex align-items-end mb-3 fs-6">
-                        <div class="col-md-4">
-                            <div class="link-secondary">¿Nro. de votos con los que gano?<span class="requerido">*</span></div>
-                            <input type="number" class="form-control" placeholder="¿Nro. de votos con los que gano?" name="nvotos" id="nvotos" value="">
-                        </div>
-                    </div>
-
 
                     <div class="text-center">
                         <button type="button" class=" btn btn-guardar rounded-pill">Guardar</button>

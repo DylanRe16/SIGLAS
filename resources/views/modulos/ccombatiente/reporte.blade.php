@@ -182,6 +182,23 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6">
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <h5 class="card-title">Condicion de Salud</h5>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="myChart10" width="400" height="400"></canvas>
+                    <div class="text-end">
+                        <button id="btnImprimir10" class="btn btn-primary">
+                            <i class="fas fa-file-pdf"></i> Descargar Reporte PDF
+                        </button>
+                    </div>
+                </div>
+        </div>
     </div>
 </main>
 
@@ -243,7 +260,8 @@
         cantidadMPPPST,
         cantidadINPSASEL,
         cantidadINCES,
-        cantidadTSS
+        cantidadTSS,
+        cantidadINCRET
     ];
     //Reporte por Comuna
     const datosComuna = @json($cantidadComunas);
@@ -267,6 +285,15 @@
     const labelsRango = datosRango.map(r => `${r.rango_militancia} (${r.cantidad})`);
     const valoresRango = datosRango.map(r => r.cantidad);
     const totalRango = valoresRango.reduce((acc, val) => acc + val, 0);
+    //Reporte por Condicion de Salud
+    const datosCondicionsi = @json($condicionSaludsi);
+    const datosCondicionno = @json($condicionSaludno);
+    const labelsCondicion = [
+        `Con Condicion de Salud (${datosCondicionsi})`,
+        `Sin Condicion de Salud (${datosCondicionno})`
+    ];
+    const totalCondicion = datosCondicionsi + datosCondicionno;
+    const valoresCondicion = [datosCondicionsi, datosCondicionno];
 
     //Definimos las graficas    
     const ctx = document.getElementById('myChart');
@@ -278,6 +305,7 @@
     const ctx7 = document.getElementById('myChart7');
     const ctx8 = document.getElementById('myChart8');
     const ctx9 = document.getElementById('myChart9');
+    const ctx10 = document.getElementById('myChart10');
     //Creamos las graficas
 
     if (ctx && labels.length > 0) {
@@ -651,6 +679,42 @@
     } else {
         console.warn('⚠️ No hay datos o no se encontró el canvas.');
     }
+    if (ctx10) {
+        new Chart(ctx10, {
+            type: 'doughnut',
+            data: {
+                labels: labelsCondicion,
+                datasets: [{
+                    label: 'Personas',
+                    data: valoresCondicion,
+                    backgroundColor: [
+                        'rgba(255, 206, 86, 0.6)', // amarillo
+                        'rgba(75, 192, 192, 0.6)' // verde agua
+                    ],
+                    borderColor: 'rgba(255,255,255,1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Relación del Cuerpo Combatiente por Condición de Salud Total de Registros: (' + totalCondicion + ')',
+                        font: {
+                            size: 20
+                        }
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    } else {
+        console.warn('⚠️ No se encontró el canvas para condición de salud.');
+    }
+
 </script>
 
 

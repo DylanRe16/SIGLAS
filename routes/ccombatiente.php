@@ -7,9 +7,7 @@ use App\Http\Controllers\RangoController;
 use App\Http\Controllers\ReporteCCombatienteController;
 
 Route::middleware('auth')->group(function () {
-    Route::get('/ccombatiente', function () {
-        return view('modulos.ccombatiente.index');
-    })->name('ccombatiente-index');
+    route::get('/ccombatiente', [CcombatienteController::class, 'index'])->name('ccombatiente-index');
 
     Route::get('/ccombatiente/reporte', [ReporteCCombatienteController::class, 'index'])->name('ccombatiente-reportes');
 
@@ -37,5 +35,5 @@ Route::middleware('auth')->group(function () {
     #MANTENIMIENTO USUARIOS
     Route::get('/ccombatiente/mantenimiento/usuarios', [CcombatienteController::class, 'usuarios'])->name('ccombatiente-mantenimiento-usuarios');
     Route::post('/ccombatiente/mantenimiento/usuarios/asignar', [CcombatienteController::class, 'asignarRoles'])->name('ccombatiente.usuarios.asignar');
-    Route::post('/ccombatiente/mantenimiento/usuarios/desasignar', [CcombatienteController::class, 'desasignarRoles'])->name('ccombatiente.usuarios.desasignar');
+    Route::get('/ccombatiente/mantenimiento/usuarios/desasignar/{cedula}', [CcombatienteController::class, 'desasignarRoles'])->name('ccombatiente.usuarios.desasignar');
 });

@@ -1,18 +1,3 @@
-// todo: para mostrar el campo tipo de Organización Social
-const selectOsocial = document.getElementById('osocial');
-const selectTOsocial = document.getElementById('tosocial');
-
-selectOsocial.addEventListener('change', function(){
-        if (selectOsocial.value == 'Si') {
-            selectTOsocial.style.display = 'block';
-        } else {
-            selectTOsocial.style.display = 'none';
-        }
-        // console.log("osocial -> ", selectOsocial.value);
-})
-// fin todo: para mostrar el campo tipo de Organización Social
-
-
 
 // {{-- todo: para obtener los datos de una persona y empresa --}}
 document.addEventListener('DOMContentLoaded', () => {
@@ -233,5 +218,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 🔹 Asignar evento
     btnBuscarPersona.addEventListener('click', buscarPersona);
-    btnBuscarEmpresa.addEventListener('click', buscarEmpresa);
+    // btnBuscarEmpresa.addEventListener('click', buscarEmpresa);
 });
