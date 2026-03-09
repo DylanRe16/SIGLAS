@@ -6,7 +6,7 @@
 @section('css')
 <style>
     /* Mantiene el borde rojo pero elimina el icono/símbolo de Bootstrap */
-    .form-control.is-invalid, 
+    .form-control.is-invalid,
     .form-select.is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
@@ -15,7 +15,7 @@
     .is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
-        border-color: #80bdff !important; 
+        border-color: #80bdff !important;
         box-shadow: none !important;
     }
 
@@ -31,8 +31,8 @@
     }
 
     /* Evita el cambio a blanco o colores claros al pasar el mouse */
-    .btn-guardar:hover, 
-    .btn-guardar:active, 
+    .btn-guardar:hover,
+    .btn-guardar:active,
     .btn-guardar:focus {
         background-color: #007bff !important; /* Un verde ligeramente más oscuro para feedback visual */
         border-color: #007bff !important;
@@ -49,7 +49,12 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <div class="link-secondary">
-                <h4 class="font-weight-bold"> Recibos de Pagos > Jubilados </h4>
+                <h4 class="font-weight-bold">
+                    <a href="{{ route('recibos.index') }}" class="link-secondary text-decoration-none">
+
+                        Recibos de Pagos
+                    </a>
+                    > Jubilados </h4>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
@@ -67,7 +72,7 @@
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
             </div>
         </div>
-        
+
         <div class="card-body">
             <form id="formBusquedaEgresado"> @csrf
                 <div class="row fs-6 d-flex align-items-end mb-4">
@@ -81,10 +86,10 @@
                         </select>
                         <div class="invalid-feedback">El tipo de Documento es obligatorio.</div>
                     </div>
-                    
+
                     <div class="col-md-5">
                         <div class="link-secondary">Nro. de Documento<span class="requerido">*</span></div>
-                        <input class="form-control" placeholder="Ingrese..." oninput="this.value = this.value.replace(/[^0-9]/g, '');" 
+                        <input class="form-control" placeholder="Ingrese..." oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                name="ndocumento" id="ndocumento" maxlength="11" onkeypress="return numbers(event);" required>
                         <div class="invalid-feedback">El número de Documento es obligatorio.</div>
                     </div>
@@ -102,13 +107,13 @@
 
     <div id="resultadoBusqueda" class="mt-4"></div>
 
-    <div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"> 
+    <div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">    
+        <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">
             <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                            Ayuda 
+                            Ayuda
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             <!-- <span aria-hidden="true">&times;</span> -->
@@ -144,7 +149,7 @@ $(document).ready(function() {
         let spinner = $('#spinnerBoton');
         let contenedorResultado = $('#resultadoBusqueda');
         let contenedorAlertas = $('#contenedorAlertas');
-        
+
         let tipoDoc = $('#snacionalidad');
         let nroDoc = $('#ndocumento');
 
@@ -167,7 +172,7 @@ $(document).ready(function() {
 
         if (camposVacios.length > 0) {
             let mensajeAlerta = "Los campos obligatorios no pueden quedar vacíos: <strong>" + camposVacios.join(' y ') + "</strong>.";
-            
+
             contenedorAlertas.html(`
                 <div class="alert alert-danger border-left-danger shadow-sm mt-2 mb-3 animate__animated animate__shakeX">
                     <div class="d-flex align-items-center">
@@ -176,7 +181,7 @@ $(document).ready(function() {
                     </div>
                 </div>
             `);
-            return; 
+            return;
         }
 
         // Activar spinner

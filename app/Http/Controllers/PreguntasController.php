@@ -44,8 +44,8 @@ class PreguntasController extends Controller
             'pregunta_3' => 'required|exists:bd2.public.tb_preguntas_seg,id_preguntaseg|distinct',
         ], [], [
             'respuesta_1' => 'Respuesta 1',
-            'respuesta_1' => 'Respuesta 2',
-            'respuesta_1' => 'Respuesta 3',
+            'respuesta_2' => 'Respuesta 2',
+            'respuesta_3' => 'Respuesta 3',
             'pregunta_1' => 'Pregunta 1',
             'pregunta_2' => 'Pregunta 2',
             'pregunta_3' => 'Pregunta 3',

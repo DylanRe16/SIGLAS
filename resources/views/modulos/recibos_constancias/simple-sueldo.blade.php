@@ -142,35 +142,57 @@
         </tr>
     </table>
 
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-    <tr>
-        <td style="width: 20%;"></td> <td style="width: 60%; text-align: center; vertical-align: middle;">
-            <div style="line-height: 1.2;">
-                <div style="font-weight: bold; font-size: 12pt;">CARLOS JAVIER FONSECA TOVAR</div>
-                <div style="font-weight: bold; font-size: 10pt; text-transform: uppercase;">DIRECTOR GENERAL DE LA OFICINA DE GESTIÓN HUMANA</div>
-                <div style="font-style: italic; font-size: 9pt;">
-                    Según Resolución N° 031 de fecha 24/09/2024<br>
-                    Gaceta Oficial N° 42.971 de fecha 25/09/2024
+    {{-- <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <tr>
+            <td style="width: 20%;"></td> <td style="width: 60%; text-align: center; vertical-align: middle;">
+                <div style="line-height: 1.2;">
+                    <div style="font-weight: bold; font-size: 12pt;">CARLOS JAVIER FONSECA TOVAR</div>
+                    <div style="font-weight: bold; font-size: 10pt; text-transform: uppercase;">DIRECTOR GENERAL DE LA OFICINA DE GESTIÓN HUMANA</div>
+                    <div style="font-style: italic; font-size: 9pt;">
+                        Según Resolución N° 031 de fecha 24/09/2024<br>
+                        Gaceta Oficial N° 42.971 de fecha 25/09/2024
+                    </div>
                 </div>
-            </div>
-        </td>
-        <td style="width: 20%; text-align: right; vertical-align: middle;">
-            @if(isset($qrCode) && $qrCode)
-                <img src="{{ $qrCode }}" class="img-qr-final">
-                <div style="font-size: 6pt; text-align: center; margin-top: 3px; color: #555;">
-                    VALIDACIÓN DIGITAL
+            </td>
+            <td style="width: 20%; text-align: right; vertical-align: middle;">
+                @if(isset($qrCode) && $qrCode)
+                    <img src="{{ $qrCode }}" class="img-qr-final">
+                    <div style="font-size: 6pt; text-align: center; margin-top: 3px; color: #555;">
+                    </div>
+                @else
+                    <div style="color: red; font-size: 8pt;">Error QR</div>
+                @endif
+            </td>
+        </tr>
+    </table> --}}
+
+    <table class="table-info-qr">
+        <tr>
+            <td class="td-texto">
+                <div class="info-director">
+                    <div class="nombre-director">CARLOS JAVIER FONSECA TOVAR</div>
+                    <div class="cargo-director">DIRECTOR GENERAL DE LA OFICINA DE GESTIÓN HUMANA</div>
+                    <div class="resolucion">
+                        Según Resolución N° 031 de fecha 24/09/2024<br>
+                        Gaceta Oficial N° 42.971 de fecha 25/09/2024
+                    </div>
                 </div>
-            @else
-                <div style="color: red; font-size: 8pt;">Error QR</div>
-            @endif
-        </td>
-    </tr>
-</table>
+            </td>
+            <td class="td-qr">
+                @if($qrCode)
+                    <div style="text-align: center;">
+                        <img src="{{ $qrCode }}" style="width: 105px; height: 105px; display: block; margin: 0 auto;">
+                        {{-- <span style="font-size: 6pt; display: block; margin-top: 2px;">VALIDACIÓN DIGITAL</span> --}}
+                    </div>
+                @endif
+            </td>
+        </tr>
+    </table>
 </div>
 
 
-    <div class="legal-notice">
-        Esta constancia es Válida hasta el <span class="bold">{{ $fec_caducidad }}</span>. 
+    <div class="legal-notice" style="text-align: center;">
+        Esta constancia es válida hasta el <span class="bold">{{ $fec_caducidad }}</span>. 
         No requiere sello húmedo. Según Ley de Simplificación de Trámites Administrativos y Ley de Infogobierno.
     </div>
 

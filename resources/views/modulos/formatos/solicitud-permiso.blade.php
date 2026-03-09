@@ -5,11 +5,16 @@
 
 @section('content')
 <main class="p-4">
+     @include('layouts.modals.formatos.modal_permiso')
     <form action="{{ route('formatos-solicitud-permiso-generarpdf') }}" method="post" id="form-pdf">
     <div class="row">
             <div class="col-md-12 d-flex justify-content-between">
                 <div class="link-secondary">
-                    <h4 class="font-weight-bold">Formato > Solicitud de Permiso</h4>
+                    <h4 class="font-weight-bold">
+                        <a href="{{ route('formatos') }}" class="link-secondary text-decoration-none">
+                        Formato
+                        </a>
+                        > Solicitud de Permiso</h4>
                 </div>
                 <div class="text-danger fs-6 fw-normal">Campos obligatorios (*)</div>
             </div>
@@ -271,30 +276,6 @@ document.getElementById('form-pdf').addEventListener('submit', function (e) {
     });
 });
 </script>
-
-<div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"> 
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">    
-            <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                            Ayuda 
-                        </h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <!-- <span aria-hidden="true">&times;</span> -->
-                        </button>
-                    </div>
-
-                <div class="modal-body" style="text-align: justify;">
-                    <p>En esta sección, puedes generar una <strong> Solicitud de Permiso</strong> para un empleado.</p>
-                    <p>Asegúrate de proporcionar los datos requeridos correctamente para evitar errores en la consulta.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </main>
 @endsection
 

@@ -333,7 +333,7 @@ class ActualizacionDatoController extends Controller
             'ubicacion_fisica' => 'required|regex:/^[\pL\s]+$/u',
             'codigo_oficina' => 'required',
             'numero_oficina' => 'required|numeric|digits_between:7,7',
-            'cargo_ejerce' => 'required|regex:/^[\pL\s]+$/u',
+            'cargo_ejerce' => 'required',
             'nivel_academico' => 'required',
 
 
@@ -445,7 +445,7 @@ class ActualizacionDatoController extends Controller
             $actualizarDatos->ncodigo_telfoficina = $request->input('codigo_oficina');
             $actualizarDatos->nnumero_telfoficina = $request->input('numero_oficina');
 
-            // $actualizarDatos->scodigo = $request->input('cargo_ejerce');
+            $actualizarDatos->scargo_actual_ejerce = $request->input('cargo_ejerce');
             $actualizarDatos->sobservacion = $request->input('observaciones_laborales');
 
             $actualizarDatos->ncont_estudios = $request->input('continuar_estudios');

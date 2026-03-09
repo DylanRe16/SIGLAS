@@ -6,7 +6,7 @@
 
 @section('css')
 <style>
-    .form-control.is-invalid, 
+    .form-control.is-invalid,
     .form-select.is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
@@ -17,7 +17,7 @@
     .is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
-        border-color: #80bdff !important; 
+        border-color: #80bdff !important;
         box-shadow: none !important;
     }
 
@@ -34,7 +34,11 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <div class="link-secondary">
-                <h4 class="font-weight-bold">Recibos de Pagos > Año Actual > Pagos Especiales</h4>
+                <h4 class="font-weight-bold">
+                    <a href="{{ route('recibos.index') }}" class="link-secondary text-decoration-none"">
+                    Recibos de Pagos
+                    </a>
+                    > Año Actual > Pagos Especiales</h4>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
@@ -53,7 +57,7 @@
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
             </div>
         </div>
-        
+
         <div class="card-body">
             <div class="row fs-6 d-flex align-items-end mb-4  p-3 rounded">
                 <div class="col-md-3">
@@ -72,7 +76,7 @@
                     <div class="link-secondary font-weight-bold">Código de Nómina</div>
                     <input class="form-control bg-white" value="{{ $perfil->ncodigo_nomina ?? 'N/A' }}" disabled>
                 </div>
-                
+
                 <div class="sep"></div>
 
                 <div class="col-md-6">
@@ -116,13 +120,13 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"> 
+    <div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">    
+        <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">
             <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                            Ayuda 
+                            Ayuda
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             <!-- <span aria-hidden="true">&times;</span> -->
@@ -153,7 +157,7 @@
 $(document).ready(function() {
     $('#frm_especiales_consulta').on('submit', function(e) {
         e.preventDefault();
-        
+
         let btn = $('#btnBuscar');
         let texto = $('#textoBoton');
         let spinner = $('#spinnerBoton');
@@ -207,7 +211,7 @@ $(document).ready(function() {
             },
             error: function(xhr) {
                 let mensajeError = "Ocurrió un error al procesar la consulta.";
-                
+
                 if (xhr.status === 404) {
                     mensajeError = "No se encontraron pagos especiales registrados para este periodo.";
                 } else if (xhr.status === 422) {

@@ -6,7 +6,7 @@
 <style>
     /* Estilo para los separadores */
     .sep { border-bottom: 1px solid #e9ecef; margin: 15px 0; width: 100%; }
-    
+
     /* Adaptación de btn-guardar al color institucional del módulo */
     .btn-institucional {
         background-color: #007bff;
@@ -21,19 +21,19 @@
     }
 
     .btn-guardar {
-        background-color: #007bff; 
+        background-color: #007bff;
         border-color: #007bff;
         color: #ffffff !important;
     }
 
     /* Evita el cambio a blanco o colores claros al pasar el mouse */
-    .btn-guardar:hover, 
-    .btn-guardar:active, 
+    .btn-guardar:hover,
+    .btn-guardar:active,
     .btn-guardar:focus {
-        background-color: #007bff !important; 
+        background-color: #007bff !important;
         border-color: #007bff !important;
-        color: #ffffff !important; 
-        transform: scale(1.02); 
+        color: #ffffff !important;
+        transform: scale(1.02);
     }
 
     /* Estilos para el modal de ayuda */
@@ -45,11 +45,15 @@
 @section('content')
 <main class="p-4">
     @include('layouts.alertas')
-    
+
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <div class="link-secondary">
-                <h4 class="font-weight-bold">PROCESOS > Actualizar Personal</h4>
+                <h4 class="font-weight-bold">
+                    <a href="{{ route('recibos.index') }}" class="link-secondary text-decoration-none">
+                    PROCESOS
+                </a>
+                    > Actualizar Personal</h4>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
@@ -67,7 +71,7 @@
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
             </div>
         </div>
-        
+
         <div class="card-body">
             <div class="row fs-6 d-flex align-items-center mb-4 bg-light p-4 rounded shadow-sm">
                 <div class="col-md-8">
@@ -86,7 +90,7 @@
 
             {{-- ESPACIO PARA FEEDBACK VISUAL DETALLADO --}}
             <div id="resultadoSincronizacion" class="mt-4"></div>
-            
+
             <div id="loaderSection" class="text-center py-4 d-none animate__animated animate__fadeIn">
                 <div class="spinner-border text-primary" role="status" style="color: #007bff !important; width: 3rem; height: 3rem;"></div>
                 <p class="mt-3 font-weight-bold text-secondary">Actualizando registros de nómina...</p>
@@ -95,12 +99,12 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalAyudaProcesos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"> 
+    <div class="modal fade" id="modalAyudaProcesos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                        Ayuda 
+                        Ayuda
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>

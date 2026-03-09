@@ -6,7 +6,7 @@
 @section('css')
 <style>
     /* Mantiene el borde rojo pero elimina el icono/símbolo de Bootstrap */
-    .form-control.is-invalid, 
+    .form-control.is-invalid,
     .form-select.is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
@@ -15,7 +15,7 @@
     .is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
-        border-color: #80bdff !important; 
+        border-color: #80bdff !important;
         box-shadow: none !important;
     }
 
@@ -25,19 +25,19 @@
     }
 
     .btn-guardar {
-        background-color: #007bff; 
+        background-color: #007bff;
         border-color: #007bff;
         color: #ffffff !important;
     }
 
     /* Evita el cambio a blanco o colores claros al pasar el mouse */
-    .btn-guardar:hover, 
-    .btn-guardar:active, 
+    .btn-guardar:hover,
+    .btn-guardar:active,
     .btn-guardar:focus {
-        background-color: #007bff !important; 
+        background-color: #007bff !important;
         border-color: #007bff !important;
-        color: #ffffff !important; 
-        transform: scale(1.02); 
+        color: #ffffff !important;
+        transform: scale(1.02);
     }
 
     /* Estilos para el modal de ayuda */
@@ -53,7 +53,11 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <div class="link-secondary">
-                <h4 class="font-weight-bold">Procesos > Cargar Nómina Obreros</h4>
+                <h4 class="font-weight-bold">
+                    <a href="{{ route('recibos.index') }}" class="link-secondary text-decoration-none">
+                         PORCESOS
+                    </a>
+                    > Cargar Nómina Obreros</h4>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
@@ -131,12 +135,12 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalInfoObreros" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"> 
+    <div class="modal fade" id="modalInfoObreros" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                    Ayuda 
+                    Ayuda
                 </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -181,7 +185,7 @@
             if (camposVacios.length > 0) {
                 e.preventDefault();
                 let mensaje = "Debe completar los campos obligatorios: <strong>" + camposVacios.join(', ') + "</strong>.";
-                
+
                 contenedorAlertas.html(`
                     <div class="alert alert-danger border-left-danger shadow-sm mt-2 mb-3 animate__animated animate__shakeX">
                         <div class="d-flex align-items-center">

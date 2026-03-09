@@ -6,7 +6,7 @@
 @section('css')
 <style>
     /* Mantiene el borde rojo de error pero elimina el icono/símbolo de Bootstrap */
-    .form-control.is-invalid, 
+    .form-control.is-invalid,
     .form-select.is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
@@ -15,7 +15,7 @@
     .is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
-        border-color: #80bdff !important; 
+        border-color: #80bdff !important;
         box-shadow: none !important;
     }
 
@@ -31,8 +31,8 @@
     }
 
     /* Evita el cambio a blanco o colores claros al pasar el mouse */
-    .btn-guardar:hover, 
-    .btn-guardar:active, 
+    .btn-guardar:hover,
+    .btn-guardar:active,
     .btn-guardar:focus {
         background-color: #007bff !important; /* Un verde ligeramente más oscuro para feedback visual */
         border-color: #007bff !important;
@@ -49,7 +49,12 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <div class="link-secondary">
-                <h4 class="font-weight-bold">Constancia de Trabajo > Simple con Sueldo por Trabajador</h4>
+                <h5 class="font-weight-bold">
+                    <a href="{{ route('recibos.index') }}" class="link-secondary text-decoration-none">
+                    Recibos y Constacias
+                    </a>
+
+                    > Constancias de Trabajo > Consulta por Trabajador</h5>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
@@ -68,7 +73,7 @@
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
             </div>
         </div>
-        
+
         <div class="card-body">
             <form id="formBusquedaEgresado"> @csrf
                 <div class="row fs-6 d-flex align-items-end mb-4">
@@ -82,7 +87,7 @@
                         </select>
                         <div class="invalid-feedback">El tipo de Documento es obligatorio.</div>
                     </div>
-                    
+
                     <div class="col-md-5">
                         <div class="link-secondary">Nro. de Documento<span class="requerido">*</span></div>
                         <input class="form-control" placeholder="Ingrese..." oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="ndocumento" id="ndocumento" maxlength="11" onkeypress="return numbers(event);" required>
@@ -90,7 +95,7 @@
                     </div>
 
                     <div class="col-md-2 d-flex justify-content-center">
-                        <button type="submit" class="btn btn-guardar" id="btnBuscar">
+                        <button type="submit" class="btn btn-guardar btn-primary" id="btnBuscar">
                             <span id="textoBoton">Buscar</span>
                             <span id="spinnerBoton" class="spinner-border spinner-border-sm d-none" role="status"></span>
                         </button>
@@ -101,14 +106,14 @@
     </div>
 
     <div id="resultadoBusqueda" class="mt-4"></div>
-       
-    <div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"> 
+
+    <div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">    
+        <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">
             <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                            Ayuda 
+                            Ayuda
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             <!-- <span aria-hidden="true">&times;</span> -->
@@ -133,25 +138,35 @@
 @section('js')
 <script>
 $(document).ready(function() {
+    // 1. Alerta de cuota mensual al cargar la página
+    Swal.fire({
+        title: '<strong>Información Importante</strong>',
+        icon: 'info',
+        html: 'Usted sólo puede solicitar <b>diez (10)</b> Constancias de Trabajo en el mes.',
+        allowOutsideClick: false,
+        confirmButtonText: 'He leído y acepto',
+        confirmButtonColor: '#007bff'
+    });
+
+    // 2. Lógica de Envío de Formulario
     $('#formBusquedaEgresado').on('submit', function(e) {
         e.preventDefault();
 
-        let btn = $('#btnBuscar');
-        let texto = $('#textoBoton');
-        let spinner = $('#spinnerBoton');
-        let contenedorResultado = $('#resultadoBusqueda');
-        let contenedorAlertas = $('#contenedorAlertas');
-        
-        let tipoDoc = $('#snacionalidad');
-        let nroDoc = $('#ndocumento');
+        // Variables de UI
+        const btn = $('#btnBuscar');
+        const texto = $('#textoBoton');
+        const spinner = $('#spinnerBoton');
+        const contenedorResultado = $('#resultadoBusqueda');
+        const contenedorAlertas = $('#contenedorAlertas');
+        const tipoDoc = $('#snacionalidad');
+        const nroDoc = $('#ndocumento');
 
         // Limpiar estados previos
         contenedorResultado.html('');
         contenedorAlertas.html('');
-        tipoDoc.removeClass('is-invalid');
-        nroDoc.removeClass('is-invalid');
+        $('.form-control, .form-select').removeClass('is-invalid');
 
-        // VALIDACIÓN DE CAMPOS (Alerta superior con sacudida)
+        // VALIDACIÓN DE CAMPOS
         let camposVacios = [];
         if (!tipoDoc.val()) {
             camposVacios.push("Tipo de Documento");
@@ -172,39 +187,37 @@ $(document).ready(function() {
                     </div>
                 </div>
             `);
-            return; 
+            return;
         }
 
-        // Activar spinner y enviar
+        // UI en estado de carga
         btn.prop('disabled', true);
         texto.addClass('d-none');
         spinner.removeClass('d-none');
 
         $.ajax({
-            url: "{{ route('recibos.buscarsueldo.post') }}", 
+            url: "{{ route('recibos.buscarsueldo.post') }}",
             method: "POST",
             data: $(this).serialize(),
             success: function(response) {
                 contenedorResultado.html(response);
-                btn.prop('disabled', false);
-                texto.removeClass('d-none');
-                spinner.addClass('d-none');
             },
             error: function(xhr) {
                 let mensajeError = "No se pudo procesar la solicitud.";
 
                 if (xhr.status === 404) {
-                    mensajeError = "El número de Documento consultado no se encuentra registrado como trabajador activo.";
+                    mensajeError = "Persona no encontrada en SIGEFIRRHH.";
                 } else if (xhr.status === 422) {
                     let errores = xhr.responseJSON.errors;
                     mensajeError = Object.values(errores).flat().join('<br>');
                 } else if (xhr.status === 500) {
-                    mensajeError = "Persona no encontrada, Por Favor Intente mas tarde.";
+                    mensajeError = "Persona no encontrada en SIGEFIRRHH.";
                 }
 
-                // INYECCIÓN DEL MODAL BASADO EN LAYOUTS.ALERTAS (SI O SI)
+                // Gestión del Modal de Error
+                $('#ajaxErrorModal').remove();
                 let modalHtml = `
-                <div class="modal fade" id="ajaxErrorModal" tabindex="-1">
+                <div class="modal fade" id="ajaxErrorModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content shadow-lg border-0">
                             <div class="modal-header bg-danger text-white">
@@ -212,7 +225,7 @@ $(document).ready(function() {
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body fs-5 text-dark">
-                                <i class="bi bi-exclamation-triangle-fill"></i> ${mensajeError}
+                                <i class="fas fa-exclamation-triangle mr-2"></i> ${mensajeError}
                             </div>
                             <div class="modal-footer border-0">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -221,11 +234,13 @@ $(document).ready(function() {
                     </div>
                 </div>`;
 
-                $('#ajaxErrorModal').remove();
                 $('body').append(modalHtml);
-                var modal = new bootstrap.Modal(document.getElementById('ajaxErrorModal'));
-                modal.show();
-
+                const modalElement = document.getElementById('ajaxErrorModal');
+                const modalInstance = new bootstrap.Modal(modalElement);
+                modalInstance.show();
+            },
+            complete: function() {
+                // Restaurar botón siempre, sea éxito o error
                 btn.prop('disabled', false);
                 texto.removeClass('d-none');
                 spinner.addClass('d-none');
@@ -233,7 +248,7 @@ $(document).ready(function() {
         });
     });
 
-    // Quitar marcas de error al interactuar
+    // Limpiar errores visuales al escribir
     $('#snacionalidad, #ndocumento').on('change input', function() {
         $(this).removeClass('is-invalid');
     });

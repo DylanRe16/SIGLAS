@@ -36,7 +36,13 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <div class="link-secondary">
-                <h4 class="font-weight-bold">Constancia de Trabajo > Jubilado/Pensionado</h4>
+                <h4 class="font-weight-bold">
+                    <a href="{{ route('recibos.index') }}" class="link-secondary text-decoration-none">
+
+                        Recibos y Constacias
+                    </a>
+
+                    > Constancia de Trabajo > Jubilado/Pensionado</h4>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
@@ -46,7 +52,7 @@
 
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title font-weight-bold">Buscar Jubilado / Pensionado</h3>
+            <h3 class="card-title font-weight-bold">Buscar Trabajador</h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#modalHelpJubilado">
                     <i class="bi bi-info-circle"></i>
@@ -56,7 +62,7 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="card-body">
             <form id="formBusquedaJubilado">
                 @csrf
@@ -71,10 +77,10 @@
                         </select>
                         <div class="invalid-feedback">El tipo de Documento es obligatorio.</div>
                     </div>
-                    
+
                     <div class="col-md-5">
                         <div class="link-secondary">Nro. de Documento<span class="requerido">*</span></div>
-                        <input class="form-control" placeholder="Ingrese..." oninput="this.value = this.value.replace(/[^0-9]/g, '');" 
+                        <input class="form-control" placeholder="Ingrese..." oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                name="ndocumento" id="ndocumento" maxlength="11" required>
                         <div class="invalid-feedback">El número de Documento es obligatorio.</div>
                     </div>
@@ -92,12 +98,12 @@
 
     <div id="resultadoBusqueda" class="mt-4"></div>
 
-   <div class="modal fade" id="modalHelpJubilado" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"> 
+   <div class="modal fade" id="modalHelpJubilado" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                    Ayuda 
+                    Ayuda
                 </h1>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -147,7 +153,7 @@ $(document).ready(function() {
         if (!tipoDoc.val() || !nroDoc.val().trim()) {
             if(!tipoDoc.val()) tipoDoc.addClass('is-invalid');
             if(!nroDoc.val().trim()) nroDoc.addClass('is-invalid');
-            
+
             contenedorAlertas.html(`
                 <div class="alert alert-danger border-left-danger shadow-sm mt-2 mb-3 animate__animated animate__shakeX">
                     <div class="d-flex align-items-center">
@@ -156,7 +162,7 @@ $(document).ready(function() {
                     </div>
                 </div>
             `);
-            return; 
+            return;
         }
 
         btn.prop('disabled', true);
@@ -164,7 +170,7 @@ $(document).ready(function() {
         spinner.removeClass('d-none');
 
         $.ajax({
-            url: "{{ route('recibos.buscarjubilado') }}", 
+            url: "{{ route('recibos.buscarjubilado') }}",
             method: "POST",
             data: $(this).serialize(),
             success: function(response) {
@@ -176,7 +182,7 @@ $(document).ready(function() {
             error: function(xhr) {
                 let mensajeError = "No se encontró registro activo como Jubilado o Pensionado.";
                 if (xhr.status !== 404) mensajeError = "Error al procesar la solicitud.";
-                
+
                 // INYECCIÓN DEL MODAL SEGÚN LAYOUTS.ALERTAS (SI O SI)
                 let modalHtml = `
                 <div class="modal fade" id="ajaxErrorModal" tabindex="-1">

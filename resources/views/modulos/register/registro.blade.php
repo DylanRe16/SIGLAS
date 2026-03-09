@@ -28,21 +28,21 @@
                     </div>
 
                     @if ($errors->any())
-                        <div class="alert alert-danger fs-6" id="alert">
-                            @foreach ($errors->all() as $error)
-                                <i class="bi bi-exclamation-triangle-fill"></i> {{ $error }} <br>
-                            @endforeach
-                        </div>
+                    <div class="alert alert-danger fs-6" id="alert">
+                        @foreach ($errors->all() as $error)
+                        <i class="bi bi-exclamation-triangle-fill"></i> {{ $error }} <br>
+                        @endforeach
+                    </div>
                     @endif
 
                     @if (session('error'))
-                        <div class="alert alert-danger fs-6" id="alert">
-                            <i class="bi bi-exclamation-triangle-fill"></i> {{session('error')}}
-                        </div>
+                    <div class="alert alert-danger fs-6" id="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i> {{session('error')}}
+                    </div>
                     @endif
 
-                    <form action="{{route('registro-show')}}" method="get">
-                        
+                    <form action="{{route('registro-show')}}" method="post">
+
                         <div class="row">
                             <div style="margin-left:5px">
                                 <h6 style="color: #004B9D;">Documento de identidad <span class="requerido">*</span></h6>
@@ -59,18 +59,18 @@
                                     </div>
                                     <div class="sep"></div>
                                     <div class="input-group">
-                                    
-                                        <input maxlength="8" tabindex="9" class="form-control num_certif" aria-label="Es obligatorio indicar su Nro. de documento" type="text" style="width: 80%; max-width: 210px" placeholder="Nro. de documento" name="ced_afiliado" id="ced_afiliado"  value="{{ old('ced_afiliado') }}">
+
+                                        <input maxlength="8" tabindex="9" class="form-control num_certif" aria-label="Es obligatorio indicar su Nro. de documento" type="text" style="width: 80%; max-width: 210px" placeholder="Nro. de documento" name="ced_afiliado" id="ced_afiliado" value="{{ old('ced_afiliado') }}">
                                         <span style="width: 10px; background-color: #fff"></span>
                                         <button tabindex="10" id="busca" type="submit" class="buttom " data-bs-toggle="tooltip" data-bs-placement="right" title="Buscar" style="width:auto; border-radius:0 30px 30px 0" onmouseover='this.style.color="#46A2FD"; this.style.backgroundColor="#fff";' onmouseout='this.style.color="#fff"; this.style.backgroundColor="#46A2FD"; this.style.border="1px Solid #46A2FD"'>Buscar</button>
                                     </div>
 
-                                
+
                                 </center>
-                                </div>
                             </div>
-                        </form>
-                                
+                        </div>
+                    </form>
+
 
                     <div class="sep"></div>
                     <div class="row ">

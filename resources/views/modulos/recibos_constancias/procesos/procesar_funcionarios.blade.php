@@ -6,7 +6,7 @@
 @section('css')
 <style>
     /* Mantiene el borde rojo pero elimina el icono/símbolo de Bootstrap */
-    .form-control.is-invalid, 
+    .form-control.is-invalid,
     .form-select.is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
@@ -15,7 +15,7 @@
     .is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
-        border-color: #80bdff !important; 
+        border-color: #80bdff !important;
         box-shadow: none !important;
     }
 
@@ -25,19 +25,19 @@
     }
 
     .btn-guardar {
-        background-color: #007bff; 
+        background-color: #007bff;
         border-color: #007bff;
         color: #ffffff !important;
     }
 
     /* Evita el cambio a blanco o colores claros al pasar el mouse */
-    .btn-guardar:hover, 
-    .btn-guardar:active, 
+    .btn-guardar:hover,
+    .btn-guardar:active,
     .btn-guardar:focus {
-        background-color: #007bff !important; 
+        background-color: #007bff !important;
         border-color: #007bff !important;
-        color: #ffffff !important; 
-        transform: scale(1.02); 
+        color: #ffffff !important;
+        transform: scale(1.02);
     }
 
     /* Estilos para el modal de ayuda */
@@ -53,7 +53,11 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <div class="link-secondary">
-                <h4 class="font-weight-bold">Procesos > Cargar Nómina Funcionarios</h4>
+                <h4 class="font-weight-bold">
+                    <a href="{{ route('recibos.index') }}" class="link-secondary text-decoration-none">
+                        PROCESOS
+                    </a>
+                        > Cargar Nómina Funcionarios</h4>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
@@ -139,7 +143,7 @@
                 <div class="row justify-content-center border-top pt-3">
                     <div class="col-md-8 text-center">
                         <p class="text-muted small">
-                            <i class="fas fa-info-circle mr-1"></i> 
+                            <i class="fas fa-info-circle mr-1"></i>
                             Este proceso extraerá los datos históricos de <b>SIGEFIRRHH</b> y los migrará al sistema de recibos en <b>BD4</b>.
                         </p>
                     </div>
@@ -165,7 +169,7 @@
                         En esta sección, podrá <strong>consultar los datos del funcionario(a)</strong>. Ingrese los datos que se le solicitan.
                     </p>
                    <!--  <hr> -->
-                </div> 
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Entendido</button>
                 </div>

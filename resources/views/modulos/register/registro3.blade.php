@@ -9,7 +9,7 @@
     <div class="alert alert-danger fs-6">{{session('error')}}</div>
     @endif
 
-    <form action="{{route('registro-store')}}" method="post">
+    <form action="{{route('registro-store')}}" method="get">
 
       @csrf
       <div class="card-header">
@@ -28,7 +28,7 @@
       <hr style="margin-top:0">
 
 
-      <input type="text" hidden name="ndocumento" value="{{ old('ndocumento', $persona) }}">
+      <!-- <input type="text" hidden name="ndocumento" > -->
 
       <div class="font-weight-bold" style="color: #007BFF;">
         <h4 style="font-size: calc(1.500rem + 0.3vw);">Preguntas de seguridad</h4>
@@ -115,7 +115,7 @@
 
       <div class="sep"></div>
 
-      <input type="password" name="sclave" id="" value="{{ $clave }}" class="form-control" hidden>
+      <!-- <input type="password" name="sclave" id="" class="form-control" hidden> -->
 
 
 

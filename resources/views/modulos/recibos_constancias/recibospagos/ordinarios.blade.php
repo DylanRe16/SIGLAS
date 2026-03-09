@@ -6,7 +6,7 @@
 @section('css')
 <style>
     /* Mantiene el borde rojo pero elimina el icono/símbolo de Bootstrap */
-    .form-control.is-invalid, 
+    .form-control.is-invalid,
     .form-select.is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
@@ -16,7 +16,7 @@
     .is-invalid {
         background-image: none !important;
         padding-right: 0.75rem !important;
-        border-color: #80bdff !important; 
+        border-color: #80bdff !important;
         box-shadow: none !important;
     }
 
@@ -34,7 +34,11 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <div class="link-secondary">
-                <h4 class="font-weight-bold">Recibos de Pagos > Año Actual > Ordinario</h4>
+                <h4 class="font-weight-bold">
+                    <a href="{{ route('recibos.index') }}" class="link-secondary text-decoration-none">
+                        Recibos de Pagos
+                    </a>
+                    > Año Actual > Ordinario</h4>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
@@ -52,7 +56,7 @@
                 <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
             </div>
         </div>
-        
+
         <div class="card-body">
             <form id="formBusquedaEgresado"> @csrf
                 {{-- SECCIÓN 1: PERFIL LABORAL --}}
@@ -110,7 +114,7 @@
                 <div class="row fs-6 d-flex align-items-end mb-4">
                     <div class="col-md-5">
                         <div class="link-secondary">Mes<span class="requerido">*</span></div>
-                        <select class="form-select" name="mes" id="mes" required> 
+                        <select class="form-select" name="mes" id="mes" required>
                             <option value="" selected disabled>Seleccione un mes</option>
                             <option value="01">Enero</option>
                             <option value="02">Febrero</option>
@@ -151,13 +155,13 @@
 
     <div id="resultadoBusqueda" class="mt-4"></div>
 
-    <div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"> 
+    <div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">    
+        <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">
             <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                            Ayuda 
+                            Ayuda
                         </h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             <!-- <span aria-hidden="true">&times;</span> -->
@@ -195,7 +199,7 @@ $(document).ready(function() {
         let spinner = $('#spinnerBoton');
         let contenedorResultado = $('#resultadoBusqueda');
         let contenedorAlertas = $('#contenedorAlertas');
-        
+
         let mes = $('#mes');
         let tipoNomina = $('#tipo_nomina');
 
@@ -227,7 +231,7 @@ $(document).ready(function() {
                     </div>
                 </div>
             `);
-            return; 
+            return;
         }
 
         // UI de carga

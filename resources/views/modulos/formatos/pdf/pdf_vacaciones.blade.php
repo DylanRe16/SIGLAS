@@ -64,11 +64,11 @@
 
     <tr>
         <td colspan="4">
-            <span class="label">Nombre(s) y Apellido(s) del trabajador(a):</span>
+            <span class="label">Nombre(s) y Apellido(s) del Trabajador(a):</span>
             <span>{{ $user->primer_nombre }}  {{ $user->segundo_nombre }}   {{ $user->primer_apellido }} {{ $user->segundo_apellido }}</span>
         </td>
 
-        <td colspan="2"><span class="label">Nro de Documento:</span> <span class="data-text">{{ number_format($user->cedula, 0, ',', '.') }}</span></td>
+        <td colspan="2"><span class="label">Nro. de Documento:</span> <span class="data-text">{{ number_format($user->cedula, 0, ',', '.') }}</span></td>
     </tr>
 
     <tr>
@@ -78,7 +78,7 @@
         </td>
 
          <td colspan="2">
-            <span class="label">Correo electrónico del trabajador(a)</span>
+            <span class="label">Correo Electrónico del Trabajador(a)</span>
             <span>{{ $user->semail }}</span>
         </td>
     </tr>
@@ -109,12 +109,12 @@
     </tr>
 
     <tr style="text-align: center; height: 25px;">
-        <td>{{ $user->fecha_ingreso }}</td>
+        <td>{{  \Carbon\Carbon::parse($user->fecha_ingreso)->format('d-m-Y') }}</td>
         <td>{{ $años_servicio }}</td>
         <td>{{ $años_servicio_apn }}</td>
         <td>{{ $totalservicios }}</td>
         <td>{{ $lapso_vacacional_solicitado }}</td>
-        <td>{{ $fecha_deseada }}</td>
+        <td>{{ \Carbon\Carbon::parse($fecha_deseada)->format('d-m-Y') }}</td>
     </tr>
 
     <tr>

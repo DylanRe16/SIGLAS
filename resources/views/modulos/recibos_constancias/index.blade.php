@@ -68,7 +68,7 @@
     <div class="card card-outline card-success shadow-lg">
         <div class="card-header">
             <h3 class="card-title bold">
-                <i class="fas fa-list-ul mr-2"></i> Seleccione
+                <i class="fas fa-list-ul mr-2"></i> Constancias de Trabajo
             </h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" id="btn-cerrar-constancias">
@@ -76,28 +76,31 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="card-body">
-            <div class="row">
+            <div class="row d-flex align-items-stretch">
+                
                 {{-- Constancia Simple con Sueldo --}}
-                <div class="col-md-6 col-lg-5 mb-3">
-                    <div class="info-box bg-gradient-light shadow-sm border-success" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                <div class="col-md-6 mb-4">
+                    <div class="info-box bg-gradient-light shadow-sm border-success h-100"
+                        style="cursor: pointer; transition: 0.3s; display: flex;"
                         onclick="window.open('{{ route('recibos.simple-sueldo') }}', '_blank')"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
                         title="Haga clic para generar">
-                        
+
                         <span class="info-box-icon bg-success elevation-1">
                             <i class="fas fa-money-bill-wave"></i>
                         </span>
 
-                        <div class="info-box-content">
-                            <span class="info-box-text text-bold" style="font-size: 1.1rem; font-weight: normal;">Constancia Simple con Sueldo</span>
-                            <span class="info-box-number text-muted font-weight-normal">
-                                Generar documento oficial con desglose de ingresos mensuales.
-                            </span>
-                            <div class="progress mt-2" style="height: 2px;">
+                        <div class="info-box-content d-flex flex-column justify-content-between">
+                            <div>
+                                <span class="info-box-text" style="font-size: 1.1rem;">Constancia de Trabajo</span>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem; line-height: 1.2;">
+                                    Documento formal emitido por la institución donde se certifica que un trabajador mantiene actualmente una relación laboral vigente.
+                                </p>
+                            </div>
+                            <div class="progress mt-2" style="height: 3px;">
                                 <div class="progress-bar bg-success" style="width: 100%"></div>
                             </div>
                         </div>
@@ -105,24 +108,26 @@
                 </div>
 
                 {{-- Constancia de Egreso --}}
-                <div class="col-md-6 col-lg-5 mb-3">
-                    <div class="info-box bg-gradient-light shadow-sm border-danger" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;"
-                        onclick="window.location='{{ route('recibos.egresado') }}'" 
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                <div class="col-md-6 mb-4">
+                    <div class="info-box bg-gradient-light shadow-sm border-danger h-100"
+                        style="cursor: pointer; transition: 0.3s; display: flex;"
+                        onclick="window.location='{{ route('recibos.egresado') }}'"
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
                         title="Haga clic para ir a Egresados">
-                        
+
                         <span class="info-box-icon bg-danger elevation-1">
                             <i class="fas fa-user-minus"></i>
                         </span>
-                        
-                        <div class="info-box-content">
-                            <span class="info-box-text text-bold" style="font-size: 1.1rem; font-weight: normal;">Constancia de Egreso</span>
-                            <span class="info-box-number text-muted font-weight-normal">
-                                Para personal que ha cesado funciones o jubilados.
-                            </span>
-                            <div class="progress mt-2" style="height: 2px;">
+
+                        <div class="info-box-content d-flex flex-column justify-content-between">
+                            <div>
+                                <span class="info-box-text " style="font-size: 1.1rem;">Constancia de Egreso</span>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem; line-height: 1.2;">
+                                    Documento que certifica que una persona culminó satisfactoriamente su relación laboral o período de servicio en la institución.
+                                </p>
+                            </div>
+                            <div class="progress mt-2" style="height: 3px;">
                                 <div class="progress-bar bg-danger" style="width: 100%"></div>
                             </div>
                         </div>
@@ -130,90 +135,97 @@
                 </div>
 
                 {{-- Referencia FAOV --}}
-                <div class="col-md-6 col-lg-5 mb-3">
-                    <div class="info-box bg-gradient-light shadow-sm border-info" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;"
-                        onclick="window.location='{{ route('recibos.faov') }}'" 
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                <div class="col-md-6 mb-4">
+                    <div class="info-box bg-gradient-light shadow-sm border-info h-100"
+                        style="cursor: pointer; transition: 0.3s; display: flex;"
+                        onclick="window.location='{{ route('recibos.faov') }}'"
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
-                        title="Haga clic para generar Referencia FAOV">
-                        
+                        title="Haga clic para generar FAOV">
+
                         <span class="info-box-icon bg-info elevation-1">
                             <i class="fas fa-home"></i>
                         </span>
-                        
-                        <div class="info-box-content">
-                            <span class="info-box-text text-bold" style="font-size: 1.1rem; font-weight: normal;">Referencia FAOV</span>
-                            <span class="info-box-number text-muted font-weight-normal">
-                                Aporte al Fondo de Ahorro Obligatorio para la Vivienda.
-                            </span>
-                            <div class="progress mt-2" style="height: 2px;">
+
+                        <div class="info-box-content d-flex flex-column justify-content-between">
+                            <div>
+                                <span class="info-box-text " style="font-size: 1.1rem;">FAOV</span>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem; line-height: 1.2;">
+                                    Certifica la afiliación y el estatus de aportes del trabajador al régimen de ahorro habitacional obligatorio.
+                                </p>
+                            </div>
+                            <div class="progress mt-2" style="height: 3px;">
                                 <div class="progress-bar bg-info" style="width: 100%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- Simple con Sueldo por Trabajador --}}
-                <div class="col-md-6 col-lg-5 mb-3">
-                    <div class="info-box bg-gradient-light shadow-sm border-success" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                {{-- Consulta por Trabajador --}}
+                <div class="col-md-6 mb-4">
+                    <div class="info-box bg-gradient-light shadow-sm border-success h-100"
+                        style="cursor: pointer; transition: 0.3s; display: flex;"
                         onclick="window.location='{{ route('recibos.buscarsueldo.index') }}'"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
                         title="Haga clic para buscar trabajador">
-                        
+
                         <span class="info-box-icon bg-success elevation-1">
-                            <i class="fas fa-money-bill-wave"></i>
+                            <i class="fas fa-search"></i>
                         </span>
 
-                        <div class="info-box-content">
-                            <span class="info-box-text text-bold" style="font-size: 1.1rem; font-weight: normal;">Simple con Sueldo por Trabajador</span>
-                            <span class="info-box-number text-muted font-weight-normal">
-                                Búsqueda y generación de documento oficial con desglose.
-                            </span>
-                            <div class="progress mt-2" style="height: 2px;">
+                        <div class="info-box-content d-flex flex-column justify-content-between">
+                            <div>
+                                <span class="info-box-text " style="font-size: 1.1rem;">Consulta por Trabajador</span>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem; line-height: 1.2;">
+                                    Búsqueda personalizada y generación de documento oficial con desglose para trabajadores activos.
+                                </p>
+                            </div>
+                            <div class="progress mt-2" style="height: 3px;">
                                 <div class="progress-bar bg-success" style="width: 100%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- Simple con Sueldo (Jubilados) --}}
-                <div class="col-md-6 col-lg-5 mb-3">
-                    <div class="info-box bg-gradient-light shadow-sm border-info" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                {{-- Jubilados --}}
+                <div class="col-md-6 mb-4">
+                    <div class="info-box bg-gradient-light shadow-sm border-info h-100"
+                        style="cursor: pointer; transition: 0.3s; display: flex;"
                         onclick="window.location='{{ route('recibos.jubilados') }}'"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
                         title="Haga clic para buscar jubilado o pensionado">
-                        
+
                         <span class="info-box-icon bg-info elevation-1">
                             <i class="fas fa-blind"></i>
                         </span>
 
-                        <div class="info-box-content">
-                            <span class="info-box-text text-bold" style="font-size: 1.1rem; font-weight: normal;">Simple con Sueldo (Jubilados)</span>
-                            <span class="info-box-number text-muted font-weight-normal">
-                                Búsqueda para personal jubilado, pensionado o sobreviviente.
-                            </span>
-                            <div class="progress mt-2" style="height: 2px;">
+                        <div class="info-box-content d-flex flex-column justify-content-between">
+                            <div>
+                                <span class="info-box-text " style="font-size: 1.1rem;">Jubilados</span>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem; line-height: 1.2;">
+                                    Documento oficial que certifica la condición de jubilado(a) o pensionado(a) y su beneficio económico.
+                                </p>
+                            </div>
+                            <div class="progress mt-2" style="height: 3px;">
                                 <div class="progress-bar bg-info" style="width: 100%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
-        </div>
     </div>
+</div>
 
    {{-- SECCIÓN DE OPCIONES: RECIBOS --}}
 <div id="opciones-recibos" class="mt-4" style="display: none;">
     <div class="card card-outline card-info shadow-lg">
         <div class="card-header">
             <h3 class="card-title bold">
-                <i class="fas fa-list-ul mr-2"></i> Seleccione
+                <i class="fas fa-list-ul mr-2"></i> Recibos de Pago
             </h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-tool d-none" id="btn-volver-recibos" title="Volver atrás">
@@ -224,16 +236,16 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="card-body">
             {{-- NIVEL 1: OPCIONES PRINCIPALES --}}
             <div class="row" id="recibos-nivel-1">
                 {{-- Opción: Año Actual --}}
                 <div class="col-md-6 col-lg-6 mb-3">
-                    <div class="info-box bg-gradient-light shadow-sm border-info" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                    <div class="info-box bg-gradient-light shadow-sm border-info"
+                        style="cursor: pointer; min-height: 110px; transition: 0.3s;"
                         id="btn-submenu-año"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
                         title="Haga clic para ver desglose">
                         <span class="info-box-icon bg-info elevation-1"><i class="fas fa-calendar-check"></i></span>
@@ -246,10 +258,10 @@
 
                 {{-- Opción: Jubilados --}}
                 <div class="col-md-6 col-lg-6 mb-3">
-                    <div class="info-box bg-gradient-light shadow-sm border-primary" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                    <div class="info-box bg-gradient-light shadow-sm border-primary"
+                        style="cursor: pointer; min-height: 110px; transition: 0.3s;"
                         onclick="window.location='{{ route('recibos.jubilados.index') }}'"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
                         title="Recibos de Jubilados">
                         <span class="info-box-icon bg-primary elevation-1"><i class="fas fa-blind"></i></span>
@@ -262,10 +274,10 @@
 
                 {{-- Opción: Mensual por Trabajador --}}
                 <div class="col-md-8 col-lg-6 mb-3">
-                    <div class="info-box bg-gradient-light shadow-sm border-success" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                    <div class="info-box bg-gradient-light shadow-sm border-success"
+                        style="cursor: pointer; min-height: 110px; transition: 0.3s;"
                         onclick="window.location.href='{{ route('recibos.mensual.trabajador') }}'"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
                         title="Búsqueda Histórica">
                         <span class="info-box-icon bg-success elevation-1"><i class="fas fa-user-tag"></i></span>
@@ -280,10 +292,10 @@
             {{-- NIVEL 2: SUB-MENÚ AÑO ACTUAL --}}
             <div class="row d-none" id="recibos-nivel-2-año">
                 <div class="col-md-6 col-lg-5 mb-3">
-                    <div class="info-box bg-gradient-light shadow-sm border-secondary" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                    <div class="info-box bg-gradient-light shadow-sm border-secondary"
+                        style="cursor: pointer; min-height: 110px; transition: 0.3s;"
                         onclick="window.location='{{ route('recibos.pago.ordinarios') }}'"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';">
                         <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-file-invoice-dollar"></i></span>
                         <div class="info-box-content">
@@ -294,10 +306,10 @@
                 </div>
 
                 <div class="col-md-6 col-lg-5 mb-3">
-                    <div class="info-box bg-gradient-light shadow-sm border-warning" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                    <div class="info-box bg-gradient-light shadow-sm border-warning"
+                        style="cursor: pointer; min-height: 110px; transition: 0.3s;"
                         onclick="window.location='{{ route('recibos.pago.especiales') }}'"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';">
                         <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-star"></i></span>
                         <div class="info-box-content">
@@ -325,15 +337,15 @@
                 </button>
             </div>
         </div>
-        
+
         <div class="card-body">
             {{-- SECCIÓN 1: ACCIONES GENERALES --}}
             <div class="row">
                 <div class="col-md-6 col-lg-5">
-                    <div class="info-box bg-gradient-light shadow-sm border-success" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                    <div class="info-box bg-gradient-light shadow-sm border-success"
+                        style="cursor: pointer; min-height: 110px; transition: 0.3s;"
                         onclick="window.location='{{ route('procesos.actualizar') }}'"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
                         title="Haga clic para actualizar datos del personal">
                         <span class="info-box-icon bg-success elevation-1">
@@ -349,10 +361,10 @@
                 </div>
 
                 <div class="col-md-6 col-lg-5">
-                    <div class="info-box bg-gradient-light shadow-sm border-success" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                    <div class="info-box bg-gradient-light shadow-sm border-success"
+                        style="cursor: pointer; min-height: 110px; transition: 0.3s;"
                         onclick="window.location='{{ route('procesos.consultar') }}'"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
                         title="Haga clic para consultar expedientes">
                         <span class="info-box-icon bg-success elevation-1">
@@ -378,10 +390,10 @@
             <div class="row">
                 {{-- FUNCIONARIOS --}}
                 <div class="col-md-6 col-lg-5">
-                    <div class="info-box bg-gradient-light shadow-sm border-success" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                    <div class="info-box bg-gradient-light shadow-sm border-success"
+                        style="cursor: pointer; min-height: 110px; transition: 0.3s;"
                         onclick="window.location='{{ route('procesos.funcionarios.index') }}'"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
                         title="Procesar Nómina Funcionarios">
                         <span class="info-box-icon bg-info elevation-1">
@@ -398,10 +410,10 @@
 
                 {{-- OBREROS --}}
                 <div class="col-md-6 col-lg-5">
-                    <div class="info-box bg-gradient-light shadow-sm border-success" 
-                        style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                    <div class="info-box bg-gradient-light shadow-sm border-success"
+                        style="cursor: pointer; min-height: 110px; transition: 0.3s;"
                         onclick="window.location='{{ route('procesos.obreros.index') }}'"
-                        onmouseover="this.style.transform='scale(1.02)';" 
+                        onmouseover="this.style.transform='scale(1.02)';"
                         onmouseout="this.style.transform='scale(1)';"
                         title="Procesar Nómina Obreros">
                         <span class="info-box-icon bg-info elevation-1">
@@ -437,13 +449,13 @@
                 <div class="row">
                     {{-- Tickets de Alimentación --}}
                     <div class="col-md-6 col-lg-5">
-                        <div class="info-box bg-gradient-light shadow-sm border-warning" 
-                            style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                        <div class="info-box bg-gradient-light shadow-sm border-warning"
+                            style="cursor: pointer; min-height: 110px; transition: 0.3s;"
                             onclick="window.location='{{ route('mantenimiento.tickets.index') }}'"
-                            onmouseover="this.style.transform='scale(1.02)';" 
+                            onmouseover="this.style.transform='scale(1.02)';"
                             onmouseout="this.style.transform='scale(1)';"
                             title="Gestionar Tickets">
-                            
+
                             <span class="info-box-icon bg-warning elevation-1">
                                 <i class="fas fa-utensils"></i>
                             </span>
@@ -459,13 +471,13 @@
 
                     {{-- Usuarios --}}
                     <div class="col-md-6 col-lg-5">
-                        <div class="info-box bg-gradient-light shadow-sm border-primary" 
-                            style="cursor: pointer; min-height: 110px; transition: 0.3s;" 
+                        <div class="info-box bg-gradient-light shadow-sm border-primary"
+                            style="cursor: pointer; min-height: 110px; transition: 0.3s;"
                             onclick="window.location='{{ route('recibos_constancias.mantenimiento.usuarios.index') }}'"
-                            onmouseover="this.style.transform='scale(1.02)';" 
+                            onmouseover="this.style.transform='scale(1.02)';"
                             onmouseout="this.style.transform='scale(1)';"
                             title="Gestionar Usuarios">
-                            
+
                             <span class="info-box-icon bg-primary elevation-1">
                                 <i class="fas fa-users-cog"></i>
                             </span>
@@ -497,7 +509,7 @@
 @section('js')
 <script>
 $(document).ready(function() {
-    
+
     // Función auxiliar para cerrar todos los paneles abiertos
     function cerrarTodo() {
         $('#opciones-constancias, #opciones-recibos, #opciones-procesos, #opciones-mantenimiento').slideUp('fast');
@@ -542,7 +554,7 @@ $(document).ready(function() {
         } else {
             cerrarTodo();
             $('#opciones-recibos').slideToggle('fast');
-            resetRecibosMenu(); 
+            resetRecibosMenu();
         }
     });
 

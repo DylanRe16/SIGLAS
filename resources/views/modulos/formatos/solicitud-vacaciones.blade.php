@@ -5,11 +5,16 @@
 
 @section('content')
 <main class="p-4">
+    @include('layouts.modals.formatos.modal_vacaciones')
     <form action="{{ route('formatos-solicitud-vacaciones-generarpdf') }}" method="post" id="form-pdf" >
     <div class="row">
             <div class="col-md-12 d-flex justify-content-between">
                 <div class="link-secondary">
-                    <h4 class="font-weight-bold">Formato > Solicitud de Vacaciones</h4>
+                    <h4 class="font-weight-bold">
+                        <a href="{{ route('formatos') }}" class="link-secondary text-decoration-none">
+                        Formato
+                        </a>
+                        > Solicitud de Vacaciones</h4>
                 </div>
                 <div class="text-danger fs-6 fw-normal">Campos obligatorios (*)</div>
             </div>
@@ -94,77 +99,79 @@
                             </div>
 
 
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <label class="link-secondary ">Años en la Institución</label>
-                                    <input type="text" name="años" id="años" class="form-control form-control-ovalado" disabled>
-                                    </div>
+                        </div> --}}
+
+
+
+
+                        {{-- <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="link-secondary ">Correo Electrónico<span class="text-danger">*</span></label>
+                                <input type="text" name="correo_electronico" id="correo_electronico" class="form-control form-control-ovalado" placeholder="Ingrese...">
+                                @error('correo_electronico')
+                                <small class="text-danger">{{$message}}</small>
+                                @enderror
                             </div>
-                    </div> --}}
+                        </div> --}}
+                        {{--
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="link-secondary ">Total de Años en la APN</label>
+                                    <input type="text" name="total_años_apn" id="total_años_apn" class="form-control form-control-ovalado" disabled>
+                                </div>
+                            </div>  --}}
 
 
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="link-secondary ">Años de Servicio en la APN<span class="text-danger">*</span></label>
-                                        <input type="text" name="años_servicio_apn" id="años_servicio_apn" class="form-control form-control-ovalado" value="{{ old('años_servicio_apn') }}" placeholder="Ingrese...">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="link-secondary ">Años de Servicio en la APN<span class="text-danger">*</span></label>
+                                            <input type="text" name="años_servicio_apn" id="años_servicio_apn" class="form-control form-control-ovalado" value="{{ old('años_servicio_apn') }}" placeholder="Ingrese...">
                                             @error('años_servicio_apn')
                                             <small class="text-danger">{{$message}}</small>
                                             @enderror
-                                    </div>
-                                </div>
-
-
-                                    {{-- <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="link-secondary ">Correo Electrónico<span class="text-danger">*</span></label>
-                                            <input type="text" name="correo_electronico" id="correo_electronico" class="form-control form-control-ovalado" placeholder="Ingrese...">
-                                        @error('correo_electronico')
-                                            <small class="text-danger">{{$message}}</small>
-                                            @enderror
-                                        </div>
-                                    </div> --}}
-
-
-                                    {{-- <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="link-secondary ">Total de Años en la APN</label>
-                                            <input type="text" name="total_años_apn" id="total_años_apn" class="form-control form-control-ovalado" disabled>
-                                            </div>
-                                    </div> --}}
-
-
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="link-secondary ">Lapso Vacacional Solicitado<span class="text-danger">*</span></label>
-                                            <input type="text" name="lapso_vacacional_solicitado"
-                                             id="lapso_vacacional_solicitado"
-                                             class="form-control form-control-ovalado"
-                                             value="{{ old('lapso_vacacional_solicitado') }}" placeholder="Ej: 2026/2027, 2027/2028">
-                                           @error('lapso_vacacional_solicitado')
-                                            <small class="text-danger">{{$message}}</small>
-                                            @enderror
                                         </div>
                                     </div>
-                            </div>
 
-                            <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="link-secondary ">Fecha Deseada<span class="text-danger">*</span></label>
-                                            <input type="date" name="fecha_deseada" id="fecha_deseada"
-                                             class="form-control form-control-ovalado"
-                                              onkeypress="return false;"
-                                              onkeydown="return false;"
-                                              onclick="this.showPicker();"
-                                              {{-- Genera 2024-01-01 (dependiendo del año actual) --}}
-                                              min="{{ date('Y') }}-01-01"
-                                              value="{{ old('fecha_deseada') }}" placeholder="Ingrese...">
-                                            @error('fecha_deseada')
-                                            <small class="text-danger">{{$message}}</small>
-                                            @enderror
+                                            <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="link-secondary ">Años en la Institución</label>
+                                                <input type="text" name="años" id="años" class="form-control form-control-ovalado" value="{{ $años_servicio }}" disabled>
+                                                </div>
                                         </div>
-                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="link-secondary ">Lapso Vacacional Solicitado<span class="text-danger">*</span></label>
+                                                            <input type="text" name="lapso_vacacional_solicitado"
+                                                            id="lapso_vacacional_solicitado"
+                                                            class="form-control form-control-ovalado"
+                                                            value="{{ old('lapso_vacacional_solicitado') }}" placeholder="Ej: 2026/2027, 2027/2028">
+                                                        @error('lapso_vacacional_solicitado')
+                                                            <small class="text-danger">{{$message}}</small>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="link-secondary ">Fecha Deseada<span class="text-danger">*</span></label>
+                                                            <input type="date" name="fecha_deseada" id="fecha_deseada"
+                                                            class="form-control form-control-ovalado"
+                                                            onkeypress="return false;"
+                                                            onkeydown="return false;"
+                                                            onclick="this.showPicker();"
+                                                            {{-- Genera 2024-01-01 (dependiendo del año actual) --}}
+                                                            min="{{ date('Y') }}-01-01"
+                                                            value="{{ old('fecha_deseada') }}" placeholder="Ingrese...">
+                                                            @error('fecha_deseada')
+                                                            <small class="text-danger">{{$message}}</small>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                </div>
 
 
                                     {{-- <div class="col-md-6">
@@ -323,30 +330,6 @@ document.getElementById('form-pdf').addEventListener('submit', function (e) {
     });
 });
 </script>
-
-<div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"> 
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">    
-            <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                            Ayuda 
-                        </h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <!-- <span aria-hidden="true">&times;</span> -->
-                        </button>
-                    </div>
-
-                <div class="modal-body" style="text-align: justify;">
-                    <p>En esta sección, puedes generar una <strong>Solicitud de Vacaciones</strong> para un empleado.</p>
-                    <p>Asegúrate de proporcionar los datos requeridos correctamente para evitar errores en la consulta.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </main>
 @endsection
 @section('footer')

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Validator; // Asegúrate de importar esto arriba
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreRegistroRequest;
 use App\Models\Persona;
@@ -74,6 +73,7 @@ class BusquedaController extends Controller
         $cod_moviles = DB::connection('bd4')->table('tb_codigos_telefonicos')->where('btipo', true)->get();
         $cod_locales = DB::connection('bd4')->table('tb_codigos_telefonicos')->where('btipo', false)->get();
 
+        $preguntas_seg = DB::connection('bd4')->table('tb_preguntas_seg')->get();
 
 
         //$edad = $this->calcularEdad($request->dfecha_nacimiento);
@@ -104,22 +104,23 @@ class BusquedaController extends Controller
             Auth::login($persona2);
 
 
-            return $this->preguntas();
+            return view('modulos.register.registro3', [
+
+                'preguntas_seg' => $preguntas_seg,
+            ]);
         } else {
             return redirect()->route('registro-index')->with('error', 'La persona no se encuentra en los registros.');
         }
     }
-    public function preguntas()
-    {
-        $preguntas_seg = DB::connection('bd4')->table('tb_preguntas_seg')->get();
-
-        return view('modulos.register.registro3', ['preguntas_seg' => $preguntas_seg]);
-    }
+    // public function preguntas($preguntas_seg)
+    // {
+    //     return view('modulos.register.registro3', ['preguntas_seg' => $preguntas_seg]);
+    // }
 
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'pregunta_1' => 'required',
             'pregunta_2' => 'required',
             'pregunta_3' => 'required',
@@ -135,14 +136,9 @@ class BusquedaController extends Controller
             'respuesta_2.required' => 'La respuesta a la pregunta 2 es requerida.',
             'respuesta_3.required' => 'La respuesta a la pregunta 3 es requerida.',
         ]);
-        if ($validator->fails()) {
-            // FORZAMOS el regreso a la ruta GET de preguntas
-            return redirect()->route('registro-preguntas')
-                ->withErrors($validator)
-                ->withInput();
-        }
 
-        $cedula = auth()->user()->cedula;
+
+        $cedula = Auth()::user()->cedula;
 
         $preguntas = [
             ['pregunta' => $request->pregunta_1, 'respuesta' => $request->respuesta_1],

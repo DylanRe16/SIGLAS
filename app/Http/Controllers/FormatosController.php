@@ -155,8 +155,8 @@ class FormatosController extends Controller
         'director' => 'required|string|max:45|regex:/^[a-zA-Z0-9\s]+$/',
     ], [], [
         'motivo' => 'Motivo',
-        'fecha_inicio' => 'Fecha de Solicitud inicio',
-        'fecha_final' => 'Fecha de Solicitud fin',
+        'fecha_inicio' => 'Fecha de Solicitud Inicio',
+        'fecha_final' => 'Fecha de Solicitud Fin',
         'soporte_legal' => 'Soporte legal',
         'nombre' => 'Nombre y Apellido del Jefe(a)/Supervisor(a) Inmediato',
         'director' => 'Nombre y Apellido del Director(a)'
@@ -213,11 +213,11 @@ class FormatosController extends Controller
 
          //'duracion' => 'required'
       ],[
-   
+
       ], [
          'motivo' => ' Motivo',
-        'fecha_inicio' => 'Fecha de Solicitud inicio',
-         'fecha_final' => 'Fecha de Solicitud fin',
+        'fecha_inicio' => 'Fecha de Solicitud Inicio',
+         'fecha_final' => 'Fecha de Solicitud Fin',
          'soporte_legal' => ' Soporte  Legal ',
          'nombre' => 'Nombre y Apellido del Jefe(a)/Supervisor(a) Inmediato',
          'director' => 'Nombre y Apellido del Director(a)',
@@ -248,7 +248,10 @@ class FormatosController extends Controller
 
 
    public function vacaciones(){
-      return view('modulos.formatos.solicitud-vacaciones');
+
+     $años_servicio = $this->calcularAños(Auth::user()->fecha_ingreso);
+
+      return view('modulos.formatos.solicitud-vacaciones', compact('años_servicio'));
    }
 
    public function generarPDFvacaciones(Request $request){
@@ -265,7 +268,7 @@ class FormatosController extends Controller
 
             'años_servicio_apn' => 'Años de Servicio en la APN',
          //    'correo_electronico' => 'Correo electronico',
-            'lapso_vacacional_solicitado' => 'Lapso Vacacional',
+            'lapso_vacacional_solicitado' => 'Lapso Vacacional Solicitado',
             'fecha_deseada' => 'la Fecha Deseada',
             // 'jefe_supervisor_inmediato' => 'Supervisor inmediato',
             // 'director1' => 'Director',

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sigefirrhh;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ProcesosRecibosController extends Controller
 {
@@ -91,20 +93,19 @@ class ProcesosRecibosController extends Controller
 
             return response()->json(['status' => 'success']);
         } catch (\Exception $e) {
-            \Log::error("Error en carga de personal: " . $e->getMessage());
+            Log::error("Error en carga de personal: " . $e->getMessage());
             return response()->json(['status' => 'error'], 500);
         }
     }
 
-   public function buscarTrabajador(Request $request)
-    {
+    public function buscarTrabajador(Request $request){
         try {
             $request->validate([
                 'snacionalidad' => 'required',
-                'ndocumento' => 'required|numeric|digits_between:1,11', // Validamos longitud razonable
+                'ndocumento' => 'required|numeric|digits_between:1,11',
             ]);
 
-            $trabajador = DB::connection('bd4')
+            /* $trabajador = DB::connection('bd4')
                 ->table('public.personales as p')
                 ->leftJoin('public.entidad as e', 'e.nentidad', '=', 'p.nentidad_entidad')
                 ->leftJoin('public.municipio as m', 'm.nmunicipio', '=', 'p.nmunicipio_municipio')
@@ -117,21 +118,26 @@ class ProcesosRecibosController extends Controller
                     'm.sdescripcion as municipio_descripcion',
                     'pa.sdescripcion as parroquia_descripcion'
                 )
-                // IMPORTANTE: Cast a string para evitar el límite de integer en el binding de SQL
+                // FILTRO CRUCIAL: Cédula Y Nacionalidad
                 ->where('p.cedula', '=', (string)$request->ndocumento) 
-                ->first();
+                ->where('p.nacionalidad', '=', $request->snacionalidad) 
+                ->first(); */
+
+            $trabajador = Sigefirrhh::where('nacionalidad', $request->snacionalidad)
+                                ->where('cedula', $request->ndocumento)->first();
+
+            // return $trab;
 
             if (!$trabajador) {
-                return response()->json(['error' => 'No se encontró ningún trabajador con esa cédula.'], 404);
+                return response()->json(['error' => 'No se encontró ningún trabajador con esos datos de nacionalidad y cédula.'], 404);
             }
 
             $html = view('modulos.recibos_constancias.procesos.partials.resultado_busqueda', compact('trabajador'))->render();
             return response()->json(['html' => $html]);
 
         } catch (\Exception $e) {
-            // Si el error es específicamente de rango numérico, damos un mensaje limpio
             if (str_contains($e->getMessage(), '22003')) {
-                return response()->json(['error' => 'El número de documento ingresado es demasiado largo para el sistema.'], 422);
+                return response()->json(['error' => 'El número de documento ingresado es demasiado largo.'], 422);
             }
             return response()->json(['error' => 'Error de sistema: ' . $e->getMessage()], 500);
         }

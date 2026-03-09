@@ -1,22 +1,21 @@
+
 <div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Ayuda</h1>
-                <!--TITULO DE LA PANTALLA EMERGENTE-->
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Ayuda</h1> <!--TITULO DE LA PANTALLA EMERGENTE-->
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <!--CONTENIDO DE LA PANTALLA EMERGENTE-->
-            <div class="modal-body" style="text-align: justify;">
-                <h5 class="card-title" id="titulo1"> </h5>
+            <div class="modal-body">
 
                 <p>
-                    Permite asignar/desasignar el rol del usuario autorizado para
-                    el uso del módulo. Recuerde completar todos los
-                    campos obligatorios, identificados con un asterisco (*).
+                     Permite registrar la información por el trabajador(a) 
+                    para generar el formato de la Notificación de Ausencia a su lugar de trabajo. 
+                    Recuerde completar todos los campos obligatorios, 
+                    indentificados con un asterisco (*).
                 </p>
-
             </div>
 
             <div class="modal-footer">

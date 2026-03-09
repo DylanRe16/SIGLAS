@@ -41,7 +41,11 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <div class="link-secondary">
-                <h4 class="font-weight-bold">Mantenimiento > Tickets Alimentación</h4>
+                <h4 class="font-weight-bold">
+                    <a href="{{ route('recibos.index') }}" class="link-secondary text-decoration-none">
+                        Mantenimiento
+                    </a>
+                    > Tickets Alimentación</h4>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
         </div>
@@ -153,12 +157,12 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalHelpTickets" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"> 
+    <div class="modal fade" id="modalHelpTickets" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                        Ayuda 
+                        Ayuda
                     </h1>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -210,7 +214,7 @@ $(document).ready(function() {
     $('#formTickets').on('submit', function(e) {
         let mes = $('#mes_vigencia'), ut = $('#ut'), porc = $('#porcentaje');
         let contenedorAlertas = $('#contenedorAlertas');
-        
+
         $('.form-control, .form-select').removeClass('is-invalid');
 
         if (!mes.val() || !ut.val() || !porc.val()) {

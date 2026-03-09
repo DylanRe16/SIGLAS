@@ -34,7 +34,7 @@
 
 
 
-            <form action="{{route('registro-create')}}" method="get">
+            <form action="{{route('registro-create')}}" method="post">
                 @csrf
                 <div class="col-sm-10" style="margin-top:0 !important;">
                     <div class="card-body caja-body">

@@ -1,4 +1,5 @@
-<div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+    <div class="modal fade" id="modal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable" style="height: auto;">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,10 +11,10 @@
             <div class="modal-body">
 
                 <p>
-                    Permite cambiar/actualizar su contraseña para mejorar la seguridad de su cuenta.
-                    Asegúrese de seleccionar una contraseña que cumpla con todos los parámetros
-                    requeridos en pantalla. Recuerde completar todos los
-                    campos obligatorios, identificados con un asterisco (*).
+                    Permite registrar la información por el trabajador(a) 
+                    para generar el formato de Solicitud de Permiso a su lugar de trabajo. 
+                    Recuerde completar todos los campos obligatorios, 
+                    indentificados con un asterisco (*). <br>
                 </p>
             </div>
 

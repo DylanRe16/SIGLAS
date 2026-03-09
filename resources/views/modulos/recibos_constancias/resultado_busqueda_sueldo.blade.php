@@ -8,24 +8,30 @@
                 <table class="table table-bordered table-sm">
                     <tr>
                         <th class="bg-light" style="width: 30%">Nombre(s) y Apellido(s):</th>
-                        <td>{{ strtoupper($persona->primer_nombre) }} {{ strtoupper($persona->primer_apellido) }}</td>
+                        <td>
+                            {{ strtoupper($persona->primer_nombre) }} {{ strtoupper($persona->segundo_nombre) }}
+                            {{ strtoupper($persona->primer_apellido) }} {{ strtoupper($persona->segundo_apellido) }}
+                        </td>
                     </tr>
+
                     <tr>
                         <th class="bg-light">Tipo y Nro. de Documento:</th>
                         <td>{{ $persona->nacionalidad }}-{{ number_format($persona->cedula, 0, '', '.') }}</td>
                     </tr>
+
                     <tr>
                         <th class="bg-light">Tipo de Personal:</th>
                         <td><span>{{ $figura }}</span></td>
                     </tr>
+
                     <tr>
                         <th class="bg-light">Ubicación Administrativa:</th>
                         <td>{{ strtoupper($persona->nombre_dep) }}</td>
                     </tr>
-                
+
                 </table>
             </div>
-            
+
             <div class="col-md-4 d-flex align-items-center justify-content-center">
                 {{-- Ruta corregida para sueldo --}}
                 <form action="{{ route('recibos.generarpdf.sueldo') }}" method="POST" target="_blank">

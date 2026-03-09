@@ -391,17 +391,17 @@ return [
         ],
 
         [
-            'text' => 'Constancia de Trabajo',
+            'text' => 'Constancias de Trabajo',
             'topnav' => true,
             'classes' => 'opciones-recibos', // Clase única para tu filtro
             'submenu' => [
                 [
-                    'text' => 'Simple Con Sueldo',
+                    'text' => 'Constancia de Trabajo',
                     'url'  => '/recibosconstancias/simple-sueldo',
                     'target' => '_blank',
                 ],
                 [
-                    'text' => 'Egreso',
+                    'text' => 'Constancia de Egreso',
                     'url'  => '/recibosconstancias/egresado',
                 ],
                 [
@@ -409,7 +409,7 @@ return [
                     'url'  => '/recibosconstancias/faov',
                 ],
                 [
-                    'text' => 'Simple con Sueldo por Trabajador',
+                    'text' => 'Consulta por Trabajador',
                     'url'  => '/recibosconstancias/buscar-sueldo',
                 ],
                 [
@@ -491,13 +491,13 @@ return [
             ],
         ],
 
-        [
-            'text' => 'Roraima',
-            'url' => '/roraima',
-            'icon' => 'fas fa-fw fa-cogs',
-        ],
+        // [
+        //     'text' => 'Roraima',
+        //     'url' => '/roraima',
+        //     'icon' => 'fas fa-fw fa-cogs',
+        // ],
 
-       [
+        [
             'text' => 'Proyectos',
             'topnav' => true,
             'classes' => 'opciones-roraima',
@@ -514,7 +514,7 @@ return [
         ],
 
 
-       [
+        [
             'text' => 'Asignar Usuarios',
             'topnav' => true,
             'classes' => 'opciones-roraima',
@@ -530,7 +530,7 @@ return [
             ]
         ],
 
-       [
+        [
             'text' => 'Solicitudes',
             'topnav' => true,
             'classes' => 'opciones-roraima',
@@ -544,9 +544,9 @@ return [
                     'url'  => 'roraima/acc-requerimientos',
                 ],
             ]
-        ], 
+        ],
 
-       [
+        [
             'text' => 'Variables',
             'topnav' => true,
             'classes' => 'opciones-roraima',
@@ -564,9 +564,9 @@ return [
                     'url'  => 'roraima/variables/reportes',
                 ],
             ]
-        ], 
+        ],
 
-       
+
 
 
 
@@ -591,7 +591,7 @@ return [
             'url' => '/formatos/solicitud-permiso',
             'classes' => 'opciones-formatos',
         ],
-        
+
         [
             'text' => 'Solicitud de Vacaciones',
             'topnav' => true,
@@ -601,7 +601,7 @@ return [
 
 
 
-        
+
         [
             'text' => 'Registrar',
             'topnav' => true,
@@ -781,7 +781,7 @@ return [
         'css/estilos.css',
 
         // Si tuvieras otro archivo, simplemente añades otra cadena:
-        // 'vendor/otro_plugin/otro.css', 
+        // 'vendor/otro_plugin/otro.css',
     ],
 
     'plugins' => [

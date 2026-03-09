@@ -71,10 +71,15 @@
         </table>
         @endif
 
-        <div class="text-center mt-4">
-            <a href="#" class="btn btn-danger">
-                <i class="fas fa-file-pdf mr-2"></i> Imprimir Recibo Especial
-            </a>
-        </div>
+        <div class="card shadow-sm mt-4">
+    <div class="text-center mt-4 mb-3">
+        {{-- EL ENLACE DEBE APUNTAR A LA NUEVA RUTA GET --}}
+        <a href="{{ route('recibos.pago.imprimirEspecial', ['mes' => $mes]) }}" 
+           target="_blank" 
+           class="btn btn-danger btn-lg shadow">
+            <i class="fas fa-file-pdf mr-2"></i> Imprimir Recibo
+        </a>
+    </div>
+</div>
     </div>
 </div>

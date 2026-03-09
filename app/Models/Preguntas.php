@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Preguntas extends Model
 {
-    protected $connection = 'bd5';
+    protected $connection = 'bd4';
     protected $table = 'public.tb_preguntas_seg';
     protected $primaryKey = 'id_preguntaseg';
     public $timestamps = false;

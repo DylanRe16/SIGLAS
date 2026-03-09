@@ -44,25 +44,24 @@
         </table>
 
         @if($noSalariales->count() > 0)
-            <h6 class="mt-4 text-info font-weight-bold">Conceptos No Salariales</h6>
-            <table class="table table-sm table-borderless">
-                @foreach($noSalariales as $ns)
-                <tr>
-                    <td width="70%">{{ $ns->descripcion_concepto }}</td>
-                    <td class="text-right">{{ number_format($ns->monto, 2, ',', '.') }}</td>
-                </tr>
-                @endforeach
-            </table>
+        <h6 class="mt-4 text-info font-weight-bold">Conceptos No Salariales</h6>
+        <table class="table table-sm table-borderless">
+            @foreach($noSalariales as $ns)
+            <tr>
+                <td width="70%">{{ $ns->descripcion_concepto }}</td>
+                <td class="text-right">{{ number_format($ns->monto, 2, ',', '.') }}</td>
+            </tr>
+            @endforeach
+        </table>
         @endif
-        
+
         <div class="mt-3 text-center">
-            <button class="btn btn-danger btn-sm">
-                <a href="{{ route('recibos.pago.imprimir', ['mes' => $mes, 'quincena' => $quincena]) }}" 
-                    target="_blank" 
-                    class="btn btn-danger btn-sm">
-                    <i class="fas fa-file-pdf mr-2"></i> Imprimir Recibo
-                </a>
-            </button>
+            <a href="{{ route('recibos.pago.imprimir', ['mes' => $mes, 'quincena' => $quincena]) }}"
+                target="_blank">
+                <button class="btn btn-danger">
+                    <i class="fas fa-file-pdf"></i> Imprimir Recibo
+                </button>
+            </a>
         </div>
     </div>
 </div>

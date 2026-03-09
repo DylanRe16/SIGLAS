@@ -76,18 +76,20 @@
                 </td>
                 <td class="td-qr">
                     @if($qrCode)
-                        <img src="{{ $qrCode }}" class="img-qr">
+                        <div style="text-align: center;">
+                            <img src="{{ $qrCode }}" style="width: 105px; height: 105px; display: block; margin: 0 auto;">
+                            {{-- <span style="font-size: 6pt; display: block; margin-top: 2px;">VALIDACIÓN DIGITAL</span> --}}
+                        </div>
                     @endif
                 </td>
             </tr>
         </table>
     </div>
 
-    <!-- <div class="legal-notice">
-        Esta referencia ha sido impresa electrónicamente, los datos reflejados están sujetos a confirmación a través de: 
-        <span class="bold">www.mpppst.gob.ve</span>. No requiere sello húmedo. 
-        Según Ley de Simplificación de Trámites Administrativos y Ley de Infogobierno.
-    </div> -->
+    <div class="legal-notice" style="text-align: center;">
+        Esta constancia es válida hasta el <span class="bold">{{ $fec_caducidad }}</span>. 
+        No requiere sello húmedo. Según Ley de Simplificación de Trámites Administrativos y Ley de Infogobierno.
+    </div>
 
     <div class="address-footer">
         Av. Baralt. Edif. Sur, Centro Simón Bolívar, piso 4. Urb. Santa Teresa. Caracas. Distrito Capital. Apartado Postal 1010.<br>
