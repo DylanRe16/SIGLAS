@@ -8,18 +8,18 @@
         body { font-family: 'Arial', sans-serif; font-size: 11pt; line-height: 1.5; color: #000; }
         .header-image { text-align: center; margin-bottom: 10px; }
         .header-image img { width: 100%; height: auto; }
-        
+
         .title {
             text-align: center; font-weight: bold; font-size: 14pt;
             text-decoration: underline; margin-bottom: 30px; margin-top: 10px;
         }
-        
+
         .content { text-align: justify; margin-bottom: 12px; }
         .bold { font-weight: bold; }
         .uppercase { text-transform: uppercase; }
-        
+
         .footer { text-align: center; width: 100%; margin-top: 20px; }
-        
+
         .table-firma {
             width: 50%;
             margin: 0 auto 5px auto;
@@ -33,9 +33,9 @@
             border-collapse: collapse;
             margin-top: 10px;
         }
-        
-        .td-espacio-izq { width: 20%; } 
-        
+
+        .td-espacio-izq { width: 20%; }
+
         .td-director {
             width: 60%;
             text-align: center;
@@ -96,13 +96,13 @@
     <div class="title">CONSTANCIA</div>
 
     <div class="content">
-        Quien suscribe, el <span class="bold">Director General</span> de la <span class="bold">Oficina de Gestión Humana...</span>, 
-        hace constar por medio de la presente que {{ $ciudadano }} 
-        <span class="bold uppercase">{{ $nombre_completo }}</span>, 
-        titular de la cédula de identidad Nro. <span class="bold">{{ $nacionalidad }}-{{ $cedula }}</span>, 
-        ostenta la condición de <span class="bold">{{ $figura }}</span> de este Organismo a partir del 
-        <span class="bold">{{ $fecha_egreso }}</span> 
-        devengando: <span class="bold">{{ $monto_num }} BOLÍVARES</span> 
+        Quien suscribe, el <span class="bold">Director General</span> de la <span class="bold">Oficina de Gestión Humana</span>,
+        hace constar por medio de la presente que {{ $ciudadano }}
+        <span class="bold uppercase">{{ $nombre_completo }}</span>,
+        titular de la cédula de identidad Nro. <span class="bold">{{ $nacionalidad }}-{{ $cedula }}</span>,
+        ostenta la condición de <span class="bold">{{ $figura }}</span> de este Organismo a partir del
+        <span class="bold">{{ $fecha_egreso }}</span>
+        devengando: <span class="bold">{{ $monto_num }} BOLÍVARES</span>
         ({{ $monto_letras }}) por concepto de <span class="bold">{{ $tipo_asignacion }}</span>.
     </div>
 
@@ -111,7 +111,7 @@
     </div> -->
 
     <div class="content">
-        Constancia que se expide a petición de la parte interesada en la ciudad de Caracas a los <span class="bold">{{ $dia }}</span> 
+        Constancia que se expide a petición de la parte interesada en la ciudad de Caracas a los <span class="bold">{{ $dia }}</span>
         días del mes de <span class="bold">{{ $mes }}</span> de <span class="bold">{{ $ano }}</span>.
     </div>
 
@@ -128,7 +128,7 @@
         <table class="table-info-final">
             <tr>
                 <td class="td-espacio-izq"></td>
-                
+
                 <td class="td-director">
                     <div class="nombre-director">CARLOS JAVIER FONSECA TOVAR</div>
                     <div class="cargo-director">DIRECTOR GENERAL DE LA OFICINA DE GESTIÓN HUMANA</div>
@@ -150,11 +150,11 @@
         </table>
 
 
-        
+
     </div>
 
     <div class="legal-notice" style="text-align: center;">
-        Esta constancia es válida hasta el <span class="bold">{{ $fec_caducidad }}</span>. 
+        Esta constancia es válida hasta el <span class="bold">{{ $fec_caducidad }}</span>.
         No requiere sello húmedo. Según Ley de Simplificación de Trámites Administrativos y Ley de Infogobierno.
     </div>
 

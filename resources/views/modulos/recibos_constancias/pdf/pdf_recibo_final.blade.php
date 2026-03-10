@@ -7,11 +7,11 @@
         body { font-family: 'Helvetica', sans-serif; font-size: 11px; color: #333; margin: 0; padding: 0; }
         
         .header-image { text-align: center; margin-bottom: 10px; width: 100%; }
-        .header-image img { width: 100%; height: auto; }
+        .header-image img { width: 100%; height: auto; max-height: 85px; } /* Consistente con el ordinario */
 
         .header-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .blue-cell { background-color: #1F497D; color: white; font-weight: bold; padding: 5px; border: 1px solid #1F497D; }
-        .data-cell { background-color: #F2F2F2; padding: 5px; border: 1px solid #ccc; }
+        .blue-cell { background-color: #1F497D; color: white; font-weight: bold; padding: 5px; border: 1px solid #1F497D; font-size: 10px; text-align: center; }
+        .data-cell { background-color: #F2F2F2; padding: 5px; border: 1px solid #ccc; font-size: 10px; text-align: center; }
         
         .main-table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1px solid #1F497D; }
         .main-table thead th { background-color: #1F497D; color: white; padding: 8px; font-size: 11px; border: 1px solid #1F497D; }
@@ -24,36 +24,40 @@
         
         .title-section { text-align: center; margin-bottom: 15px; }
         .title-main { color: #1F497D; margin-bottom: 5px; font-size: 16px; text-transform: uppercase; }
+
+        .print-date { text-align: right; margin-top: 15px; font-size: 12px; color: black; font-style: italic; }
     </style>
 </head>
 <body>
     <div class="header-image">
-        <img src="{{ $cintillo }}" alt="Cintillo">
+        @if($cintillo)
+            <img src="{{ $cintillo }}" alt="Cintillo">
+        @endif
     </div>
 
     <div class="title-section">
-        <h2 class="title-main">RECIBO DE PAGO HISTÓRICO</h2>
-        <h4 style="margin-top: 0;">{{ $mes_letras }} {{ $anio }}</h4>
+        <h2 class="title-main">RECIBO DE PAGO  MENSUAL</h2>
+       
     </div>
 
     <table class="header-table">
         <thead>
             <tr>
-                <th class="blue-cell" style="text-align: center; width: 40%;">FUNCIONARIO</th>
-                <th class="blue-cell" style="text-align: center; width: 30%;">DOCUMENTO DE IDENTIDAD</th>
-                <th class="blue-cell" style="text-align: center; width: 30%;">ESTATUS ACTUAL</th>
+                <th class="blue-cell" style="width: 40%;">FUNCIONARIO</th>
+                <th class="blue-cell" style="width: 30%;">DOCUMENTO DE IDENTIDAD</th>
+                <th class="blue-cell" style="width: 30%;">ESTATUS ACTUAL</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="data-cell" style="text-align: center;">
+                <td class="data-cell">
                     {{ $info->primer_nombre }} {{ $info->segundo_nombre }} 
                     {{ $info->primer_apellido }} {{ $info->segundo_apellido }}
                 </td>
-                <td class="data-cell" style="text-align: center;">
+                <td class="data-cell">
                     {{ number_format($info->personales_cedula, 0, '', '.') }}
                 </td>
-                <td class="data-cell" style="text-align: center;">
+                <td class="data-cell">
                     {{ ($info->nestatus == 1) ? 'ACTIVO' : 'EGRESADO' }}
                 </td>
             </tr>
@@ -63,35 +67,36 @@
     <table class="header-table" style="margin-top: -15px;">
         <thead>
             <tr>
-                <th class="blue-cell" style="text-align: center; width: 40%;">CARGO</th>
-                <th class="blue-cell" style="text-align: center; width: 30%;">CÓDIGO DE NÓMINA</th>
-                <th class="blue-cell" style="text-align: center; width: 30%;">CUENTA NÓMINA</th>
+                <th class="blue-cell" style="width: 40%;">CARGO</th>
+                <th class="blue-cell" style="width: 30%;">CÓDIGO DE NÓMINA</th>
+                <th class="blue-cell" style="width: 30%;">CUENTA NÓMINA</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="data-cell" style="text-align: center;">{{ $info->nombre_cargo ?? 'N/A' }}</td>
-                <td class="data-cell" style="text-align: center;">{{ $info->ncodigo_nomina ?? 'N/A' }}</td>
-                <td class="data-cell" style="text-align: center;">{{ $info->scuenta_nomina ?? 'S/N' }}</td>
+                <td class="data-cell">{{ $info->nombre_cargo ?? 'N/A' }}</td>
+                <td class="data-cell">{{ $info->ncodigo_nomina ?? 'N/A' }}</td>
+                <td class="data-cell">{{ $info->scuenta_nomina ?? 'S/N' }}</td>
             </tr>
         </tbody>
     </table>
-
-    <table class="header-table" style="margin-top: -15px;">
+	
+	<table class="header-table" style="margin-top: -15px;">
         <thead>
             <tr>
-                <th class="blue-cell" style="text-align: center; width: 60%;">UBICACIÓN ADMINISTRATIVA</th>
-                <th class="blue-cell" style="text-align: center; width: 40%;">PERIODO DE PAGO</th>
+                <th class="blue-cell" style="width: 60%;">UBICACIÓN ADMINISTRATIVA</th>
+                <th class="blue-cell" style="width: 40%;">PERIODO DE PAGO</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="data-cell" style="text-align: center;">{{ $info->nombre_ubicacion ?? 'NO ASIGNADA' }}</td>
-                <td class="data-cell" style="text-align: center;">{{ $mes_letras }} - {{ $anio }}</td>
+                <td class="data-cell">{{ $info->nombre_ubicacion ?? 'NO ASIGNADA' }}</td>
+                <td class="data-cell">{{ $mes_letras }} - {{ $anio }}</td>
             </tr>
         </tbody>
     </table>
 
+    {{-- CONCEPTOS SALARIALES --}}
     <table class="main-table">
         <thead>
             <tr>
@@ -101,74 +106,64 @@
             </tr>
         </thead>
         <tbody>
-            @php $t_asig = 0; $t_dedu = 0; @endphp
-            @foreach($historial as $item)
-                @if($item->ncategoria == 1 || $item->ncategoria == 2)
-                <tr>
-                    <td>{{ $item->concepto }}</td>
-                    <td class="text-end">
-                        @if($item->ncategoria == 1) 
-                            {{ number_format($item->nmonto, 2, ',', '.') }} 
-                            @php $t_asig += $item->nmonto; @endphp
-                        @endif
-                    </td>
-                    <td class="text-end">
-                        @if($item->ncategoria == 2) 
-                            {{ number_format($item->nmonto, 2, ',', '.') }} 
-                            @php $t_dedu += $item->nmonto; @endphp
-                        @endif
-                    </td>
-                </tr>
-                @endif
+            @foreach($asignaciones as $item)
+            <tr>
+                <td>{{ $item->descripcion_concepto }}</td>
+                <td class="text-end">{{ number_format($item->monto, 2, ',', '.') }}</td>
+                <td class="text-end"></td>
+            </tr>
+            @endforeach
+
+            @foreach($deducciones as $item)
+            <tr>
+                <td>{{ $item->descripcion_concepto }}</td>
+                <td class="text-end"></td>
+                <td class="text-end">{{ number_format($item->monto, 2, ',', '.') }}</td>
+            </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td class="text-end">TOTALES CONCEPTOS SALARIALES:</td>
-                <td class="text-end">{{ number_format($t_asig, 2, ',', '.') }}</td>
-                <td class="text-end">{{ number_format($t_dedu, 2, ',', '.') }}</td>
+                <td class="text-start">TOTALES CONCEPTOS SALARIALES:</td>
+                <td class="text-end">{{ number_format($totalAsignaciones, 2, ',', '.') }}</td>
+                <td class="text-end">{{ number_format($totalDeducciones, 2, ',', '.') }}</td>
             </tr>
             <tr class="total-row">
-                <td colspan="2" class="text-end">NETO NÓMINA:</td>
-                <td class="text-end">{{ number_format($t_asig - $t_dedu, 2, ',', '.') }}</td>
+                <td colspan="2" class="text-start">NETO NÓMINA:</td>
+                <td class="text-end">{{ number_format($totalAsignaciones - $totalDeducciones, 2, ',', '.') }}</td>
             </tr>
         </tfoot>
     </table>
 
-    @php 
-        $noSal = $historial->where('ncategoria', 3); 
-        $t_noSal = $noSal->sum('nmonto');
-    @endphp
-
-    @if($noSal->count() > 0)
+    {{-- CONCEPTOS NO SALARIALES --}}
+    @if($noSalariales->count() > 0)
     <table class="main-table" style="margin-top: 20px;">
         <thead>
             <tr>
-                <th style="text-align: left; width: 50%;">CONCEPTOS NO SALARIALES</th>
-                <th class="text-end" style="width: 25%;">ASIGNACIONES</th>
-                <th class="text-end" style="width: 25%;">DEDUCCIONES</th>
+                <th style="text-align: left; width: 70%;">CONCEPTOS NO SALARIALES</th>
+                <th class="text-end" style="width: 30%;">ASIGNACIONES</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($noSal as $item)
+            @foreach($noSalariales as $item)
             <tr>
-                <td>{{ $item->concepto }}</td>
-                <td class="text-end">{{ number_format($item->nmonto, 2, ',', '.') }}</td>
-                <td class="text-end">-</td>
+                <td>{{ $item->descripcion_concepto }}</td>
+                <td class="text-end">{{ number_format($item->monto, 2, ',', '.') }}</td>
             </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td class="text-end">TOTAL CONCEPTOS NO SALARIALES:</td>
-                <td class="text-end">{{ number_format($t_noSal, 2, ',', '.') }}</td>
-                <td class="text-end">0,00</td>
+                <td class="text-start">TOTAL CONCEPTOS NO SALARIALES:</td>
+                <td class="text-end">{{ number_format($totalNoSalarial, 2, ',', '.') }}</td>
             </tr>
         </tfoot>
     </table>
     @endif
 
-    
+    <div class="print-date">
+        Fecha de Impresión: {{ date('d/m/Y h:i A') }}
+    </div>
 
 </body>
 </html>

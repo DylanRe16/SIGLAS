@@ -24,6 +24,8 @@
         .total-row { background-color: #DCE6F1; font-weight: bold; }
         
         .title-main { color: #1F497D; text-align: center; margin: 10px 0; font-size: 16px; text-transform: uppercase; }
+
+        .print-date { text-align: right; margin-top: 15px; font-size: 12px; color: black; font-style: italic; }
     </style>
 </head>
 <body>
@@ -33,7 +35,7 @@
         @endif
     </div>
 
-    <h2 class="title-main">RECIBO DE PAGO - QUINCENA {{ $quincena }}</h2>
+    <h2 class="title-main">RECIBO DE PAGO - QUINCENAL(ORDINARIO)</h2>
 
     <table class="header-table">
         <thead>
@@ -82,7 +84,7 @@
         <tbody>
             <tr>
                 <td class="data-cell">{{ $info->nombre_ubicacion ?? 'NO ASIGNADA' }}</td>
-                <td class="data-cell">MES: {{ $mes }} - QUINCENA: {{ $quincena }}</td>
+                <td class="data-cell">{{ $nombreMes }} - QUINCENA: {{ $quincena }}  - {{ date('Y') }}</td>
             </tr>
         </tbody>
     </table>
@@ -108,12 +110,12 @@
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td class="text-end">TOTALES SALARIALES:</td>
+                <td class="text-start">TOTAL CONCEPTOS SALARIALES:</td>
                 <td class="text-end">{{ number_format($totalAsignas, 2, ',', '.') }}</td>
                 <td class="text-end">{{ number_format($totalDeduce, 2, ',', '.') }}</td>
             </tr>
             <tr class="total-row">
-                <td colspan="2" class="text-end">NETO NÓMINA (SALARIAL):</td>
+                <td colspan="2" class="text-start">NETO NÓMINA:</td>
                 <td class="text-end">{{ number_format($totalAsignas - $totalDeduce, 2, ',', '.') }}</td>
             </tr>
         </tfoot>
@@ -123,9 +125,8 @@
     <table class="main-table" style="margin-top: 20px;">
         <thead>
             <tr>
-                <th style="text-align: left; width: 50%;">CONCEPTOS NO SALARIALES</th>
-                <th class="text-end" style="width: 25%;">ASIGNACIONES</th>
-                <th class="text-end" style="width: 25%;">DEDUCCIONES</th>
+                <th style="text-align: left; width: 70%;">CONCEPTOS NO SALARIALES</th>
+                <th class="text-end" style="width: 30%;">ASIGNACIONES</th>
             </tr>
         </thead>
         <tbody>
@@ -133,20 +134,21 @@
             <tr>
                 <td>{{ $c->descripcion_concepto }}</td>
                 <td class="text-end">{{ number_format($c->monto, 2, ',', '.') }}</td>
-                <td class="text-end"> - </td>
             </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td class="text-end">TOTAL CONCEPTOS NO SALARIALES:</td>
+                <td class="text-start">TOTAL CONCEPTOS NO SALARIALES:</td>
                 <td class="text-end">{{ number_format($totalNoSalarial, 2, ',', '.') }}</td>
-                <td class="text-end">0,00</td>
             </tr>
         </tfoot>
     </table>
     @endif
 
+    <div class="print-date">
+        Fecha de Impresión: {{ date('d/m/Y h:i A') }}
+    </div>
    
 </body>
 </html>

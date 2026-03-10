@@ -90,6 +90,14 @@
             font-size: 16px;
             text-transform: uppercase;
         }
+
+        .print-date {
+            text-align: right;
+            margin-top: 15px;
+            font-size: 12px;
+            color: black;
+            font-style: italic;
+        }
     </style>
 </head>
 
@@ -100,9 +108,9 @@
         @endif
     </div>
 
-    <h2 class="title-main">PAGOS ESPECIALES - MES: {{ $mes }} / {{ date('Y') }}</h2>
+    <h2 class="title-main">RECIBO DE PAGOS - PAGOS ESPECIALES</h2>
 
-    {{-- BLOQUE DE INFORMACIÓN DEL FUNCIONARIO (MANTENIENDO TU DISEÑO) --}}
+    {{-- BLOQUE DE INFORMACIÓN DEL FUNCIONARIO --}}
     <table class="header-table">
         <thead>
             <tr>
@@ -139,6 +147,21 @@
             </tr>
         </tbody>
     </table>
+	
+	<table class="header-table">
+        <thead>
+            <tr>
+                <th class="blue-cell" style="width: 60%;">UBICACIÓN ADMINISTRATIVA</th>
+                <th class="blue-cell" style="width: 40%;">PERIODO DE PAGO</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="data-cell">{{ $info->nombre_ubicacion ?? 'NO ASIGNADA' }}</td>
+                <td class="data-cell"> {{ $nombreMes }} / {{ date('Y') }}</td>
+            </tr>
+        </tbody>
+    </table>
 
     {{-- TABLA DE CONCEPTOS SALARIALES --}}
     <table class="main-table">
@@ -168,12 +191,12 @@
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td class="text-end">TOTAL CONCEPTOS SALARIALES</td>
+                <td class="text-start">TOTAL CONCEPTOS SALARIALES</td>
                 <td class="text-end">{{ number_format($totalAsigna, 2, ',', '.') }}</td>
                 <td class="text-end">{{ number_format($totalDeduce, 2, ',', '.') }}</td>
             </tr>
             <tr class="total-row">
-                <td colspan="2" class="text-end">NETO NÓMINA (SALARIAL):</td>
+                <td colspan="2" class="text-start">NETO NÓMINA :</td>
                 <td class="text-end">{{ number_format($totalAsigna - $totalDeduce, 2, ',', '.') }}</td>
             </tr>
         </tfoot>
@@ -184,8 +207,8 @@
     <table class="main-table" style="margin-top: 20px;">
         <thead>
             <tr>
-                <th style="text-align: left; width: 75%;">Descripción</th>
-                <th class="text-end" style="width: 25%;">Asignaciones</th>
+                <th style="text-align: left; width: 70%;">Descripción</th>
+                <th class="text-end" style="width: 30%;">Asignaciones</th>
             </tr>
         </thead>
         <tbody>
@@ -198,13 +221,16 @@
         </tbody>
         <tfoot>
             <tr class="total-row">
-                <td class="text-end">TOTAL NO SALARIAL</td>
+                <td class="text-start">TOTAL CONCEPTOS NO SALARIALES</td>
                 <td class="text-end">{{ number_format($totalNoSalarial, 2, ',', '.') }}</td>
             </tr>
-            {{-- AQUÍ NO DEBE HABER NINGUNA FILA DE "NETO NÓMINA" --}}
         </tfoot>
     </table>
     @endif
+
+    <div class="print-date">
+        Fecha de Impresión: {{ date('d/m/Y h:i A') }}
+    </div>
 </body>
 
 </html>

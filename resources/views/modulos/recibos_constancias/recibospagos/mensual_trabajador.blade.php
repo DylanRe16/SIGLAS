@@ -53,7 +53,7 @@
                         Recibos de Pagos
 
                     </a>
-                    > Histórico Mensual
+                    > Consulta de Recibo de Pago Mensual por Trabajador  
                 </h4>
             </div>
             <div class="requerido fs-6 fw-normal">Campos obligatorios (*)</div>
@@ -157,57 +157,107 @@
 @section('js')
 <script>
 $(document).ready(function() {
+    // 1. Alerta Inicial SweetAlert2
+    Swal.fire({
+        title: '<strong>Consulta Histórica</strong>',
+        icon: 'info',
+        html: 'Seleccione el <b>Año y Mes</b> para obtener el detalle de sus conceptos salariales.',
+        allowOutsideClick: true,
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#163A7F'
+    });
+
+    // 2. Lógica AJAX de Búsqueda
     $('#formHistorico').on('submit', function(e) {
         e.preventDefault();
 
-        // Forzamos que los datos sean limpios
-        let dataInput = {
-            _token: "{{ csrf_token() }}",
-            ndocumento: $('#ndocumento').val().replace(/\s/g, ''),
-            anio: $('#anio').val(),
-            mes: $('#mes').val()
-        };
+        // Referencias de UI
+        let btn = $('#btnCargar'), 
+            texto = $('#textBtn'), 
+            spinner = $('#spinBtn'), 
+            res = $('#resultadoHistorico');
 
-        let btn = $('#btnCargar');
-        let text = $('#textBtn');
-        let spin = $('#spinBtn');
-        let res = $('#resultadoHistorico');
+        // Limpieza de estados previos
+        res.html('');
+        $('.form-control, .form-select').removeClass('is-invalid');
 
-        // UI de carga
+        // Validación básica antes de enviar
+        if (!$('#ndocumento').val() || !$('#anio').val() || !$('#mes').val()) {
+            if(!$('#ndocumento').val()) $('#ndocumento').addClass('is-invalid');
+            if(!$('#anio').val()) $('#anio').addClass('is-invalid');
+            if(!$('#mes').val()) $('#mes').addClass('is-invalid');
+            return;
+        }
+
+        // UI de carga (Bloquear botón)
         btn.prop('disabled', true);
-        text.addClass('d-none');
-        spin.removeClass('d-none');
+        texto.addClass('d-none');
+        spinner.removeClass('d-none');
 
         $.ajax({
-            // ESTO ES LO MÁS IMPORTANTE: Usar el helper route de Blade
-            url: "{{ route('recibos.historico.buscar') }}", 
+            url: "{{ route('recibos.historico.buscar') }}",
             type: "POST",
-            data: dataInput,
-            dataType: 'html', // Esperamos HTML de la vista parcial
+            data: $(this).serialize(),
+            dataType: 'json', // Cambiado a JSON para manejar éxito y error bajo el mismo formato
             success: function(response) {
-                res.html(response);
-                btn.prop('disabled', false);
-                text.removeClass('d-none');
-                spin.addClass('d-none');
-            },
-            error: function(xhr) {
-                // Si entra aquí, vamos a ver el error real en la consola
-                console.error("Error completo:", xhr);
-                
-                let errorMsg = "Error desconocido";
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMsg = xhr.responseJSON.message;
-                } else if (xhr.status === 404) {
-                    errorMsg = "Ruta no encontrada o Registro inexistente (404)";
+                // Si el controlador mandó status success, inyectamos el HTML
+                if (response.status === 'success') {
+                    res.html(response.html);
                 }
 
-                alert("ERROR: " + errorMsg);
-                
+                // Restaurar botón
                 btn.prop('disabled', false);
-                text.removeClass('d-none');
-                spin.addClass('d-none');
+                texto.removeClass('d-none');
+                spinner.addClass('d-none');
+            },
+            error: function(xhr) {
+                console.error("Error capturado:", xhr);
+                
+                let mensajeError = "No se encontraron registros para el periodo seleccionado.";
+
+                // Si el servidor mandó un mensaje específico (como el 404 del controlador)
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    mensajeError = xhr.responseJSON.message;
+                } else if (xhr.status === 404) {
+                    mensajeError = "La cédula ingresada no posee registros de nómina en la fecha indicada.";
+                }
+
+                // INYECCIÓN DINÁMICA DEL MODAL DE ERROR
+                let modalHtml = `
+                <div class="modal fade" id="ajaxErrorModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content shadow-lg border-0">
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> ¡Aviso del Sistema!</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fs-5 text-dark text-center py-4">
+                                ${mensajeError}
+                            </div>
+                            <div class="modal-footer border-0">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+                // Eliminar modal anterior si existe, agregar nuevo y mostrarlo
+                $('#ajaxErrorModal').remove();
+                $('body').append(modalHtml);
+                var modal = new bootstrap.Modal(document.getElementById('ajaxErrorModal'));
+                modal.show();
+                
+                // Restaurar botón
+                btn.prop('disabled', false);
+                texto.removeClass('d-none');
+                spinner.addClass('d-none');
             }
         });
+    });
+
+    // Limpiar clases de error al escribir/cambiar
+    $('#ndocumento, #anio, #mes').on('input change', function() {
+        $(this).removeClass('is-invalid');
     });
 });
 </script>

@@ -10,11 +10,7 @@
     <div class="row">
             <div class="col-md-12 d-flex justify-content-between">
                 <div class="link-secondary">
-                    <h4 class="font-weight-bold">
-                        <a href="{{ route('formatos') }}" class="link-secondary text-decoration-none">
-                        Formato
-                        </a>
-                        > Solicitud de Permiso</h4>
+                    <h4 class="font-weight-bold">Formato > Solicitud de Permiso</h4>
                 </div>
                 <div class="text-danger fs-6 fw-normal">Campos obligatorios (*)</div>
             </div>
@@ -52,7 +48,7 @@
                     <div class="form-group">
                         <label class="link-secondary">Fecha de Solicitud</label>
                         <div class="sep"></div>
-                        
+
                         <div class="d-flex gap-3 w-100">
                             <div class="box flex-fill link-secondary">
                                 <label for="fecha_inicio">Inicio<span class="text-danger">*</span></label>
@@ -264,7 +260,7 @@ document.getElementById('form-pdf').addEventListener('submit', function (e) {
              // 🛑 AQUÍ CAPTURAMOS EL ERROR REAL DEL SERVIDOR (CÓDIGO 500)
             const textError = await response.text();
             console.error("Error del Servidor:", textError); // Muestra el error en la consola del navegador (F12)
-            alert('Error 500: Revisa la consola (F12) para ver el detalle técnico.');
+            alert('Error de respuesta del servidor.');
 
         // Opcional: Escribir el error en el body para verlo rápido
         // document.body.innerHTML = textError;
@@ -272,7 +268,7 @@ document.getElementById('form-pdf').addEventListener('submit', function (e) {
     })
     .catch((error) => {
         console.error(error);
-        alert('Error de conexión.');
+        alert('Error en el servidor: ', error);
     });
 });
 </script>

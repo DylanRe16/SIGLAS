@@ -147,10 +147,10 @@ class FormatosController extends Controller
       // ]);
 
       $validator = Validator::make($request->all(), [
-        'motivo' => 'required|string|max:100|alpha_num:ascii',
+        'motivo' => 'required|string|max:100||regex:/^[a-zA-Z0-9\s]+$/i',
         'fecha_inicio' => 'required',
         'fecha_final' => 'required|date|after_or_equal:fecha_inicio',
-        'soporte_legal' => 'required|string|max:200|alpha_num:ascii',
+        'soporte_legal' => 'required|string|max:200||regex:/^[a-zA-Z0-9\s]+$/',
         'nombre' => 'required|string|max:45|regex:/^[a-zA-Z0-9\s]+$/',
         'director' => 'required|string|max:45|regex:/^[a-zA-Z0-9\s]+$/',
     ], [], [
@@ -204,10 +204,10 @@ class FormatosController extends Controller
 
    public function generarPDFpermiso(Request $request){
       $validator = Validator::make($request->all(), [
-         'motivo' => 'required|string|max:100|alpha_num:ascii',
+         'motivo' => 'required|string|max:100||regex:/^[a-zA-Z0-9\s]+$/',
          'fecha_inicio' => 'required',
         'fecha_final' => 'required|after_or_equal:fecha_inicio',
-         'soporte_legal' => 'required|string|max:200|alpha_num:ascii',
+         'soporte_legal' => 'required|string|max:200||regex:/^[a-zA-Z0-9\s]+$/',
          'nombre' => 'required|string|max:45|regex:/^[a-zA-Z0-9\s]+$/',
          'director' => 'required|string|max:45|regex:/^[a-zA-Z0-9\s]+$/',
 

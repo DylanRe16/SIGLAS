@@ -121,67 +121,70 @@ class RecibosPagosController extends Controller
     }
 
     public function imprimirPDF($mes, $quincena)
-    {
-        $cedula = Auth::user()->cedula;
+{
+    $cedula = Auth::user()->cedula;
+    $anioActual = date('Y'); // Filtro de año importante
 
-        $conceptos = DB::connection('bd4')
-            ->table('recibos_pagos_constancias.recibo_pago as rp')
-            ->join('recibos_pagos_constancias.conceptos as c', 'rp.conceptos_scodigo', '=', 'c.scodigo')
-            ->leftJoin('public.personales as p', 'p.cedula', '=', 'rp.personales_cedula')
-            ->leftJoin('public.cargos as car', 'rp.cargos_id', '=', 'car.id')
-            ->leftJoin('public.ubicacion_administrativa as ua', 'rp.ubicacion_administrativa_scodigo', '=', 'ua.scodigo')
-            ->select(
-                'c.ncategoria as categoria',
-                'rp.nmonto as monto',
-                'c.sdescripcion as descripcion_concepto',
-                'p.primer_nombre',
-                'p.segundo_nombre',
-                'p.primer_apellido',
-                'p.segundo_apellido',
-                'p.cedula as personales_cedula',
-                'car.sdescripcion as nombre_cargo',
-                'ua.sdescripcion as nombre_ubicacion',
-                'rp.ncodigo_nomina',
-                'rp.scuenta_nomina',
-                'rp.nestatus'
-            )
-            ->where('rp.personales_cedula', $cedula)
-            ->where('rp.nmes', $mes)
-            ->where('rp.nsemana_quincena', $quincena)
-            ->get();
+    $meses = [
+        '01' => 'ENERO', '02' => 'FEBRERO', '03' => 'MARZO', '04' => 'ABRIL',
+        '05' => 'MAYO', '06' => 'JUNIO', '07' => 'JULIO', '08' => 'AGOSTO',
+        '09' => 'SEPTIEMBRE', '10' => 'OCTUBRE', '11' => 'NOVIEMBRE', '12' => 'DICIEMBRE',
+        1 => 'ENERO', 2 => 'FEBRERO', 3 => 'MARZO', 4 => 'ABRIL',
+        5 => 'MAYO', 6 => 'JUNIO', 7 => 'JULIO', 8 => 'AGOSTO',
+        9 => 'SEPTIEMBRE', 10 => 'OCTUBRE', 11 => 'NOVIEMBRE', 12 => 'DICIEMBRE'
+    ];
 
-        if ($conceptos->isEmpty()) {
-            return back()->with('error', 'No se encontró el recibo.');
-        }
+    $nombreMes = $meses[$mes] ?? 'DESCONOCIDO';
 
-        $info = $conceptos->first();
+    $conceptos = DB::connection('bd4')
+        ->table('recibos_pagos_constancias.recibo_pago as rp')
+        ->join('recibos_pagos_constancias.conceptos as c', 'rp.conceptos_scodigo', '=', 'c.scodigo')
+        ->leftJoin('public.personales as p', 'p.cedula', '=', 'rp.personales_cedula')
+        ->leftJoin('public.cargos as car', 'rp.cargos_id', '=', 'car.id')
+        ->leftJoin('public.ubicacion_administrativa as ua', 'rp.ubicacion_administrativa_scodigo', '=', 'ua.scodigo')
+        ->select(
+            'c.ncategoria as categoria',
+            'rp.nmonto as monto',
+            'c.sdescripcion as descripcion_concepto',
+            'p.primer_nombre', 'p.segundo_nombre',
+            'p.primer_apellido', 'p.segundo_apellido',
+            'p.cedula as personales_cedula',
+            'car.sdescripcion as nombre_cargo',
+            'ua.sdescripcion as nombre_ubicacion',
+            'rp.ncodigo_nomina', 'rp.scuenta_nomina', 'rp.nestatus'
+        )
+        ->where('rp.personales_cedula', $cedula)
+        ->where('rp.nmes', $mes)
+        ->where('rp.nsemana_quincena', $quincena)
+        ->where('rp.nanio', $anioActual) // IGUAL QUE EN LA BUSQUEDA
+        ->where('rp.nenabled', '1')     // IGUAL QUE EN LA BUSQUEDA
+        ->where('c.nenabled', '1')      // IGUAL QUE EN LA BUSQUEDA
+        ->orderBy('c.scodigo')
+        ->get();
 
-        // Cargar Cintillo en Base64 para evitar errores de carga
-        $path = public_path('imagenes/cintillo.png');
-        $base64 = '';
-        if (file_exists($path)) {
-            $type = pathinfo($path, PATHINFO_EXTENSION);
-            $data_img = file_get_contents($path);
-            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data_img);
-        }
-
-        $data = [
-            'info' => $info,
-            'cintillo' => $base64,
-            'mes' => $mes,
-            'quincena' => $quincena,
-            'conceptos' => $conceptos,
-            'totalAsignas' => $conceptos->where('categoria', 1)->sum('monto'),
-            'totalDeduce' => $conceptos->where('categoria', 2)->sum('monto'),
-            'totalNoSalarial' => $conceptos->where('categoria', 3)->sum('monto'),
-        ];
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('modulos.recibos_constancias.pdf.pdf_recibo', $data);
-
-        // ESTA LÍNEA ES LA QUE QUITA EL "1":
-        // El segundo parámetro false indica que no se descargue, el stream envía el nombre al visor
-        return $pdf->stream("Recibo_Pago_{$cedula}.pdf", ["Attachment" => false]);
+    if ($conceptos->isEmpty()) {
+        return back()->with('error', 'No se encontró el recibo.');
     }
+
+    $info = $conceptos->first();
+
+    $path = public_path('imagenes/cintillo.png');
+    $base64 = file_exists($path) ? 'data:image/' . pathinfo($path, PATHINFO_EXTENSION) . ';base64,' . base64_encode(file_get_contents($path)) : '';
+
+    $data = [
+        'info' => $info,
+        'cintillo' => $base64,
+        'nombreMes' => $nombreMes,
+        'quincena' => $quincena,
+        'conceptos' => $conceptos,
+        'totalAsignas' => $conceptos->where('categoria', 1)->sum('monto'),
+        'totalDeduce' => $conceptos->where('categoria', 2)->sum('monto'),
+        'totalNoSalarial' => $conceptos->where('categoria', 3)->sum('monto'),
+    ];
+
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('modulos.recibos_constancias.pdf.pdf_recibo', $data);
+    return $pdf->stream("Recibo_Pago_{$cedula}.pdf", ["Attachment" => false]);
+}
 
 
 
@@ -280,77 +283,87 @@ class RecibosPagosController extends Controller
     }
 
     // ... otros métodos ...
+	
+	public function imprimirEspecialPDF($mes)
+{
+    $cedula = Auth::user()->cedula ?? Auth::user()->name;
+    $anio = date('Y');
 
-    public function imprimirEspecialPDF($mes)
-    {
-        $cedula = Auth::user()->cedula ?? Auth::user()->name;
-        $anio = date('Y');
+    // Mapeo de meses
+    $meses = [
+        '01' => 'ENERO', '02' => 'FEBRERO', '03' => 'MARZO', '04' => 'ABRIL',
+        '05' => 'MAYO', '06' => 'JUNIO', '07' => 'JULIO', '08' => 'AGOSTO',
+        '09' => 'SEPTIEMBRE', '10' => 'OCTUBRE', '11' => 'NOVIEMBRE', '12' => 'DICIEMBRE',
+        1 => 'ENERO', 2 => 'FEBRERO', 3 => 'MARZO', 4 => 'ABRIL',
+        5 => 'MAYO', 6 => 'JUNIO', 7 => 'JULIO', 8 => 'AGOSTO',
+        9 => 'SEPTIEMBRE', 10 => 'OCTUBRE', 11 => 'NOVIEMBRE', 12 => 'DICIEMBRE'
+    ];
 
-        // Usamos la misma lógica de SELECT y WHERE que en buscarEspecial
-        $conceptos = DB::connection('bd4')
-            ->table('recibos_pagos_constancias.recibo_pago as rp')
-            ->join('recibos_pagos_constancias.conceptos as c', 'rp.conceptos_scodigo', '=', 'c.scodigo')
-            // Joins adicionales solo para el encabezado del PDF
-            ->leftJoin('public.personales as p', 'p.cedula', '=', 'rp.personales_cedula')
-            ->leftJoin('public.cargos as car', 'rp.cargos_id', '=', 'car.id')
-            ->leftJoin('public.ubicacion_administrativa as ua', 'rp.ubicacion_administrativa_scodigo', '=', 'ua.scodigo')
-            ->select(
-                'c.ncategoria as categoria',
-                'rp.nmonto as monto',
-                'c.sdescripcion as descripcion_concepto',
-                'p.primer_nombre',
-                'p.segundo_nombre',
-                'p.primer_apellido',
-                'p.segundo_apellido',
-                'p.cedula as personales_cedula',
-                'car.sdescripcion as nombre_cargo',
-                'ua.sdescripcion as nombre_ubicacion',
-                'rp.ncodigo_nomina',
-                'rp.scuenta_nomina',
-                'rp.nestatus'
-            )
-            ->where('rp.personales_cedula', $cedula)
-            ->where('rp.nmes', $mes)
-            ->where('rp.nanio', $anio)
-            ->where('rp.nenabled', '1')
-            ->where('c.nenabled', '1')
-            ->orderBy('c.scodigo')
-            ->get();
+    $nombreMes = $meses[$mes] ?? 'DESCONOCIDO';
 
-        if ($conceptos->isEmpty()) {
-            return back()->with('error', 'No posee recibos para el mes seleccionado.');
-        }
+    $conceptos = DB::connection('bd4')
+        ->table('recibos_pagos_constancias.recibo_pago as rp')
+        ->join('recibos_pagos_constancias.conceptos as c', 'rp.conceptos_scodigo', '=', 'c.scodigo')
+        ->leftJoin('public.personales as p', 'p.cedula', '=', 'rp.personales_cedula')
+        ->leftJoin('public.cargos as car', 'rp.cargos_id', '=', 'car.id')
+        ->leftJoin('public.ubicacion_administrativa as ua', 'rp.ubicacion_administrativa_scodigo', '=', 'ua.scodigo')
+        ->select(
+            'c.ncategoria as categoria',
+            'rp.nmonto as monto',
+            'c.sdescripcion as descripcion_concepto',
+            'p.primer_nombre',
+            'p.segundo_nombre',
+            'p.primer_apellido',
+            'p.segundo_apellido',
+            'p.cedula as personales_cedula',
+            'car.sdescripcion as nombre_cargo',
+            'ua.sdescripcion as nombre_ubicacion',
+            'rp.ncodigo_nomina',
+            'rp.scuenta_nomina',
+            'rp.nestatus'
+        )
+        ->where('rp.personales_cedula', $cedula)
+        ->where('rp.nmes', $mes)
+        ->where('rp.nanio', $anio)
+        ->where('rp.nenabled', '1')
+        ->where('c.nenabled', '1')
+        ->orderBy('c.scodigo')
+        ->get();
 
-        $info = $conceptos->first();
-
-        // Filtramos exactamente igual que en buscarEspecial
-        $asignaciones = $conceptos->where('categoria', 1);
-        $deducciones = $conceptos->where('categoria', 2);
-        $noSalariales = $conceptos->where('categoria', 3);
-
-        $totalAsigna = $asignaciones->sum('monto');
-        $totalDeduce = $deducciones->sum('monto');
-        $totalNoSalarial = $noSalariales->sum('monto');
-
-        // Lógica del cintillo
-        $path = public_path('imagenes/cintillo.png');
-        $cintillo = file_exists($path) ? 'data:image/png;base64,' . base64_encode(file_get_contents($path)) : '';
-
-        $data = compact(
-            'info',
-            'cintillo',
-            'mes',
-            'asignaciones',
-            'deducciones',
-            'noSalariales',
-            'totalAsigna',
-            'totalDeduce',
-            'totalNoSalarial'
-        );
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('modulos.recibos_constancias.pdf.pdf_recibo_especial', $data);
-        return $pdf->stream("Recibo_Especial_{$cedula}.pdf");
+    if ($conceptos->isEmpty()) {
+        return back()->with('error', 'No posee recibos para el mes seleccionado.');
     }
+
+    $info = $conceptos->first();
+
+    $asignaciones = $conceptos->where('categoria', 1);
+    $deducciones = $conceptos->where('categoria', 2);
+    $noSalariales = $conceptos->where('categoria', 3);
+
+    $totalAsigna = $asignaciones->sum('monto');
+    $totalDeduce = $deducciones->sum('monto');
+    $totalNoSalarial = $noSalariales->sum('monto');
+
+    $path = public_path('imagenes/cintillo.png');
+    $cintillo = file_exists($path) ? 'data:image/png;base64,' . base64_encode(file_get_contents($path)) : '';
+
+    $data = compact(
+        'info',
+        'cintillo',
+        'nombreMes', // Enviamos el nombre del mes
+        'asignaciones',
+        'deducciones',
+        'noSalariales',
+        'totalAsigna',
+        'totalDeduce',
+        'totalNoSalarial'
+    );
+
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('modulos.recibos_constancias.pdf.pdf_recibo_especial', $data);
+    return $pdf->stream("Recibo_Especial_{$cedula}.pdf");
+}
+
+   
 
     public function indexJubilados()
     {
@@ -465,109 +478,118 @@ class RecibosPagosController extends Controller
         return view('modulos.recibos_constancias.recibospagos.mensual_trabajador', compact('anios', 'meses', 'mes_actual', 'anio_actual'));
     }
 
-    public function buscarHistoricoMensual(Request $request)
-    {
-        try {
-            $cedula = trim($request->ndocumento);
-            $anio   = (int)$request->anio;
-            $mes    = (int)$request->mes;
-
-            $db = DB::connection('bd4');
-
-            $historial = $db->table('recibos_pagos_constancias.recibo_pago as rp')
-                ->join('recibos_pagos_constancias.conceptos as c', 'rp.conceptos_scodigo', '=', 'c.scodigo')
-                ->where('rp.personales_cedula', $cedula)
-                ->where('rp.nanio', $anio)
-                ->where('rp.nmes', $mes)
-                ->where('rp.nenabled', '1')
-                ->select(
-                    'rp.nmonto as monto',
-                    'rp.nanio',
-                    'rp.nmes',
-                    'rp.personales_cedula',
-                    'c.sdescripcion as descripcion_concepto',
-                    'c.ncategoria as categoria'
-                )
-                ->get();
-
-            if ($historial->isEmpty()) {
-                return response()->json(['message' => "No hay datos para la CI $cedula"], 404);
-            }
-
-            return view('modulos.recibos_constancias.recibospagos.resultado_historico', compact('historial'))->render();
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        }
-    }
-
-    public function imprimirHistoricoPDF(Request $request)
-    {
-        $cedula = $request->ndocumento;
-        $anio   = $request->anio;
+  public function buscarHistoricoMensual(Request $request)
+{
+    try {
+        $cedula = trim($request->ndocumento);
+        $anio   = (int)$request->anio;
         $mes    = (int)$request->mes;
 
         $db = DB::connection('bd4');
 
         $historial = $db->table('recibos_pagos_constancias.recibo_pago as rp')
             ->join('recibos_pagos_constancias.conceptos as c', 'rp.conceptos_scodigo', '=', 'c.scodigo')
-            ->leftJoin('public.personales as p', 'p.cedula', '=', 'rp.personales_cedula')
-            ->leftJoin('public.cargos as car', 'rp.cargos_id', '=', 'car.id')
-            // NUEVO JOIN PARA LA UBICACIÓN
-            ->leftJoin('public.ubicacion_administrativa as ua', 'rp.ubicacion_administrativa_scodigo', '=', 'ua.scodigo')
-            ->select(
-                'rp.*',
-                'c.sdescripcion as concepto',
-                'c.ncategoria',
-                'p.primer_nombre',
-                'p.segundo_nombre',
-                'p.primer_apellido',
-                'p.segundo_apellido',
-                'car.sdescripcion as nombre_cargo',
-                'ua.sdescripcion as nombre_ubicacion' // Seleccionamos el nombre real
-            )
             ->where('rp.personales_cedula', $cedula)
             ->where('rp.nanio', $anio)
             ->where('rp.nmes', $mes)
             ->where('rp.nenabled', '1')
+            ->where('c.nenabled', '1')
+            ->select(
+                'c.ncategoria as categoria',
+                'c.sdescripcion as descripcion_concepto',
+                'rp.nanio',
+                'rp.nmes',
+                'rp.personales_cedula',
+                DB::raw('SUM(rp.nmonto) as monto')
+            )
+            ->groupBy('c.ncategoria', 'c.sdescripcion', 'c.scodigo', 'rp.nanio', 'rp.nmes', 'rp.personales_cedula')
+            ->orderBy('c.scodigo')
             ->get();
 
-        if ($historial->isEmpty()) return "Error: Sin datos para el PDF.";
-
-        $info = $historial->first();
-        $meses = [
-            1 => 'ENERO',
-            2 => 'FEBRERO',
-            3 => 'MARZO',
-            4 => 'ABRIL',
-            5 => 'MAYO',
-            6 => 'JUNIO',
-            7 => 'JULIO',
-            8 => 'AGOSTO',
-            9 => 'SEPTIEMBRE',
-            10 => 'OCTUBRE',
-            11 => 'NOVIEMBRE',
-            12 => 'DICIEMBRE'
-        ];
-
-        // --- LÓGICA PARA EL CINTILLO EN BASE64 ---
-        $path = public_path('imagenes/cintillo.png'); // Asegúrate que la imagen exista en public/imagenes/cintillo.png
-        $cintillo = null;
-
-        if (file_exists($path)) {
-            $type = pathinfo($path, PATHINFO_EXTENSION);
-            $data_img = file_get_contents($path);
-            $cintillo = 'data:image/' . $type . ';base64,' . base64_encode($data_img);
+        // Si no hay datos, respondemos 200 (OK) pero con un mensaje de éxito falso o 404 controlado
+        if ($historial->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => "No se encontraron registros de nómina para la CI $cedula en el periodo $mes-$anio."
+            ], 404);
         }
-        // -----------------------------------------
 
-        $pdf = \Pdf::loadView('modulos.recibos_constancias.pdf.pdf_recibo_final', [
-            'historial'  => $historial,
-            'info'       => $info,
-            'mes_letras' => $meses[$mes] ?? 'SIN MES',
-            'anio'       => $anio,
-            'cintillo'   => $cintillo // <--- AHORA SÍ SE ENVÍA A LA VISTA
-        ])->setPaper('letter', 'portrait');
+        // Si hay datos, renderizamos la vista a una cadena de texto (HTML)
+        $html = view('modulos.recibos_constancias.recibospagos.resultado_historico', compact('historial'))->render();
 
-        return $pdf->stream("recibo_{$cedula}.pdf");
+        return response()->json([
+            'status' => 'success',
+            'html' => $html
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Error de sistema: ' . $e->getMessage()
+        ], 500);
     }
+}
+
+  public function imprimirHistoricoPDF(Request $request)
+{
+    $cedula = $request->ndocumento;
+    $anio   = $request->anio;
+    $mes    = (int)$request->mes;
+
+    $db = DB::connection('bd4');
+
+    $historial = $db->table('recibos_pagos_constancias.recibo_pago as rp')
+        ->join('recibos_pagos_constancias.conceptos as c', 'rp.conceptos_scodigo', '=', 'c.scodigo')
+        ->leftJoin('public.personales as p', 'p.cedula', '=', 'rp.personales_cedula')
+        ->leftJoin('public.cargos as car', 'rp.cargos_id', '=', 'car.id')
+        ->leftJoin('public.ubicacion_administrativa as ua', 'rp.ubicacion_administrativa_scodigo', '=', 'ua.scodigo')
+        ->select(
+            'c.ncategoria as categoria',
+            'c.sdescripcion as descripcion_concepto',
+            DB::raw('SUM(rp.nmonto) as monto'),
+            'p.primer_nombre', 'p.segundo_nombre', 'p.primer_apellido', 'p.segundo_apellido',
+            'car.sdescripcion as nombre_cargo',
+            'ua.sdescripcion as nombre_ubicacion',
+            'rp.ncodigo_nomina', 'rp.scuenta_nomina', 'rp.nestatus', 'rp.nmes', 'rp.nanio', 'rp.personales_cedula'
+        )
+        ->where('rp.personales_cedula', $cedula)
+        ->where('rp.nanio', $anio)
+        ->where('rp.nmes', $mes)
+        ->where('rp.nenabled', '1')
+        ->where('c.nenabled', '1')
+        ->groupBy(
+            'c.ncategoria', 'c.sdescripcion', 'c.scodigo',
+            'p.primer_nombre', 'p.segundo_nombre', 'p.primer_apellido', 'p.segundo_apellido',
+            'car.sdescripcion', 'ua.sdescripcion',
+            'rp.ncodigo_nomina', 'rp.scuenta_nomina', 'rp.nestatus', 'rp.nmes', 'rp.nanio', 'rp.personales_cedula'
+        )
+        ->orderBy('c.scodigo')
+        ->get();
+
+    if ($historial->isEmpty()) return "Error: Sin datos.";
+
+    $info = $historial->first();
+    $meses = [1 => 'ENERO', 2 => 'FEBRERO', 3 => 'MARZO', 4 => 'ABRIL', 5 => 'MAYO', 6 => 'JUNIO', 7 => 'JULIO', 8 => 'AGOSTO', 9 => 'SEPTIEMBRE', 10 => 'OCTUBRE', 11 => 'NOVIEMBRE', 12 => 'DICIEMBRE'];
+
+    $path = public_path('imagenes/cintillo.png');
+    $cintillo = file_exists($path) ? 'data:image/png;base64,' . base64_encode(file_get_contents($path)) : null;
+
+    // Calculamos totales antes de enviar
+    $asignaciones = $historial->where('categoria', 1);
+    $deducciones  = $historial->where('categoria', 2);
+    $noSalariales = $historial->where('categoria', 3);
+
+    return \Pdf::loadView('modulos.recibos_constancias.pdf.pdf_recibo_final', [
+        'info'         => $info,
+        'asignaciones' => $asignaciones,
+        'deducciones'  => $deducciones,
+        'noSalariales' => $noSalariales,
+        'totalAsignaciones' => $asignaciones->sum('monto'),
+        'totalDeducciones'  => $deducciones->sum('monto'),
+        'totalNoSalarial'   => $noSalariales->sum('monto'),
+        'mes_letras'   => $meses[$mes],
+        'anio'         => $anio,
+        'cintillo'     => $cintillo
+    ])->setPaper('letter', 'portrait')->stream("recibo_{$cedula}.pdf");
+}
 }

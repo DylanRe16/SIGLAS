@@ -103,111 +103,48 @@ class ActualizacionDatoController extends Controller
     }
     public function show()
     {
+        // 1. Obtenemos el registro principal del trabajador y su recibo activo
+        // Eliminamos los 12 joins pesados y los cambiamos por una consulta base limpia.
         $user = DB::connection('bd4')->table('public.personales')
-            ->leftJoin('public.entidad', function ($join) {
-                $join->on('entidad.nentidad', '=', 'personales.nentidad_entidad')
-                    ->orOn('entidad.nentidad', '=', 'personales.nentidad_trab');
+            ->leftJoin('recibos_pagos_constancias.recibo_pago', function ($join) {
+                $join->on('recibo_pago.personales_cedula', '=', 'personales.cedula')
+                    ->where('recibo_pago.nestatus', '=', 1);
             })
-            ->leftJoin('public.municipio', 'municipio.nmunicipio', '=', 'personales.nmunicipio_municipio')
-            ->leftJoin('public.parroquia', 'parroquia.nparroquia', '=', 'personales.nparroquia_parroquia')
-            ->leftJoin('public.ciudad', 'ciudad.id', '=', 'personales.id_ciudad')
-            ->leftJoin('public.grupo_sanguineo', 'grupo_sanguineo.id', '=', 'personales.id_grupo_sanguineo')
-            ->leftJoin('public.tipo_discapacidad', 'tipo_discapacidad.id', '=', 'personales.id_tipo_discapacidad')
-            ->leftJoin('public.grado_discapacidad', 'grado_discapacidad.id', '=', 'personales.id_grado_discapacidad')
-            ->leftJoin('recibos_pagos_constancias.recibo_pago', 'recibo_pago.personales_cedula', '=', 'personales.cedula')
-            ->leftJoin('public.cargos', 'recibo_pago.cargos_id', '=', 'cargos.id')
-            ->leftJoin('public.tipo_trabajador', 'recibo_pago.tipo_trabajador_ncodigo', '=', 'tipo_trabajador.ncodigo')
-            ->leftJoin('public.ubicacion_administrativa', 'recibo_pago.ubicacion_administrativa_scodigo', '=', 'ubicacion_administrativa.scodigo')
-            ->leftJoin('public.ubicacion_fisica', 'recibo_pago.ubicacion_fisica_scodigo', '=', 'ubicacion_fisica.scodigo')
             ->where('personales.cedula', Auth::user()->cedula)
-            ->where('recibo_pago.nestatus', 1)
             ->orderByDesc('recibo_pago.dfecha_creacion')
-            ->select([
-                'personales.cedula',
-                'personales.nacionalidad',
-                'personales.ncont_estudios',
-                'personales.id_opc_educativas',
-                'personales.nparticipar_facilitador',
-                'personales.primer_apellido',
-                'personales.segundo_apellido',
-                'personales.primer_nombre',
-                'personales.segundo_nombre',
-                'personales.id_ciudad',
-                'personales.fecha_nacimiento',
-                'personales.sexo',
-                'personales.estado_civil',
-
-                'personales.ncodigo_telfmovil',
-                'personales.nnumero_telfmovil',
-                'personales.ncodigo_telflocal',
-                'personales.nnumero_telflocal',
-
-                'personales.semail',
-                'personales.srif',
-                'personales.nentidad_entidad',
-                'personales.nmunicipio_municipio',
-                'personales.nparroquia_parroquia',
-                'personales.nentidad_trab',
-                'personales.ndireccion1',
-                'personales.sdireccion1_2',
-                'personales.ndireccion2',
-                'personales.sdireccion2_2',
-                'personales.ndireccion3',
-                'personales.sdireccion3_2',
-                'personales.ndireccion4',
-                'personales.sdireccion4_2',
-                'personales.spunto_referencia',
-                'personales.snombre_emerg_familiar',
-                'personales.sapellido_emerg_familiar',
-
-                'personales.ncodigo_telfmovil_emerg1',
-                'personales.nnumero_telfmovil_emerg1',
-                'personales.ncodigo_telfmovil_emerg2',
-                'personales.nnumero_telfmovil_emerg2',
-
-                'personales.sparentesco_emerg_familiar',
-                'personales.snombre_emerg_contacto',
-                'personales.sapellido_emerg_contacto',
-                'personales.ntelefono_emerg_contacto',
-                'personales.sparentesco_emerg_contacto',
-                'personales.sdiscapacidad',
-                'personales.id_tipo_discapacidad',
-                'personales.id_grado_discapacidad',
-                'personales.scodigo_conapdis',
-                'personales.slateralidad',
-                'personales.id_grupo_sanguineo',
-                'personales.sinscripcion_militar',
-                'personales.ncodigo_inscripcion_militar',
-                'personales.ncant_hijos',
-                'personales.sconyuge_trabajo',
-                'personales.stalla_camisa',
-                'personales.stalla_pantalon',
-                'personales.ntalla_zapato',
-                'personales.stalla_chaqueta',
-                'personales.subicacion_fisica',
-                'personales.ntelefono_oficina',
-                'personales.scargo_actual_ejerce',
-                'personales.fecha_ingreso',
-                'personales.fecha_ingreso_adm',
-                'personales.sobservacion',
-                'personales.ncodigo_telfoficina',
-                'personales.nnumero_telfoficina',
-                'ciudad.sdescripcion as ciudad',
-                'municipio.sdescripcion as municipio',
-                'parroquia.sdescripcion as parroquia',
-                'grupo_sanguineo.sdescripcion as grupo_sanguineo',
-                'tipo_discapacidad.sdescripcion as tipo_discapacidad',
-                'grado_discapacidad.sdescripcion as grado_discapacidad',
-                'recibo_pago.tipo_trabajador_ncodigo',
-                'recibo_pago.ncodigo_nomina',
-                'tipo_trabajador.ncodigo',
-                'tipo_trabajador.sdescripcion_anterior_al10102013',
-                'cargos.scodigo',
-                'cargos.sdescripcion as cargo',
-                'ubicacion_administrativa.sdescripcion as ubicacion',
-
-            ])
+            ->select('personales.*', 'recibo_pago.*') // Traemos todos los datos base primero
             ->first();
+
+        // 2. Si el usuario existe, inyectamos las descripciones de los catálogos
+        // Esto es mucho más rápido que hacer 12 Joins en una sola sentencia SQL.
+        if ($user) {
+            // Geografía
+            $user->ciudad = DB::connection('bd4')->table('public.ciudad')->where('id', $user->id_ciudad)->value('sdescripcion');
+            $user->municipio = DB::connection('bd4')->table('public.municipio')->where('nmunicipio', $user->nmunicipio_municipio)->value('sdescripcion');
+            $user->parroquia = DB::connection('bd4')->table('public.parroquia')->where('nparroquia', $user->nparroquia_parroquia)->value('sdescripcion');
+
+            // Salud y Discapacidad
+            $user->grupo_sanguineo = DB::connection('bd4')->table('public.grupo_sanguineo')->where('id', $user->id_grupo_sanguineo)->value('sdescripcion');
+            $user->tipo_discapacidad = DB::connection('bd4')->table('public.tipo_discapacidad')->where('id', $user->id_tipo_discapacidad)->value('sdescripcion');
+            $user->grado_discapacidad = DB::connection('bd4')->table('public.grado_discapacidad')->where('id', $user->id_grado_discapacidad)->value('sdescripcion');
+
+            // Datos Laborales (Cargos y Nómina)
+            $user->cargo = DB::connection('bd4')->table('public.cargos')->where('id', $user->cargos_id)->value('sdescripcion');
+            $user->ubicacion = DB::connection('bd4')->table('public.ubicacion_administrativa')->where('scodigo', $user->ubicacion_administrativa_scodigo)->value('sdescripcion');
+
+            // Tipo de Trabajador
+            $user->sdescripcion_anterior_al10102013 = DB::connection('bd4')->table('public.tipo_trabajador')
+                ->where('ncodigo', $user->tipo_trabajador_ncodigo)
+                ->value('sdescripcion_anterior_al10102013');
+
+            // Entidad (Manejando el OR que causaba lentitud)
+            $entidadId = $user->nentidad_entidad ?? $user->nentidad_trab;
+            if ($entidadId) {
+                $user->entidad_descripcion = DB::connection('bd4')->table('public.entidad')->where('nentidad', $entidadId)->value('sdescripcion');
+            }
+        }
+
+        // Ahora tienes el objeto $user con todos los campos originales disponibles para tu vista.
         //dd($user);
         $discapacidades = $this->discapacidad();
         $tipo_discapacidades = $this->tipo_discapacidad();
